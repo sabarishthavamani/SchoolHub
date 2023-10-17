@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Genius | Fee Collection</title>
+    <link rel="stylesheet" href="css/Fee.css">
+    <link href="https://unpkg.com/ionicons@4.5.10-0/dist/css/ionicons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/virtual-select.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+    <div class="fee-collection">
+        <div class="fee-side-bar">
+            <div class="fee-part-one">
+                <div class="logo-content">
+                    <div class="logo">
+                        <img src="images/Polygon 3.png">
+                        <span><h2>Genius</h2></span>
+                    </div>
+                </div>
+                <ul>
+                    <li><div class="menu-bar"><img src="images/grey-file.png">New Admission</div></li>
+                    <li><div class="menu-bar"><a href="students.html"><img src="images/person.png" alt="" style="padding-right: 15px;">Students</a></div></li>
+                    <li><div class="menu-bar" style="color: #905ef0;"><img src="images/blue-fee.png" alt="">Fee Collection</div></li>
+                    <li><div class="menu-bar"><img src="images/setup.png" alt="">Fee Setup</div></li>
+                </ul>
+            </div>
+            <div class="fee-part-two">
+                <img src="images/Profile photo.png" alt="">
+                <div>
+                    <span>Sam Smith</span><br>
+                    <span style="color: #ccc;">Admin</span>
+                </div>
+                <i class="fa fa-sign-out"></i>
+            </div>
+        </div>
+        <div class="fee-content">
+            <div class="fee-header">
+                <div class="fee-l-header">
+                    <p>Fee Collection</p>
+                </div>
+                <div class="fee-r-header">
+                    <a href="#"><img src="images/bell.png" alt="" title="notification" style="height:25px"></a>
+                    <a href="#"><img src="images/setting.png" alt="" title="setting" style="height: 25px;"></a>
+                    <div>
+                        <span>Sam Smith</span><br>
+                        <span style="color: #ccc;">Admin</span>
+                    </div>
+                    <img src="images/Profile photo.png" alt="" title="profile">
+                </div>
+            </div>
+            <div class="fee-form">
+                <div class="fee-form-header">
+                    <span>Student Fee Collection</span>
+                </div>
+                <form action="" class="fee">
+                    <div class="fee-left">
+                        <div class="fee-box">
+                            <label>Name<sup>*</sup></label>
+                            <input type="text" name="">
+                        </div>
+                        <div class="fee-box">
+                            <label>Due Amount</label>
+                            <input type="text" name="">
+                        </div>
+                        <div class="fee-box">
+                            <label>Payment Term</label>
+                            <select id="multiselect" multiple name="native-select" data-search="true" data-silent-initial-value-set="true">
+                                <option value="1">Term 1</option>
+                                <option value="2">Term 2</option>
+                                <option value="3">Term 3</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="fee-right">
+                        <div class="fee-box">
+                            <label>Student ID</label>
+                            <input type="text" name="">
+                        </div>
+                        <div class="fee-box">
+                            <label>Fee Concession<sup>*</sup></label>
+                            <input type="text" name="">
+                        </div>
+                        <div class="fee-box">
+                            <label>Amount Payable</label>
+                            <input type="text" name="">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="process-btn">
+                <button type="submit">Process to Pay</button>
+            </div>
+        </div>
+    </div>
+    <script src="https://unpkg.com/ionicons@4.5.10-0/dist/ionicons.js"></script>
+    <script src="js/virtual-select.min.js"></script>
+    <script>
+        VirtualSelect.init({ 
+            ele: '#multiselect' 
+        });
+    </script>
+</body>
+</html>

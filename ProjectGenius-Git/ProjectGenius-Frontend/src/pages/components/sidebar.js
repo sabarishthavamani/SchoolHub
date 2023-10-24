@@ -41,7 +41,7 @@ const Sidebar = () => {
               background: 'linear-gradient(to right,#fde4cb,#fcfad3)', width: '100%',
               height: '45px', display: 'flex', alignItems: 'center', justifyContent: 'center'
             } : null}>
-              <img src="images/person.png" alt="" />
+              <img src="images/edu.png" alt="" />
               <NavLink to='/students' className="mysidebar">Students</NavLink>
             </div>
           </li>
@@ -63,6 +63,17 @@ const Sidebar = () => {
               <NavLink to='/feesetup' className="mysidebar">Fee Setup</NavLink>
             </div>
           </li>
+          <li>
+          <div className="menu-bar" style={isLinkActive('/teacher') ? {
+              background: 'linear-gradient(to right,#fde4cb,#fcfad3)', width: '100%',
+              height: '45px', display: 'flex', alignItems: 'center', justifyContent: 'center'
+            } : null}>
+    <img src="images/person.png" alt="" />
+    <NavLink to='/teacher' className="mysidebar">Teacher</NavLink>
+    <i className="fa fa-caret-down caret" />
+  </div>
+</li>
+
         </ul>
       </div>
       <div className="part-two">

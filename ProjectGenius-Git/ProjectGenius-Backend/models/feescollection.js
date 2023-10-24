@@ -8,14 +8,14 @@ const feecollectionSchema = new Schema ({
     'dueamount' :Number,
     'feeconcession':Number,
     'amountpayable':Number,
-    'paymentterm':{
+    'paymentterm':[{
         type: String,
         enum: ['term1', 'term2', 'term3'],
         default: null
-    },
+    }],
+    'grade':String
 })
 
 let feecollectionModel = mongoose.model('feescollection', feecollectionSchema, 'feescollection' )
-
 
 module.exports = feecollectionModel;

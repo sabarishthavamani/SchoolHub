@@ -173,11 +173,31 @@ export const feeSetup = async (data) => {
         return {
             'status': respData.data.status,
             'message': respData.data.message,
+            'result':respData.data.result
         }
     } catch (err) {
            console.log(err,'--err')
     }
 
+}
+
+export const viewFees = async () => {
+
+    try {
+        let respData = await axios({
+            'url': '/viewfees',
+            'method': 'get',
+        })
+        return {
+            'status': respData.data.status,
+            'result': respData.data.result,
+        }
+    } catch (err) {
+        return {
+            'status': err.response.data.status,
+            'message': err.response.data.message,
+        }
+    }
 }
 
 export const feeCollection = async (data) => {

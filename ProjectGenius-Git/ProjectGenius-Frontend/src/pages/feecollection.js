@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Select from 'react-select';
 import Sidebar from './components/sidebar';
@@ -8,22 +8,23 @@ import Navbar from './components/navbar';
 import toastAlert from '../lib/toast';
 
 //actions
-import { feeSetup } from '../actions/userAction';
+import { feeCollection, viewFees } from '../actions/userAction';
 
 const initialFormValue = {
   name: '',
   studentId: '',
   feeconcession: '',
-  dueamount: '',
-  paymentterm: '',
+  dueamount: 0,
+  paymentterm: [],
   amountpayable: '',
   feeconcession: '',
+  grade:'',
 
 }
 const options = [
-  { label: 'Term 1', value: 'Term1' },
-  { label: 'Term 2', value: 'Term2' },
-  { label: 'Term 3', value: 'Term3' },
+  { label: 'Term 1', value: 'term1' },
+  { label: 'Term 2', value: 'term2' },
+  { label: 'Term 3', value: 'term3' },
 ];
 
 const FeeCollection = () => {
@@ -33,12 +34,40 @@ const FeeCollection = () => {
 
   // state
   const [formValue, setFormValue] = useState(initialFormValue);
-  const [selectedOptions, setSelectedOptions] = useState([]);
-  const { name, studentId, dueamount, paymentterm, amountpayable, feeconcession } = formValue;
+  const { name, studentId, dueamount, paymentterm, amountpayable, feeconcession, grade,  feeSetupData } = formValue;
+
+ const fetchFeeSetupData = async () => {
+    try {
+      let {status,result} = await viewFees(); // Call the updated feeSetup API
+      if (status === true) {
+        setFormValue({ ...formValue, feeSetupData: result });
+      } 
+    } catch (error) {
+      console.error(error);
+      toastAlert('error', 'Failed to fetch fee setup data');
+    }
+  }
+
+  useEffect(() => {
+    // Fetch fee setup data from the API and store it in state
+    fetchFeeSetupData();
+  }, []);
 
   const handleSelectChange = (selectedOptions) => {
-    setFormValue({ ...formValue, paymentterm: selectedOptions });
+    // Extract the values from selectedOptions
+    const selectedValues = selectedOptions.map(option => option.value);
+
+    // Calculate the dueamount based on the selected terms and feeSetupData
+    let totalDueAmount = 0;
+    selectedValues.forEach((term) => {
+      if (feeSetupData && feeSetupData[term]) {
+        totalDueAmount += feeSetupData[term];
+      }
+    });
+
+    setFormValue({ ...formValue, paymentterm: selectedValues, dueamount: totalDueAmount });
   };
+
   const CustomOption = ({ children, innerProps, isSelected }) => (
     <div {...innerProps} className={isSelected ? 'option selected' : 'option'}>
       <input type="checkbox" readOnly checked={isSelected} />
@@ -46,7 +75,6 @@ const FeeCollection = () => {
       {children}
     </div>
   );
-
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -62,12 +90,15 @@ const FeeCollection = () => {
         paymentterm: paymentterm,
         amountpayable: amountpayable,
         feeconcession: feeconcession,
+        grade:grade,
       }
-      let { status, message } = await feeSetup(data)
+      let { status, message } = await feeCollection(data)
       if (status === true) {
         setFormValue(initialFormValue)
         toastAlert('success', message)
-        // navigate('/feecollection')              
+        navigate('/feepay1', {
+          state: { name, dueamount },
+        });            
       } else if (status === false) {
         if (message) {
           toastAlert('error', message)
@@ -78,6 +109,7 @@ const FeeCollection = () => {
       console.log(err, '...err')
     }
   }
+  
   return (
     <div className="fee-collection">
       <Sidebar />
@@ -101,34 +133,57 @@ const FeeCollection = () => {
                   <input type="text" name="dueamount" value={dueamount} onChange={handleChange} />
                 </div>
                 <div className="fee-box">
-                  <label>Payment Term</label>
-                  <Select
-            options={options}
-            value={formValue.paymentterm}
-            onChange={handleSelectChange}
-            isMulti
-            closeMenuOnSelect={false}
-            components={{
-              Option: CustomOption,
-            }}
-          />
+                  <label htmlFor="">
+                    Grade<sup>*</sup>
+                  </label>
+                  <select name="grade" value={grade} onChange={handleChange}>
+                    <option >Select Grade</option>
+                    <option >Preschool</option>
+                    <option >LKG</option>
+                    <option >UKG</option>
+                    <option >Class 1</option>
+                    <option >Class 2</option>
+                    <option >Class 3</option>
+                    <option >Class 4</option>
+                    <option >Class 5</option>
+                    <option >Class 6</option>
+                    <option >Class 7</option>
+                    <option >Class 8</option>
+                    <option >Class 9</option>
+                    <option >Class 10</option>
+                    <option >Class 11</option>
+                    <option >Class 12</option>
+                  </select>
                 </div>
+                <div className="fee-box">
+        <label>Payment Term</label>
+        <Select
+          options={options}
+          value={options.filter(option => paymentterm.includes(option.value))} // Set selected values
+          onChange={handleSelectChange}
+          isMulti
+          closeMenuOnSelect={false}
+          components={{
+            Option: CustomOption,
+          }}
+        />
+      </div>
               </div>
               <div className="fee-right">
                 <div className="fee-box">
                   <label>Student ID</label>
                   <input type="text" name="studentId" value={studentId} onChange={handleChange} />
                 </div>
-                <div className="fee-box">
+                {/* <div className="fee-box">
                   <label>
                     Fee Concession<sup>*</sup>
                   </label>
                   <input type="text" name="feeconcession" value={feeconcession} onChange={handleChange} />
-                </div>
-                <div className="fee-box">
+                </div> */}
+                {/* <div className="fee-box">
                   <label>Amount Payable</label>
                   <input type="text" name="amountpayable" value={amountpayable} onChange={handleChange} />
-                </div>
+                </div> */}
               </div>
             </div>
             <div className="process-btn">

@@ -1,8 +1,13 @@
 import React from 'react'
 import Sidebar from './components/sidebar';
-
+import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 const FeePay1 = () => {
+  const location = useLocation();
+  const { state } = location;
+  const { name, dueamount } = state || {};
+  const navigate = useNavigate();
     return (
         <div className="fee-collection">
   {/* <div className="fee-side-bar">
@@ -72,11 +77,11 @@ const FeePay1 = () => {
             </span>
           </div>
           <div className="pay">
-            <input type="radio" name="pay" defaultValue="upi" />
+            <input type="radio" name="pay" defaultValue="upi" onClick={()=>{navigate('/feepay2')}} />
             <span>UPI</span>
           </div>
           <div className="pay">
-            <input type="radio" name="pay" defaultValue="cash" />
+            <input type="radio" name="pay" defaultValue="cash" onClick={()=>{navigate('/feepay3')}} />
             <span>Cash</span>
           </div>
         </div>
@@ -121,11 +126,11 @@ const FeePay1 = () => {
           <div className="pro-left">
             <img src="images/Frame 11.png" />
             <div>
-              <p>October Term Fee</p>
-              <p style={{ color: "#ccc", fontWeight: 400 }}>John lee</p>
+              <p>DueAmount:</p>
+              <p style={{ color: "#ccc", fontWeight: 400 }}>{name}</p>
             </div>
           </div>
-          <span>$593.80</span>
+          <span>${dueamount}</span>
         </div>
         <div className="apply">
           <input type="text" placeholder="Free concession or discount code" />

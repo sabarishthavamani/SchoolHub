@@ -582,7 +582,7 @@ const NewAdmission = () => {
                   // setCurrentStep((prev) => prev + 1);
                 
               }}
-              disabled={isNextButtonDisabled()}
+              // disabled={isNextButtonDisabled()}
               style={{ backgroundColor: isFormValid ? '#605bff' : 'gray' }}
             >
               Next
@@ -607,7 +607,7 @@ const NewAdmission = () => {
               //   setComplete(true);
               // }
             }}
-          disabled={isSubmitButtonDisabled()}
+          // disabled={isSubmitButtonDisabled()}
           style={{ backgroundColor: isFormValid ? '#605bff' : 'gray' }}
             >
               Submit

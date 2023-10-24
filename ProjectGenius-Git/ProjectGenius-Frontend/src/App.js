@@ -16,6 +16,7 @@ import FeePay2 from './pages/feepay2';
 import FeePay3 from './pages/feepay3';
 import FeeComplete from './pages/feesuccession';
 import FeeSetup from './pages/feesetup';
+import Teacher from './pages/teacher';
 
 
 
@@ -59,6 +60,9 @@ function App() {
         </Routes>
         <Routes>
           <Route path="/feesetup" element={<ConditionRoute type="private"><FeeSetup /></ConditionRoute>} />
+        </Routes>
+        <Routes>
+          <Route path="/teacher" element={<ConditionRoute type="private"><Teacher /></ConditionRoute>} />
         </Routes>
       </BrowserRouter>
     </div>

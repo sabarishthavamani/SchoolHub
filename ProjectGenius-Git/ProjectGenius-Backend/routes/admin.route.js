@@ -44,5 +44,6 @@ router.route('/getsingle-student/:id').get(adminCtrl.getSingleStudent);
 router.route('/updatestudent').post(profileUpload.fields([{ name: 'signature', maxCount: 1 }, { name: 'photo', maxCount: 1 }]),adminValid.updateValid,adminCtrl.updateStudent);
 router.route('/feessetup').post(adminCtrl.createFeeSetup);
 router.route('/feescollection').post(adminCtrl.createFeeCollection);
+router.route('/viewfees').get(adminCtrl.findFeeSetup);
 
 module.exports = router;

@@ -352,7 +352,16 @@ const createFeeSetup = async (req, res) => {
         })
         await newDocument.save();
         console.log(newDocument,'--doc')
-        return res.status(200).json({ 'status': true, 'message': 'Feesetup saved successfully' })
+        return res.status(200).json({ 'status': true, 'message': 'Feesetup saved successfully'})
+    } catch (err) {
+        console.log(err);
+        return res.status(500).json({ 'status': false, 'message': 'Error on the server' });
+    }
+}
+const findFeeSetup = async (req, res) => {
+    try {
+        let newDocument = await FeeSetup.find({}).lean();
+        return res.status(200).json({ 'status': true, 'result':newDocument })
     } catch (err) {
         console.log(err);
         return res.status(500).json({ 'status': false, 'message': 'Error on the server' });
@@ -360,23 +369,48 @@ const createFeeSetup = async (req, res) => {
 }
 const createFeeCollection = async (req, res) => {
     try {
-        console.log(req.body,'---body')
-        let newDocument = new FeeCollection({
-            'name':req.body.name,
-            'studentId': req.body.studentId,
-            'dueamount': req.body.dueamount,
-            'feeconcession': req.body.feeconcession,
-            'amountpayable': req.body.amountpayable,
-            'paymentterm': req.body.paymentterm   
-        })
+        console.log(req.body, '---body');
+
+        // Retrieve the FeeSetup document for the selected grade
+        const feeSetup = await FeeSetup.findOne({ grade: req.body.grade });
+
+        if (!feeSetup) {
+            return res.status(400).json({ status: false, message: 'Fee setup not found for the selected grade' });
+        }
+        // Get the selected terms from the request
+        const selectedTerms = req.body.paymentterm; // Use the selected terms from the request
+
+        // Calculate the due amount based on the selected terms
+        let totalDueAmount = 0;
+
+        selectedTerms.forEach((term) => {
+            if (term in feeSetup) {
+                totalDueAmount += feeSetup[term];
+            }
+        });
+
+        // Create the fee collection document with the calculated due amount
+        const newDocument = new FeeCollection({
+            name: req.body.name,
+            studentId: req.body.studentId,
+            dueamount: totalDueAmount,
+            feeconcession: req.body.feeconcession,
+            amountpayable: req.body.amountpayable,
+            paymentterm: selectedTerms, // Use the selected terms
+            grade: req.body.grade,
+        });
+
         await newDocument.save();
-        console.log(newDocument,'--doc')
-        return res.status(200).json({ 'status': true, 'message': 'Choose payment type,Proceed to payment' })
+        console.log(newDocument, '--doc');
+        return res.status(200).json({ status: true, message: 'Choose payment type, Proceed to payment' });
     } catch (err) {
         console.log(err);
-        return res.status(500).json({ 'status': false, 'message': 'Error on the server' });
+        return res.status(500).json({ status: false, message: 'Error on the server' });
     }
-}
+};
+
+
+
 module.exports = {
     adminLogin,
     verifyCode,
@@ -390,5 +424,6 @@ module.exports = {
     getSingleStudent,
     updateStudent,
     createFeeSetup,
-    createFeeCollection
+    createFeeCollection,
+    findFeeSetup 
 };

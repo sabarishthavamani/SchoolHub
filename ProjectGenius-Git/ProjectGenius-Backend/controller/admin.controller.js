@@ -361,6 +361,7 @@ const createFeeSetup = async (req, res) => {
 const findFeeSetup = async (req, res) => {
     try {
         let newDocument = await FeeSetup.find({}).lean();
+        console.log(newDocument,'---fees')
         return res.status(200).json({ 'status': true, 'result':newDocument })
     } catch (err) {
         console.log(err);
@@ -394,8 +395,6 @@ const createFeeCollection = async (req, res) => {
             name: req.body.name,
             studentId: req.body.studentId,
             dueamount: totalDueAmount,
-            feeconcession: req.body.feeconcession,
-            amountpayable: req.body.amountpayable,
             paymentterm: selectedTerms, // Use the selected terms
             grade: req.body.grade,
         });
@@ -409,7 +408,16 @@ const createFeeCollection = async (req, res) => {
     }
 };
 
-
+const feePayment = async (req, res) => {
+    try {
+        const result = await FeeCollection.findOne({ 'name': req.params.name }).lean();
+        console.log(result, '---res');
+        return res.status(200).json({ 'status': true, 'result': result });
+    } catch (err) {
+        console.log(err);
+        return res.status(500).json({ 'status': false, 'message': 'Error on the server' });
+    }
+}
 
 module.exports = {
     adminLogin,
@@ -425,5 +433,6 @@ module.exports = {
     updateStudent,
     createFeeSetup,
     createFeeCollection,
-    findFeeSetup 
+    findFeeSetup,
+    feePayment
 };

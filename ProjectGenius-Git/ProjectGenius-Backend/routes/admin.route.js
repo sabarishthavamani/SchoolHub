@@ -38,12 +38,14 @@ router.route('/login').post(adminValid.loginValid, adminCtrl.adminLogin);
 router.route('/verification').post(adminValid.verifyValid, adminCtrl.verifyCode);
 router.route('/re-verification').get( adminCtrl.ReverifyCode);
 router.route('/admission').post(profileUpload.fields([{ name: 'signature', maxCount: 1 }, { name: 'photo', maxCount: 1 }]),adminValid.registerValid, adminCtrl.registerStudent);
+router.route('/admission-valid').post(adminValid.registerValid);
 router.route('/viewstudent').get(adminCtrl.viewStudent);
 router.route('/deletestudent/:id').get(adminCtrl.deleteStudent);
 router.route('/getsingle-student/:id').get(adminCtrl.getSingleStudent);
 router.route('/updatestudent').post(profileUpload.fields([{ name: 'signature', maxCount: 1 }, { name: 'photo', maxCount: 1 }]),adminValid.updateValid,adminCtrl.updateStudent);
 router.route('/feessetup').post(adminCtrl.createFeeSetup);
-router.route('/feescollection').post(adminCtrl.createFeeCollection);
+router.route('/feescollection').post(adminValid.feecollectionValid,adminCtrl.createFeeCollection);
 router.route('/viewfees').get(adminCtrl.findFeeSetup);
+router.route('/feepayment/:name').post(adminCtrl.feePayment);
 
 module.exports = router;

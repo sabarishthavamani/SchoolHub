@@ -80,6 +80,26 @@ export const registerStudent = async (formData) => {
         }
     }
 }
+export const registerStudentValid = async () => {
+
+    try {
+        let respData = await axios({
+            'url': '/admission-valid',
+            'method': 'post',
+           
+        })
+        return {
+            'status': respData.data.status,
+            'message': respData.data.message,
+        }
+    } catch (err) {
+        return {
+            'status': err.response.data.status,
+            'message': err.response.data.message,
+            'errors': err.response.data.errors
+        }
+    }
+}
 export const viewStudent = async () => {
 
     try {
@@ -211,9 +231,33 @@ export const feeCollection = async (data) => {
         return {
             'status': respData.data.status,
             'message': respData.data.message,
+       
         }
     } catch (err) {
-           console.log(err,'--err')
+        return{
+        'status': err.response.data.status,
+        'message': err.response.data.message,
+        'errors' : err.response.data.errors,
+        }
     }
+}
 
+export const feePayment = async (name) => {
+
+    try {
+        let respData = await axios({
+            'url': `/feepayment/${name}`,
+            'method': 'post',
+        })
+        return {
+            'status': respData.data.status,
+            'result': respData.data.result,
+            
+        }
+    } catch (err) {
+        return {
+            'status': err.response.data.status,
+            'message': err.response.data.message,
+        }
+    }
 }

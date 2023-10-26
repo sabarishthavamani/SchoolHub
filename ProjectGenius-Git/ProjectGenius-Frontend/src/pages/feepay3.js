@@ -1,7 +1,10 @@
-import React from 'react'
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import Sidebar from './components/sidebar';
+import PaymentSummary from './components/paymentsummary';
 
 const FeePay3 = () => {
+  const navigate = useNavigate()
 return(
 <div className="fee-collection">
   {/* <div className="fee-side-bar">
@@ -65,17 +68,17 @@ return(
         <label style={{ paddingTop: 25 }}>Pay With:</label>
         <div className="paywith">
           <div className="pay">
-            <input type="radio" defaultValue="Credit/Debit Card" name="pay" />
+            <input type="radio" name="pay"  onChange={()=>{navigate('/feepay1')}} />
             <span>
               Credit/Debit<span className="card1">Card</span>
             </span>
           </div>
           <div className="pay">
-            <input type="radio" name="pay" defaultValue="upi" />
+            <input type="radio" name="pay"  onChange={()=>{navigate('/feepay2')}}/>
             <span>UPI</span>
           </div>
           <div className="pay">
-            <input type="radio" name="pay" defaultValue="cash" />
+            <input type="radio" name="pay"  />
             <span>Cash</span>
           </div>
         </div>
@@ -96,42 +99,7 @@ return(
         </div>
       </form>
     </div>
-    <div className="payment-summary">
-      <div className="summary-content">
-        <h3>Payment Summary</h3>
-        <div className="person-profile">
-          <div className="pro-left">
-            <img src="images/Frame 11.png" />
-            <div>
-              <p>October Term Fee</p>
-              <p style={{ color: "#ccc", fontWeight: 400 }}>John lee</p>
-            </div>
-          </div>
-          <span>$593.80</span>
-        </div>
-        <div className="apply">
-          <input type="text" placeholder="Free concession or discount code" />
-          <button className="apply-btn">Apply</button>
-        </div>
-        <div className="gst">
-          <div className="gst-1">
-            <span>Subtotal</span>
-            <span>$593.80</span>
-          </div>
-          <div className="gst-2">
-            <span>GST</span>
-            <span>$7.24</span>
-          </div>
-        </div>
-        <div className="total">
-          <div className="tot">
-            <span>Total</span>
-            <p className="include">Including $2.24 in taxes</p>
-          </div>
-          <span style={{ fontSize: 21 }}>$599</span>
-        </div>
-      </div>
-    </div>
+  <PaymentSummary />
   </div>
 </div>
 

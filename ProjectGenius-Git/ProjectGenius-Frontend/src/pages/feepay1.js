@@ -1,68 +1,13 @@
 import React from 'react'
 import Sidebar from './components/sidebar';
-import { useNavigate } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import PaymentSummary from './components/paymentsummary';
+
 
 const FeePay1 = () => {
-  const location = useLocation();
-  const { state } = location;
-  const { name, dueamount } = state || {};
   const navigate = useNavigate();
     return (
         <div className="fee-collection">
-  {/* <div className="fee-side-bar">
-    <div className="fee-part-one">
-      <div className="logo-content">
-        <div className="logo">
-          <img src="images/Polygon 3.png" />
-          <span>
-            <h2>Genius</h2>
-          </span>
-        </div>
-      </div>
-      <ul>
-        <li>
-          <div className="menu-bar">
-            <img src="images/grey-file.png" />
-            New Admission
-          </div>
-        </li>
-        <li>
-          <div className="menu-bar">
-            <a href="students.html">
-              <img
-                src="images/person.png"
-                alt=""
-                style={{ paddingRight: 15 }}
-              />
-              Students
-            </a>
-          </div>
-        </li>
-        <li>
-          <div className="menu-bar" style={{ color: "#905ef0" }}>
-            <img src="images/blue-fee.png" alt="" />
-            Fee Collection
-          </div>
-        </li>
-        <li>
-          <div className="menu-bar">
-            <img src="images/setup.png" alt="" />
-            Fee Setup
-          </div>
-        </li>
-      </ul>
-    </div>
-    <div className="fee-part-two">
-      <img src="images/Profile photo.png" alt="" />
-      <div>
-        <span>Sam Smith</span>
-        <br />
-        <span style={{ color: "#ccc" }}>Admin</span>
-      </div>
-      <i className="fa fa-sign-out" />
-    </div>
-  </div> */}
   <Sidebar />
   <div className="payment-content">
     <div className="payment">
@@ -77,13 +22,20 @@ const FeePay1 = () => {
             </span>
           </div>
           <div className="pay">
-            <input type="radio" name="pay" defaultValue="upi" onClick={()=>{navigate('/feepay2')}} />
+            <input type="radio" name="pay" defaultValue="upi" onChange={()=>{navigate('/feepay2')}} />
             <span>UPI</span>
           </div>
           <div className="pay">
-            <input type="radio" name="pay" defaultValue="cash" onClick={()=>{navigate('/feepay3')}} />
+            <input type="radio" name="pay" defaultValue="cash" onChange={()=>{navigate('/feepay3')}}/>
             <span>Cash</span>
           </div>
+        </div>
+        <div className="pay-part">
+          <label>Amount Payable</label>
+          <input
+            className="card"
+            type="text"
+          />
         </div>
         <div className="pay-part">
           <label>Card Number</label>
@@ -119,42 +71,7 @@ const FeePay1 = () => {
         </div>
       </form>
     </div>
-    <div className="payment-summary">
-      <div className="summary-content">
-        <h3>Payment Summary</h3>
-        <div className="person-profile">
-          <div className="pro-left">
-            <img src="images/Frame 11.png" />
-            <div>
-              <p>DueAmount:</p>
-              <p style={{ color: "#ccc", fontWeight: 400 }}>{name}</p>
-            </div>
-          </div>
-          <span>${dueamount}</span>
-        </div>
-        <div className="apply">
-          <input type="text" placeholder="Free concession or discount code" />
-          <button className="apply-btn">Apply</button>
-        </div>
-        <div className="gst">
-          <div className="gst-1">
-            <span>Subtotal</span>
-            <span>$593.80</span>
-          </div>
-          <div className="gst-2">
-            <span>GST</span>
-            <span>$7.24</span>
-          </div>
-        </div>
-        <div className="total">
-          <div className="tot">
-            <span>Total</span>
-            <p className="include">Including $2.24 in taxes</p>
-          </div>
-          <span style={{ fontSize: 21 }}>$599</span>
-        </div>
-      </div>
-    </div>
+   <PaymentSummary />
   </div>
 </div>
 

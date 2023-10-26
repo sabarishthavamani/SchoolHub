@@ -13,12 +13,11 @@ import { feeCollection, viewFees } from '../actions/userAction';
 const initialFormValue = {
   name: '',
   studentId: '',
-  feeconcession: '',
-  dueamount: 0,
+  dueamount: '',
   paymentterm: [],
-  amountpayable: '',
-  feeconcession: '',
   grade:'',
+  feeSetupData:'',
+  
 
 }
 const options = [
@@ -34,12 +33,14 @@ const FeeCollection = () => {
 
   // state
   const [formValue, setFormValue] = useState(initialFormValue);
-  const { name, studentId, dueamount, paymentterm, amountpayable, feeconcession, grade,  feeSetupData } = formValue;
+  const[errors,setErrors] =useState({});
+  const { name, studentId, dueamount, paymentterm, grade,  feeSetupData } = formValue;
 
  const fetchFeeSetupData = async () => {
     try {
       let {status,result} = await viewFees(); // Call the updated feeSetup API
       if (status === true) {
+        console.log(result,'---result')
         setFormValue({ ...formValue, feeSetupData: result });
       } 
     } catch (error) {
@@ -56,17 +57,26 @@ const FeeCollection = () => {
   const handleSelectChange = (selectedOptions) => {
     // Extract the values from selectedOptions
     const selectedValues = selectedOptions.map(option => option.value);
-
-    // Calculate the dueamount based on the selected terms and feeSetupData
-    let totalDueAmount = 0;
-    selectedValues.forEach((term) => {
-      if (feeSetupData && feeSetupData[term]) {
-        totalDueAmount += feeSetupData[term];
-      }
-    });
-
-    setFormValue({ ...formValue, paymentterm: selectedValues, dueamount: totalDueAmount });
+  
+    // Find the object that matches the selected grade
+    const selectedGradeData = feeSetupData.find(gradeData => gradeData.grade === grade);
+  
+    if (selectedGradeData) {
+      // Calculate the dueamount based on the selected terms and the selected grade's data
+      let totalDueAmount = 0;
+      selectedValues.forEach((term) => {
+        if (selectedGradeData[term]) {
+          totalDueAmount += selectedGradeData[term];
+        }
+      });
+  
+      console.log("Selected Values:", selectedValues);
+      console.log("Total Due Amount:", totalDueAmount);
+  
+      setFormValue({ ...formValue, paymentterm: selectedValues, dueamount: totalDueAmount });
+    }
   };
+  
 
   const CustomOption = ({ children, innerProps, isSelected }) => (
     <div {...innerProps} className={isSelected ? 'option selected' : 'option'}>
@@ -88,21 +98,22 @@ const FeeCollection = () => {
         studentId: studentId,
         dueamount: dueamount,
         paymentterm: paymentterm,
-        amountpayable: amountpayable,
-        feeconcession: feeconcession,
         grade:grade,
       }
-      let { status, message } = await feeCollection(data)
+      let { status, message, errors } = await feeCollection(data)
       if (status === true) {
         setFormValue(initialFormValue)
         toastAlert('success', message)
-        navigate('/feepay1', {
-          state: { name, dueamount },
-        });            
+        setErrors({})
+        navigate(`/feepay1/${name}`);            
       } else if (status === false) {
+        if(errors) {
+          setErrors(errors)
+        }
         if (message) {
           toastAlert('error', message)
         }
+      
       }
 
     } catch (err) {
@@ -127,10 +138,7 @@ const FeeCollection = () => {
                     Name<sup>*</sup>
                   </label>
                   <input type="text" name="name" value={name} onChange={handleChange} />
-                </div>
-                <div className="fee-box">
-                  <label>Due Amount</label>
-                  <input type="text" name="dueamount" value={dueamount} onChange={handleChange} />
+                  <span className='text-error'>{errors.name}</span>
                 </div>
                 <div className="fee-box">
                   <label htmlFor="">
@@ -154,12 +162,24 @@ const FeeCollection = () => {
                     <option >Class 11</option>
                     <option >Class 12</option>
                   </select>
+                  <span className='text-error'>{errors.grade}</span>
+                </div>
+                <div className="fee-box">
+                  <label>Due Amount</label>
+                  <input type="text" name="dueamount" value={dueamount} onChange={handleChange} />
+                </div>
+              </div>
+              <div className="fee-right">
+                <div className="fee-box">
+                  <label>Student ID</label>
+                  <input type="text" name="studentId" value={studentId} onChange={handleChange} />
+                  <span className='text-error'>{errors.studentId}</span>
                 </div>
                 <div className="fee-box">
         <label>Payment Term</label>
         <Select
           options={options}
-          value={options.filter(option => paymentterm.includes(option.value))} // Set selected values
+          value={options.filter(option => paymentterm.includes(option.value))}
           onChange={handleSelectChange}
           isMulti
           closeMenuOnSelect={false}
@@ -167,23 +187,8 @@ const FeeCollection = () => {
             Option: CustomOption,
           }}
         />
+                  <span className='text-error'>{errors.paymentterm}</span>
       </div>
-              </div>
-              <div className="fee-right">
-                <div className="fee-box">
-                  <label>Student ID</label>
-                  <input type="text" name="studentId" value={studentId} onChange={handleChange} />
-                </div>
-                {/* <div className="fee-box">
-                  <label>
-                    Fee Concession<sup>*</sup>
-                  </label>
-                  <input type="text" name="feeconcession" value={feeconcession} onChange={handleChange} />
-                </div> */}
-                {/* <div className="fee-box">
-                  <label>Amount Payable</label>
-                  <input type="text" name="amountpayable" value={amountpayable} onChange={handleChange} />
-                </div> */}
               </div>
             </div>
             <div className="process-btn">

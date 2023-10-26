@@ -9,7 +9,7 @@ import { TiTick } from "react-icons/ti";
 
 
 //import actions
-import { registerStudent } from '../actions/userAction';
+import { registerStudent, registerStudentValid } from '../actions/userAction';
 
 // import lib
 import toastAlert from '../lib/toast';
@@ -48,7 +48,7 @@ const NewAdmission = () => {
   // const steps = ["PersonalDetails", "Contact", "History"];
   // const [currentStep, setCurrentStep] = useState(1);
   // const [complete, setComplete] = useState(false);
-  const [isFormValid, setIsFormValid] = useState(false);
+  // const [isFormValid, setIsFormValid] = useState(false);
   const navigate =useNavigate();
   const {
     firstName,
@@ -80,6 +80,7 @@ const NewAdmission = () => {
 
 
   const handleChange = (e) => {
+    
     const { name, value } = e.target;
     if (name === "dob") {
       // Calculate age based on the selected date of birth
@@ -90,87 +91,29 @@ const NewAdmission = () => {
     } else {
       setFormValue({ ...formValue, [name]: value });
     }
-    validateFormFields();
+    let {status,errors,message} = registerStudentValid(formValue)
+    if (status === false) {
+      if (errors) {
+        setErrors(errors);
+      }
+
+      if (message) {
+        toastAlert('error', message)
+
+      }    
+    }
+    else {
+      // If the validation passes, clear any previous errors for the field
+      setErrors({ ...errors, [name]: '' });
+    }
+   
   }
 
-  const validateFormFields = () => {
-    switch (currentForm) {
-      case 1:
-    const isFirstNameValid = formValue.firstName.trim() !== '';
-    const isLastNameValid = formValue.lastName.trim() !== '';
-    const isDobValid = age >= 0;
-    const isFatherNameValid = formValue.fathername.trim() !== '';
-    const isMotherNameValid = formValue.mothername.trim() !== '';
-    const isPOBValid = formValue.placeofbirth.trim() !== '';
-    const isPhotoValid = !!formValue.photo;
-      setIsFormValid(
-        isFirstNameValid &&
-        isLastNameValid &&
-        isDobValid &&
-        isFatherNameValid &&
-        isMotherNameValid &&
-        isPOBValid &&
-        isPhotoValid 
-      );
-    break;
-    case 2:
-      const isEmailValid = formValue.email.trim() !== '';
-      const isContactNumberValid = formValue.contactNumber.trim() !== '';
-      const isWhatsappNumberValid = formValue.whatsappNumber.trim() !== '';
-      const isFatherphonenumberValid = formValue.fatherphonenumber.trim() !== '';
-      const isMotherphonenumberValid = formValue.motherphonenumber.trim() !== '';
-      const isPermenantaddresssValid = formValue.permanentaddress.trim() !== '';
-      const isTemporaryaddressValid = formValue.temporaryaddress.trim() !== '';
-      const isAadhaarnumberValid = formValue.aadhaarNumber.trim() !== '';
-      setIsFormValid(
-        isEmailValid &&
-        isContactNumberValid &&
-        isWhatsappNumberValid &&
-        isFatherphonenumberValid &&
-        isMotherphonenumberValid &&
-        isPermenantaddresssValid &&
-        isTemporaryaddressValid &&
-        isAadhaarnumberValid
-      );
-    break;
-    case 3:
-      const isBloodgroupValid = formValue.bloodgroup.trim() !== '';
-      const isVaccinationValid = formValue.vaccination.trim() !== ''; 
-      const isadmissiongradeValid = formValue.admissiongrade.trim() !== '';
-      const isPreviousgradeValid = formValue.previousgrade.trim() !== '';
-      const isSignatureValid = !!formValue.signature;
-      const isEmergencyrelationnameValid = formValue.emergencyrelationname.trim() !== '';
-      const isEmergencycontactNumberValid = formValue.emergencycontactNumber.trim() !== '';
-      const isPreviousschoolhistoryValid = formValue.previousschoolhistory.trim() !== '';
-      setIsFormValid(
-        isBloodgroupValid &&
-        isVaccinationValid &&
-        isadmissiongradeValid &&
-        isPreviousgradeValid &&
-        isSignatureValid &&
-        isEmergencyrelationnameValid &&
-        isEmergencycontactNumberValid &&
-        isPreviousschoolhistoryValid
-      );
-    break;
-    default:
-    break; 
-  }
-  };
-
-  const isNextButtonDisabled = () => {
-    // Disable the "Next" button if the form is not valid
-    return !isFormValid;
-  };
-  const isSubmitButtonDisabled = () => {
-    // Disable the "Submit" button if the form is not valid
-    return !isFormValid;
-  };
 
   const handleFileChange = (e) => {
     const { name, files } = e.target;
     setFormValue({ ...formValue, ... { [name]: files[0] } })
-    validateFormFields();
+   
   }
 
   const handleNextClick = () => {
@@ -182,7 +125,7 @@ const NewAdmission = () => {
       setCurrentForm(currentForm - 1)
   };
   const handleSubmit = async () => {
-    if(isFormValid) {  try {
+    try {
         let formData = new FormData();
         formData.append('firstName', firstName)
         formData.append('lastName', lastName)
@@ -229,7 +172,6 @@ const NewAdmission = () => {
 
       } catch (err) {
 
-      }
     }
   }
   const displayFile = (file) => {
@@ -259,28 +201,28 @@ const NewAdmission = () => {
                   <label htmlFor="">
                     First Name<sup>*</sup>
                   </label>
-                  <input type="text" name="firstName" value={firstName} onChange={handleChange} />
+                  <input type="text" name="firstName" value={firstName} onChange={(e)=>handleChange(e)} />
                   <span className='text-error'>{errors.firstName}</span>
                 </div>
                 <div className="field-box">
                   <label htmlFor="">
                     Date of Birth<sup>*</sup>
                   </label>
-                  <input type="date" name="dob" value={dob} onChange={handleChange} />
+                  <input type="date" name="dob" value={dob} onChange={(e)=>handleChange(e)} />
                   <span className='text-error'>{errors.dob}</span>
                 </div>
                 <div className="field-box">
                   <label htmlFor="">
                     Father Name<sup>*</sup>
                   </label>
-                  <input type="text" name="fathername" value={fathername} onChange={handleChange} />
+                  <input type="text" name="fathername" value={fathername} onChange={(e)=>handleChange(e)} />
                   <span className='text-error'>{errors.fathername}</span>
                 </div>
                 <div className="field-box">
                   <label htmlFor="">
                     Place of Birth<sup>*</sup>
                   </label>
-                  <input type="text" name="placeofbirth" value={placeofbirth} onChange={handleChange} />
+                  <input type="text" name="placeofbirth" value={placeofbirth} onChange={(e)=>handleChange(e)} />
                   <span className='text-error'>{errors.placeofbirth}</span>
                 </div>
               </div>
@@ -289,14 +231,14 @@ const NewAdmission = () => {
                   <label htmlFor="">
                     Last Name<sup>*</sup>
                   </label>
-                  <input type="text" name="lastName" value={lastName} onChange={handleChange} />
+                  <input type="text" name="lastName" value={lastName} onChange={(e)=>handleChange(e)} />
                   <span className='text-error'>{errors.lastName}</span>
                 </div>
                 <div className="field-box">
                   <label htmlFor="">
                     Age<sup>*</sup>
                   </label>
-                  <input type="text" name="age" value={age} onChange={handleChange} />
+                  <input type="text" name="age" value={age} onChange={(e)=>handleChange(e)} />
                   <span className='text-error'>{errors.age}</span>
                 </div>
                 <div className="field-box">
@@ -304,7 +246,7 @@ const NewAdmission = () => {
                     Mother Name<sup>*</sup>
                   </label>
                   <input
-                    type="text" name="mothername" value={mothername} onChange={handleChange} />
+                    type="text" name="mothername" value={mothername} onChange={(e)=>handleChange(e)} />
                   <span className='text-error'>{errors.mothername}</span>
                 </div>
                 <div className="field-box">
@@ -341,7 +283,7 @@ const NewAdmission = () => {
                   <label htmlFor="">
                     Mobile Number<sup>*</sup>
                   </label>
-                  <input type="text" name="contactNumber" value={contactNumber} onChange={handleChange} />
+                  <input type="text" name="contactNumber" value={contactNumber} onChange={(e)=>handleChange(e)} />
                   <span className='text-error'>{errors.contactNumber}</span>
                 </div>
                 <div className="field-box">
@@ -349,7 +291,7 @@ const NewAdmission = () => {
                   <label htmlFor="">
                     Email Address<sup>*</sup>
                   </label>
-                  <input type="email" name="email" value={email} onChange={handleChange} placeholder="abcd123@example.com" />
+                  <input type="email" name="email" value={email} onChange={(e)=>handleChange(e)} placeholder="abcd123@example.com" />
                   <span className='text-error'>{errors.email}</span>
                 </div>
                 <div className="field-box">
@@ -357,7 +299,7 @@ const NewAdmission = () => {
                   <label htmlFor="">
                     Father's Mobile Number<sup>*</sup>
                   </label>
-                  <input type="text" name="fatherphonenumber" value={fatherphonenumber} onChange={handleChange} />
+                  <input type="text" name="fatherphonenumber" value={fatherphonenumber} onChange={(e)=>handleChange(e)} />
                   <span className='text-error'>{errors.fatherphonenumber}</span>
                 </div>
                 <div className="field-box">
@@ -367,7 +309,7 @@ const NewAdmission = () => {
                     <span className="proof">(As per Government Proof)</span>
                     <sup>*</sup>
                   </label>
-                  <textarea name="permanentaddress" value={permanentaddress} onChange={handleChange} />
+                  <textarea name="permanentaddress" value={permanentaddress} onChange={(e)=>handleChange(e)} />
                   <span className='text-error'>{errors.permanentaddress}</span>
                 </div>
               </div>
@@ -377,7 +319,7 @@ const NewAdmission = () => {
                   <label htmlFor="">
                     WhatsApp Number<sup>*</sup>
                   </label>
-                  <input type="text" name="whatsappNumber" value={whatsappNumber} onChange={handleChange} defaultValue="" />
+                  <input type="text" name="whatsappNumber" value={whatsappNumber} onChange={(e)=>handleChange(e)} defaultValue="" />
                   <span className='text-error'>{errors.whatsappNumber}</span>
                 </div>
                 <div className="field-box">
@@ -387,7 +329,7 @@ const NewAdmission = () => {
                   </label>
                   <input
                     type="text"
-                    name="aadhaarNumber" value={aadhaarNumber} onChange={handleChange}
+                    name="aadhaarNumber" value={aadhaarNumber} onChange={(e)=>handleChange(e)}
                     placeholder="xxxx - xxxx - xxxx - xxxx"
                   />
                   <span className='text-error'>{errors.aadhaarNumber}</span>
@@ -397,7 +339,7 @@ const NewAdmission = () => {
                   <label htmlFor="">
                     Mother's Mobile Number<sup>*</sup>
                   </label>
-                  <input type="text" name="motherphonenumber" value={motherphonenumber} onChange={handleChange} defaultValue="" />
+                  <input type="text" name="motherphonenumber" value={motherphonenumber} onChange={(e)=>handleChange(e)} defaultValue="" />
                   <span className='text-error'>{errors.motherphonenumber}</span>
                 </div>
                 <div className="field-box">
@@ -405,7 +347,7 @@ const NewAdmission = () => {
                   <label>
                     Temporary Address<sup>*</sup>
                   </label>
-                  <textarea name="temporaryaddress" value={temporaryaddress} onChange={handleChange} />
+                  <textarea name="temporaryaddress" value={temporaryaddress} onChange={(e)=>handleChange(e)} />
                   <span className='text-error'>{errors.temporaryaddress}</span>
                 </div>
               </div>
@@ -425,7 +367,7 @@ const NewAdmission = () => {
                   <label htmlFor="">
                     Admission Grade<sup>*</sup>
                   </label>
-                  <select name="admissiongrade" value={admissiongrade} onChange={handleChange}>
+                  <select name="admissiongrade" value={admissiongrade} onChange={(e)=>handleChange(e)}>
                     <option />
                     <option>Preschool</option>
                     <option>LKG</option>
@@ -449,7 +391,7 @@ const NewAdmission = () => {
                   <label htmlFor="">
                     Previous Grade/Class<sup>*</sup>
                   </label>
-                  <select name="previousgrade" value={previousgrade} onChange={handleChange}>
+                  <select name="previousgrade" value={previousgrade} onChange={(e)=>handleChange(e)}>
                     <option />
                     <option>Not Applicable</option>
                     <option>Preschool</option>
@@ -475,14 +417,14 @@ const NewAdmission = () => {
                   <label htmlFor="">
                     Previous School Name<sup>*</sup>
                   </label>
-                  <input type="text" name="previousschoolhistory" value={previousschoolhistory} onChange={handleChange} />
+                  <input type="text" name="previousschoolhistory" value={previousschoolhistory} onChange={(e)=>handleChange(e)} />
                   <span className='text-error'>{errors.previousschoolhistory}</span>
                 </div>
                 <div className="field-box">
                   <label htmlFor="">
                     Emergency Relation Name<sup>*</sup>
                   </label>
-                  <input type="text" name="emergencyrelationname" value={emergencyrelationname} onChange={handleChange} />
+                  <input type="text" name="emergencyrelationname" value={emergencyrelationname} onChange={(e)=>handleChange(e)} />
                   <span className='text-error'>{errors.emergencyrelationname}</span>
                 </div>
               </div>
@@ -491,7 +433,7 @@ const NewAdmission = () => {
                   <label htmlFor="">
                     Blood Group<sup>*</sup>
                   </label>
-                  <select name="bloodgroup" value={bloodgroup} onChange={handleChange}>
+                  <select name="bloodgroup" value={bloodgroup} onChange={(e)=>handleChange(e)}>
                     <option />
                     <option>A+ve</option>
                     <option>A-ve</option>
@@ -513,14 +455,14 @@ const NewAdmission = () => {
                   <label htmlFor="">
                     Vaccination Details<sup>*</sup>
                   </label>
-                  <input type="text" name="vaccination" value={vaccination} onChange={handleChange} />
+                  <input type="text" name="vaccination" value={vaccination} onChange={(e)=>handleChange(e)} />
                   <span className='text-error'>{errors.vaccination}</span>
                 </div>
                 <div className="field-box">
                   <label htmlFor="">
                     Emergency Contact Number<sup>*</sup>
                   </label>
-                  <input type="text" name="emergencycontactNumber" value={emergencycontactNumber} onChange={handleChange} />
+                  <input type="text" name="emergencycontactNumber" value={emergencycontactNumber} onChange={(e)=>handleChange(e)} />
                   <span className='text-error'>{errors.emergencycontactNumber}</span>
                 </div>
                 <div className="field-box">
@@ -577,13 +519,13 @@ const NewAdmission = () => {
               onClick={() => {
                 handleNextClick();
                 // if (currentStep === steps.length) {
-                //   setComplete(true);
+                //   setComplete(true);}
                 // } else {
-                  // setCurrentStep((prev) => prev + 1);
+                //   setCurrentStep((prev) => prev + 1);
+                // }
                 
               }}
-              // disabled={isNextButtonDisabled()}
-              style={{ backgroundColor: isFormValid ? '#605bff' : 'gray' }}
+  
             >
               Next
               <img src="images/arrow.png" alt="" />
@@ -607,8 +549,6 @@ const NewAdmission = () => {
               //   setComplete(true);
               // }
             }}
-          // disabled={isSubmitButtonDisabled()}
-          style={{ backgroundColor: isFormValid ? '#605bff' : 'gray' }}
             >
               Submit
             </button>

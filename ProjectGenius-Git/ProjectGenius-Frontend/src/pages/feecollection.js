@@ -100,12 +100,12 @@ const FeeCollection = () => {
         paymentterm: paymentterm,
         grade:grade,
       }
-      let { status, message, errors } = await feeCollection(data)
+      let { status, message, errors, result } = await feeCollection(data)
       if (status === true) {
         setFormValue(initialFormValue)
         toastAlert('success', message)
         setErrors({})
-        navigate(`/feepay1/${name}`);            
+       navigate(`/feepay1/${name}`, { state: { data: result } });          
       } else if (status === false) {
         if(errors) {
           setErrors(errors)
@@ -137,14 +137,14 @@ const FeeCollection = () => {
                   <label>
                     Name<sup>*</sup>
                   </label>
-                  <input type="text" name="name" value={name} onChange={handleChange} />
+                  <input type="text" name="name" value={name} onChange={handleChange} style={{height : "60px"}} />
                   <span className='text-error'>{errors.name}</span>
                 </div>
                 <div className="fee-box">
                   <label htmlFor="">
                     Grade<sup>*</sup>
                   </label>
-                  <select name="grade" value={grade} onChange={handleChange}>
+                  <select name="grade" value={grade} onChange={handleChange} style={{height : "60px"}}>
                     <option >Select Grade</option>
                     <option >Preschool</option>
                     <option >LKG</option>
@@ -166,17 +166,18 @@ const FeeCollection = () => {
                 </div>
                 <div className="fee-box">
                   <label>Due Amount</label>
-                  <input type="text" name="dueamount" value={dueamount} onChange={handleChange} />
+                  <input type="text" name="dueamount" value={dueamount} onChange={handleChange} style={{height : "60px"}} />
                 </div>
               </div>
               <div className="fee-right">
                 <div className="fee-box">
                   <label>Student ID</label>
-                  <input type="text" name="studentId" value={studentId} onChange={handleChange} />
+                  <input type="text" name="studentId" value={studentId} onChange={handleChange} style={{height : "60px"}} />
                   <span className='text-error'>{errors.studentId}</span>
                 </div>
                 <div className="fee-box">
         <label>Payment Term</label>
+        <div>
         <Select
           options={options}
           value={options.filter(option => paymentterm.includes(option.value))}
@@ -187,6 +188,7 @@ const FeeCollection = () => {
             Option: CustomOption,
           }}
         />
+        </div>
                   <span className='text-error'>{errors.paymentterm}</span>
       </div>
               </div>

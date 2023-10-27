@@ -231,6 +231,7 @@ export const feeCollection = async (data) => {
         return {
             'status': respData.data.status,
             'message': respData.data.message,
+            'result':respData.data.result,
        
         }
     } catch (err) {
@@ -242,22 +243,3 @@ export const feeCollection = async (data) => {
     }
 }
 
-export const feePayment = async (name) => {
-
-    try {
-        let respData = await axios({
-            'url': `/feepayment/${name}`,
-            'method': 'post',
-        })
-        return {
-            'status': respData.data.status,
-            'result': respData.data.result,
-            
-        }
-    } catch (err) {
-        return {
-            'status': err.response.data.status,
-            'message': err.response.data.message,
-        }
-    }
-}

@@ -1,97 +1,67 @@
-import React,{useState,useEffect} from 'react';
-import { useParams } from 'react-router-dom';
-import { feePayment } from '../../actions/userAction';
+import React, { useState, useEffect } from 'react';
+import { useParams, useLocation } from 'react-router-dom';
 
 const PaymentSummary = () => {
-   const {name} = useParams()
-   const [data,setData] =useState({});
+  const location = useLocation();
+  const { data } = location.state || {};
+  const [feeConcession, setFeeConcession] = useState(0);
+  const [updatedDueAmount, setUpdatedDueAmount] = useState(data.dueamount);
 
-   const getData = async () => {
-    try {
-        let { status, result } = await feePayment({ name })
-        if (status === true) {
-            setData(result)
-        }
-    } catch (err) {
-        console.log(err, '--err')
-    }
-}
-useEffect(() => {
-    getData(name)
-}, [name])
- 
-console.log(data,'---data')
-    return(
-         <div className="payment-summary">
-            <div className="summary-content">
-            <h3>Payment Summary</h3>
-            <div className="person-profile">
-              <div className="pro-left">
-                <div>
-                <p>DueAmount:</p>
-                  <p style={{ color: "#ccc", fontWeight: 400 }}>{data && data.name}</p>
-                </div>
-              </div>
-              <span>${data && data.dueamount}</span>
-            </div>
-            <div className="apply">
-              {/* <input type="text" placeholder="Free concession or discount code" /> */}
-              1000
-              <button className="apply-btn">1000</button>
-            </div>
-            <div className="gst">
-              <div className="gst-1">
-                <span>Subtotal</span>
-                <span>${data && data.dueamount}-1000</span>
-              </div>
-              <div className="gst-2">
-                <span>GST</span>
-                <span>$7.24</span>
-              </div>
-            </div>
-            <div className="total">
-              <div className="tot">
-                <span>Total</span>
-                <p className="include">Including $2.24 in taxes</p>
-              </div>
-              <span style={{ fontSize: 21 }}>$599</span>
-            </div>
-          </div>
-      {/* <div className="summary-content">
+  useEffect(() => {
+    console.log(data, '---data');
+  }, [data]);
+
+  const handleApply = () => {
+    // Subtract the fee concession amount from the dueamount and update the state
+    setUpdatedDueAmount(updatedDueAmount - feeConcession);
+  };
+
+  return (
+    <div className="payment-summary">
+      <div className="summary-content">
         <h3>Payment Summary</h3>
         <div className="person-profile">
           <div className="pro-left">
             <div>
-            <p>DueAmount:</p>
-              <p style={{ color: "#ccc", fontWeight: 400 }}>Vetri</p>
+              <p>DueAmount:</p>
+              <p style={{ color: "#ccc", fontWeight: 400 }}>{data && data.name}</p>
             </div>
           </div>
-          <span>$000</span>
+          <span>₹{data.dueamount}</span>
         </div>
         <div className="apply">
-          <input type="text" placeholder="Free concession or discount code" />
-          <button className="apply-btn">Apply</button>
+          <input
+            type="text"
+            placeholder="Free concession or discount code"
+            value={feeConcession}
+            onChange={(e) => setFeeConcession(parseFloat(e.target.value))}
+          />
+          <button className="apply-btn" onClick={handleApply}>
+            Apply
+          </button>
         </div>
         <div className="gst">
           <div className="gst-1">
             <span>Subtotal</span>
-            <span>$593.80</span>
+            <span>₹{updatedDueAmount}</span>
           </div>
           <div className="gst-2">
             <span>GST</span>
-            <span>$7.24</span>
+            <span>₹2.24</span>
           </div>
         </div>
         <div className="total">
           <div className="tot">
             <span>Total</span>
-            <p className="include">Including $2.24 in taxes</p>
+            <p className="include">Including ₹2.24 in taxes</p>
           </div>
-          <span style={{ fontSize: 21 }}>$599</span>
+          <span style={{ fontSize: 21 }}>
+            ₹{updatedDueAmount + 2.24}
+          </span>
         </div>
-      </div> */}
-    </div> 
-    )
-}
+      </div>
+    </div>
+  );
+};
 
 export default PaymentSummary;

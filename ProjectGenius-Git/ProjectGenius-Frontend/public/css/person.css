@@ -418,6 +418,9 @@ form {
     text-decoration: none;
     color:black;
 }
-
+.activemysidebar {
+    color: #2d00f7 !important; 
+    font-weight: 500;
+}
   
  

@@ -401,7 +401,7 @@ const createFeeCollection = async (req, res) => {
 
         await newDocument.save();
         console.log(newDocument, '--doc');
-        return res.status(200).json({ status: true, message: 'Choose payment type, Proceed to payment' });
+        return res.status(200).json({ status: true, message: 'Choose payment type, Proceed to payment',result :newDocument});
     } catch (err) {
         console.log(err);
         return res.status(500).json({ status: false, message: 'Error on the server' });
@@ -410,6 +410,7 @@ const createFeeCollection = async (req, res) => {
 
 const feePayment = async (req, res) => {
     try {
+        console.log(req.params,'---params')
         const result = await FeeCollection.findOne({ 'name': req.params.name }).lean();
         console.log(result, '---res');
         return res.status(200).json({ 'status': true, 'result': result });

@@ -5,12 +5,18 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEllipsis, faPencil, faTags, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { viewStudent, deleteStudent } from '../actions/userAction';
 
+//components
+import StudentInfo from './components/StudentInfo';
 //lib
 import toastAlert from '../lib/toast';
-
 const Students = () => {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState();
   const [IMAGE_URL, setIMAGE_URL] = useState('');
+  const [showStudentInfo, toggleStudentInfo] = useState(false);
+  const [clickedStudentDetails, setStudentDetails] = useState({});
+  const [userSearchInput, setUserSearchInput] = useState("");
+
+  console.log(data)
 
   //navigate
   const navigate = useNavigate();
@@ -36,7 +42,9 @@ const Students = () => {
     try {
       let { status, result, imageUrl } = await viewStudent();
       if (status === true) {
-        setData(result)
+        const studentData = await result.filter(each => each.name.toLowerCase().includes(userSearchInput.toLowerCase()))
+
+        setData(studentData)
         setIMAGE_URL(imageUrl);
       }
     } catch (err) {
@@ -46,13 +54,26 @@ const Students = () => {
 
   useEffect(() => {
     getData();
-  }, []);
+  }, [userSearchInput]);
 
   const editstudent = (id) => {
     navigate('/student-edit/' + id)
   }
 
+  const handleStudentInfo = (id) => {
+    const studentDetails = data.find(eachItem => eachItem.studentId === id);
 
+    if (studentDetails) {
+      setStudentDetails(studentDetails)
+      toggleStudentInfo(true)
+    } 
+  }
+
+  const handleSearchInput = (event) => {
+      setUserSearchInput(event.target.value)
+  }
+  
+  let userSearchData = null;
   return (
     <div className="student-container">
       <Sidebar />
@@ -62,7 +83,7 @@ const Students = () => {
             <h4>Student Details</h4>
           </div>
           <div className="middle-header-right">
-            <input type="search" placeholder="search" />
+            <input type="search" placeholder="search" onChange={handleSearchInput} value={userSearchInput}/>
             <div className="dropdown filter">
               <img className="dropdown-toggle" data-bs-toggle="dropdown"
                 src="images/filter.png"
@@ -132,7 +153,7 @@ const Students = () => {
                         <a href={`${IMAGE_URL}/${item.photo}`} target="_blank">
                           <img src={`${IMAGE_URL}/${item.photo}`} alt="" />
                         </a>
-                        <span key={key}>{item.name}</span>
+                        <span key={key} onClick={() => handleStudentInfo(item.studentId)}>{item.name}</span>
                       </td>
                       <td>{item.studentId}</td>
                       <td>
@@ -178,31 +199,7 @@ const Students = () => {
           </table>
         </div>
       </div>
-      <div className="student-right">
-        <div className="std-personal-info" id="information">
-          <div className="std-image">
-            <img src="images/std.png" alt="" />
-          </div>
-          <div className="std-name">
-            <span>JHON DEO</span>
-          </div>
-          <div className="std-history">
-            <div className="adrs">
-              <i className="fa fa-envelope-o" />
-              <span>kajope5182@gmail.com</span>
-            </div>
-            <div className="adrs">
-              <i className="fa fa-phone" />
-              <span>(+91)33757005467</span>
-            </div>
-            <div className="adrs">
-              <i className="fa fa-address-card-o" />
-              <span>2239 Hog Camp Road Schaumburg</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
+      {showStudentInfo && <StudentInfo IMAGE_URL={IMAGE_URL} studentDetails={clickedStudentDetails} toggleStudentInfo={toggleStudentInfo} />}
     </div>
   );
 };

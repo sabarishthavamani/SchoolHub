@@ -26,7 +26,7 @@ const Sidebar = () => {
                 background: 'linear-gradient(to right,#fde4cb,#fcfad3)'
               } : null}>
             <div className="menu-bar">
-              <img src={`${process.env.PUBLIC_URL}/images/grey-file.png`} />
+            {isLinkActive('/newadmission') ? <img src={`${process.env.PUBLIC_URL}/images/file.png`} /> : <img src={`${process.env.PUBLIC_URL}/images/grey-file.png`} />}
               <NavLink to='/newadmission' className={`mysidebar ${isLinkActive('/newadmission') ? 'activemysidebar' : null}`}>NewAdmission</NavLink>
             </div>
 
@@ -35,7 +35,7 @@ const Sidebar = () => {
               background: 'linear-gradient(to right,#fde4cb,#fcfad3)'
             } : null}> 
             <div className="menu-bar" >
-              <img src={`${process.env.PUBLIC_URL}/images/person.png`} alt="" />
+            {isLinkActive('/students') ?  <img src= {`${process.env.PUBLIC_URL}/images/blue-student.png`} alt="" />  :  <img src= {`${process.env.PUBLIC_URL}/images/edu.png`} alt="" />}
               <NavLink to='/students' className={`mysidebar ${isLinkActive('/students') ? 'activemysidebar' : null}`}>Students</NavLink>
             </div>
           </li>
@@ -43,7 +43,7 @@ const Sidebar = () => {
               background: 'linear-gradient(to right,#fde4cb,#fcfad3)'
             } : null}>
             <div className="menu-bar" >
-              <img src={`${process.env.PUBLIC_URL}/images/fee.png`} alt="" />
+            {isLinkActive('/feecollection') ? <img src={`${process.env.PUBLIC_URL}/images/blue-fee.png`} alt="" /> :<img src={`${process.env.PUBLIC_URL}/images/fee.png`} alt="" /> }
               <NavLink to='/feecollection' className={`mysidebar ${isLinkActive('/feecollection') ? 'activemysidebar' : null}`}>Fee Collection</NavLink>
             </div>
           </li>
@@ -51,10 +51,16 @@ const Sidebar = () => {
               background: 'linear-gradient(to right,#fde4cb,#fcfad3)'
             } : null}>
             <div className="menu-bar">
-              <img src={`${process.env.PUBLIC_URL}/images/setup.png`} alt="" />
+             {isLinkActive('/feesetup') ? <img src={`${process.env.PUBLIC_URL}/images/blue-setup.png`} alt="" /> : <img src={`${process.env.PUBLIC_URL}/images/setup.png`} alt="" /> }
               <NavLink to='/feesetup' className={`mysidebar ${isLinkActive('/feesetup') ? 'activemysidebar' : null}`}>Fee Setup</NavLink>
             </div>
           </li>
+          <li style={isLinkActive('/teacher') || isLinkActive('/teacherview')  ? {
+              background: 'linear-gradient(to right,#fde4cb,#fcfad3)'
+            } : null}>
+            <div className="menu-bar" >
+           {isLinkActive ('/teacher') ? <img src={`${process.env.PUBLIC_URL}/images/blue-contact.png`} alt="" /> : <img src={`${process.env.PUBLIC_URL}/images/person.png`} alt="" />}
+            <NavLink to='/teacher' className={`mysidebar ${isLinkActive('/teacher') ? 'activemysidebar' : null}`}>Teacher</NavLink><i class="fa fa-caret-down caret"></i></div></li>
         </ul>
       </div>
       <div className="part-two">

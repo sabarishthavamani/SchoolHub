@@ -242,4 +242,59 @@ export const feeCollection = async (data) => {
         }
     }
 }
+export const feesPaid = async (data) => {
 
+    try {
+        let respData = await axios({
+            'url': '/feespaid',
+            'method': 'post',
+            'data':data
+        })
+        return {
+            'status': respData.data.status,
+            'message': respData.data.message,
+       
+        }
+    } catch (err) {
+      console.log(err)
+    }
+}
+export const registerTeacher = async (formData) => {
+
+    try {
+        let respData = await axios({
+            'url': '/teacheradmission',
+            'method': 'post',
+            'data': formData
+        })
+        return {
+            'status': respData.data.status,
+            'message': respData.data.message,
+        }
+    } catch (err) {
+        return {
+            'status': err.response.data.status,
+            'message': err.response.data.message,
+            'errors': err.response.data.errors
+        }
+    }
+}
+export const viewTeacher = async () => {
+
+    try {
+        let respData = await axios({
+            'url': '/viewteacher',
+            'method': 'get',
+        })
+        return {
+            'status': respData.data.status,
+            'result': respData.data.result,
+            'imageUrl': respData.data.imageUrl,
+        }
+    } catch (err) {
+        return {
+            'status': err.response.data.status,
+            'message': err.response.data.message,
+        }
+    }
+}

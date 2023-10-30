@@ -2,6 +2,11 @@ import React, { useEffect, useState } from 'react';
 import Sidebar from './components/sidebar';
 import { useNavigate, useLocation } from 'react-router-dom';
 import PaymentSummary from './components/paymentsummary';
+import { feesPaid } from '../actions/userAction';
+
+import toastAlert from '../lib/toast';
+
+
 
 const FeePay1 = () => {
   const navigate = useNavigate();
@@ -36,7 +41,37 @@ const FeePay1 = () => {
     // Calculate the button text when amountPayable changes
     setButtonText(`Pay ₹${(amountPayable + 2.24).toFixed(2)}`);
   }, [amountPayable]);
-  
+  const dueAmount = data.dueamount;
+  const Name = data.name;
+  const StudenId=data.studentId;
+  const total = updatedDueAmount + 2.24;
+  const amountpaid = amountPayable;
+  const isButtonDisable = (feeConcession > 0);
+  const handleSubmit = async () => {
+    try {
+
+        let data = {
+            name: Name,
+            studentId: StudenId,
+            dueamount:  dueAmount ,
+            total :total,
+            amountpaid:amountpaid,
+        }
+        let { status, message } = await feesPaid(data)
+        if (status === true) {
+          console.log("API Response:", status, message);
+            toastAlert('success', message)
+            navigate('/feecomplete')              
+        } else if (status === false) {
+        if (message) {
+                toastAlert('error', message)
+            }
+        }
+
+    } catch (err) {
+        console.log(err, '...err')
+    }
+}
   return (
     <div className="fee-collection">
       <Sidebar />
@@ -89,7 +124,7 @@ const FeePay1 = () => {
     <span>Save card details</span>
   </div>
             <div className="pay-button">
-              <button type="button">{buttonText}</button>
+              <button type="button" onClick={()=>handleSubmit()}>{buttonText}</button>
             </div>
             <div className="pay-details">
               <p>
@@ -117,9 +152,10 @@ const FeePay1 = () => {
                 type="Number"
                 placeholder="Free concession or discount code"
                 value={feeConcession}
-                onChange={(e) => setFeeConcession(parseFloat(e.target.value))} // Parse as a float
+                onChange={(e) => setFeeConcession(parseFloat(e.target.value))}
               />
-              <button className="apply-btn" onClick={handleApply}>
+              <button className="apply-btn" onClick={handleApply} disabled={!isButtonDisable}
+                style={{ backgroundColor: isButtonDisable ? '#ff80a6' : 'gray' }}>
                 Apply
               </button>
             </div>

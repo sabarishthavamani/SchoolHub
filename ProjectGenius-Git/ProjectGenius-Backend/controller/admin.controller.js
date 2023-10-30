@@ -6,9 +6,9 @@ const jwt = require('jsonwebtoken');
 const Admin = require('../models/admin');
 const Admission = require('../models/admission');
 const FeeSetup = require('../models/feesetup');
-const FeeCollection= require('../models/feescollection');
-
-
+const FeeCollection = require('../models/feescollection');
+const FeesPaid = require('../models/feespaid')
+const TeacherAdmission = require('../models/teacheradmission')
 
 // config
 const config = require('../config');
@@ -342,17 +342,17 @@ const updateStudent = async (req, res) => {
 }
 const createFeeSetup = async (req, res) => {
     try {
-    
+
         let newDocument = new FeeSetup({
-            'grade':req.body.grade,
+            'grade': req.body.grade,
             'term1': req.body.term1,
             'term2': req.body.term2,
             'term3': req.body.term3,
-             
+
         })
         await newDocument.save();
-        console.log(newDocument,'--doc')
-        return res.status(200).json({ 'status': true, 'message': 'Feesetup saved successfully'})
+        console.log(newDocument, '--doc')
+        return res.status(200).json({ 'status': true, 'message': 'Feesetup saved successfully' })
     } catch (err) {
         console.log(err);
         return res.status(500).json({ 'status': false, 'message': 'Error on the server' });
@@ -361,8 +361,8 @@ const createFeeSetup = async (req, res) => {
 const findFeeSetup = async (req, res) => {
     try {
         let newDocument = await FeeSetup.find({}).lean();
-        console.log(newDocument,'---fees')
-        return res.status(200).json({ 'status': true, 'result':newDocument })
+        console.log(newDocument, '---fees')
+        return res.status(200).json({ 'status': true, 'result': newDocument })
     } catch (err) {
         console.log(err);
         return res.status(500).json({ 'status': false, 'message': 'Error on the server' });
@@ -401,16 +401,36 @@ const createFeeCollection = async (req, res) => {
 
         await newDocument.save();
         console.log(newDocument, '--doc');
-        return res.status(200).json({ status: true, message: 'Choose payment type, Proceed to payment',result :newDocument});
+        return res.status(200).json({ status: true, message: 'Choose payment type, Proceed to payment', result: newDocument });
     } catch (err) {
         console.log(err);
         return res.status(500).json({ status: false, message: 'Error on the server' });
     }
 };
 
+const feesPaid = async (req, res) => {
+    try {
+        console.log(req.body,'----bodyyy')
+        const balanceamount = req.body.total-req.body.amountpaid
+        const newDocument = new FeesPaid({
+            name: req.body.name,
+            studentId: req.body.studentId,
+            dueamount: req.body.dueamount,
+            total: req.body.total,
+            amountpaid: req.body.amountpaid,
+            balanceamount :  balanceamount,
+        });
+        await newDocument.save();
+        return res.status(200).json({ 'status': true, 'message': 'Amount Paid successfully' });
+    } catch (err) {
+        console.log(err);
+        return res.status(500).json({ 'status': false, 'message': 'Error on the server' });
+    }
+}
+
 const feePayment = async (req, res) => {
     try {
-        console.log(req.params,'---params')
+        console.log(req.params, '---params')
         const result = await FeeCollection.findOne({ 'name': req.params.name }).lean();
         console.log(result, '---res');
         return res.status(200).json({ 'status': true, 'result': result });
@@ -420,6 +440,101 @@ const feePayment = async (req, res) => {
     }
 }
 
+const registerTeacher = async (req, res) => {
+    let checkprimaryPhone = await TeacherAdmission.findOne({ 'phoneNumber': req.body.phoneNumber }, { 'phoneNumber': 1 }).lean();
+    if (!isEmpty(checkprimaryPhone)) {
+        return res.status(400).json({ 'status': false, 'errors': { 'phoneNumber': 'Phone Nunmber already exist' },'message': 'Same Mobile Number  already registered,please go and check in previous page' })
+    }
+    let checkemergencyPhone = await TeacherAdmission.findOne({ 'emergencycontactNumber': req.body.emergencycontactNumber }, { 'emergencycontactNumber': 1 }).lean();
+    if (!isEmpty(checkemergencyPhone)) {
+        return res.status(400).json({ 'status': false, 'errors': { 'emergencycontactNumber': 'Phone Number already exist' },'message': 'Same Mobile Number  already registered,please go and check in previous page' })
+    }
+    let checkwhatsappNo = await TeacherAdmission.findOne({ 'whatsappNumber': req.body.whatsappNumber }, { 'whatsappNumber': 1 }).lean();
+    if (!isEmpty(checkwhatsappNo)) {
+        return res.status(400).json({ 'status': false, 'errors': { 'whatsappNumber': 'whatsapp Number already exist' }, })
+    }
+    let checkfatherphonenumber = await TeacherAdmission.findOne({ 'fatherphonenumber': req.body.fatherphonenumber }, { 'fatherphonenumber': 1 }).lean();
+    if (!isEmpty(checkfatherphonenumber)) {
+        return res.status(400).json({ 'status': false, 'errors': { 'fatherphonenumber': 'Same Phone Number already exist' } })
+    }
+    let checkmotherphonenumber = await TeacherAdmission.findOne({ 'motherphonenumber': req.body.motherphonenumber }, { 'motherphonenumber': 1 }).lean();
+    if (!isEmpty(checkmotherphonenumber)) {
+        return res.status(400).json({ 'status': false, 'errors': { 'motherphonenumber': 'Same Phone Number already exist' } })
+    }
+    let checkaadhaarNo = await TeacherAdmission.findOne({ 'aadhaarNumber': req.body.aadhaarNumber }, { 'aadhaarNumber': 1 }).lean();
+    if (!isEmpty(checkaadhaarNo)) {
+        return res.status(400).json({ 'status': false, 'errors': { 'aadhaarNumber': 'Aadhaar Number already exist' }, 'message': 'Same Aadhaar Number  already registered,please go and check in previous page' })
+    }
+    let checkEmail = await TeacherAdmission.findOne({ 'email': req.body.email }, { 'email': 1 }).lean();
+    if (!isEmpty(checkEmail)) {
+        return res.status(400).json({ 'status': false, 'errors': { 'email': 'Email Id already exist' }, 'message': 'Same EmailId  already registered,please go and check in previous page' })
+    }
+    let checkAddress = await TeacherAdmission.findOne({ 'permanentaddress': req.body.permanentaddress }, { 'permanentaddress': 1 }).lean();
+    if (!isEmpty(checkAddress)) {
+        return res.status(400).json({ 'status': false, 'errors': { 'permanentaddress': 'permanentaddress  already exist' } })
+    }
+    let checkAddress2 = await TeacherAdmission.findOne({ 'temporaryaddress': req.body.temporaryaddress }, { 'temporaryaddress': 1 }).lean();
+    console.log(checkAddress2, '----add')
+    if (!isEmpty(checkAddress2)) {
+        return res.status(400).json({ 'status': false, 'errors': { 'temporaryaddress': 'temporaryaddress  already exist' } })
+    }
+    const maxTeacher = await TeacherAdmission.findOne({}, { teacherId: 1 }).sort({ teacherId: -1 });
+    let nextTeacherId = 'T0001'; 
+
+    if (maxTeacher && maxTeacher.TeacherId) {
+        const currentMaxId = maxTeacher.TeacherId;
+        const seriesNumber = parseInt(currentMaxId.substring(1), 10) + 1;
+        nextTeacherId = `T${seriesNumber.toString().padStart(4, '0')}`;
+    }
+    const firstName = req.body.firstName;
+    const lastName = req.body.lastName;
+    // const surName = req.body.surName;
+
+    let FullName = `${firstName} ${lastName}`;
+
+    // if (surName !== undefined && surName !== "") {
+    //     FullName += ` ${surName}`;
+    // }
+
+
+    let newDoc = new TeacherAdmission({
+        'teacherId': nextTeacherId,
+        'name': FullName,
+        'dob': req.body.dob,
+        'age': req.body.age,
+        'experience':req.body.experience,
+        'email': req.body.email,
+        'teacherphoto': req.files.teacherphoto[0].filename,
+        'emergencycontactNumber': req.body.emergencycontactNumber,
+        'phoneNumber': req.body.phoneNumber,
+        'whatsappNumber': req.body.whatsappNumber,
+        'teachersignature': req.files.teachersignature[0].filename,
+        'vaccination': req.body.vaccination,
+        'placeofbirth': req.body.placeofbirth,
+        'aadhaarNumber': req.body.aadhaarNumber,
+        'permanentaddress': req.body.permanentaddress,
+        'temporaryaddress': req.body.temporaryaddress,
+        'bloodgroup': req.body.bloodgroup,
+        'higherqualification': req.body.higherqualification,
+        'teachingexperience': req.body.teachingexperience,
+        'teachingcertificates': req.body.teachingcertificates,
+        'subjects': req.body.subjects,
+        'fatherphonenumber': req.body.fatherphonenumber,
+        'motherphonenumber': req.body.motherphonenumber,
+        'currentSalary': req.body.currentSalary,     
+    })
+
+    await newDoc.save();
+    return res.status(200).json({ 'status': true, 'message': " Register successfully" })
+}
+const ViewTeacher = async (req,res) =>{
+    try {
+        const teacherView = await TeacherAdmission.find({}).lean();
+        return res.status(200).json({ 'status': true, 'result': teacherView, 'imageUrl': config.IMAGE.TEACHER_FILE_URL_PATH })
+    } catch (err) {
+        return res.status(500).json({ 'status': false, 'message': 'Error on server' })
+    }
+}
 module.exports = {
     adminLogin,
     verifyCode,
@@ -435,5 +550,8 @@ module.exports = {
     createFeeSetup,
     createFeeCollection,
     findFeeSetup,
-    feePayment
+    feePayment,
+    feesPaid,
+    registerTeacher,
+    ViewTeacher 
 };

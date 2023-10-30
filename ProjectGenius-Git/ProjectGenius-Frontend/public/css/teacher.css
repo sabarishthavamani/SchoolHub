@@ -343,6 +343,7 @@
 .tchr-info th {
     color: #979798;
     font-size: 11px;
+    padding-left: 35px;
 }
 .tchr-row {
     background: white;

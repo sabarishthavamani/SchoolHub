@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from './components/sidebar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEllipsis, faPencil, faTags, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faEllipsis,faSort } from '@fortawesome/free-solid-svg-icons';
 import { viewStudent, deleteStudent } from '../actions/userAction';
 
 //components
@@ -15,6 +15,8 @@ const Students = () => {
   const [showStudentInfo, toggleStudentInfo] = useState(false);
   const [clickedStudentDetails, setStudentDetails] = useState({});
   const [userSearchInput, setUserSearchInput] = useState("");
+  const [isAsc, setSortedData] = useState(true);
+  const [sortKey, setSortKey] = useState('');
 
   console.log(data)
 
@@ -74,13 +76,37 @@ const Students = () => {
   }
   
   let userSearchData = null;
+
+  const sortData = (key) => {
+    const sortedData = [...data].sort((a, b) => {
+      if (a[key] < b[key]) {
+        return isAsc ? -1 : 1;
+      }
+      if (a[key] > b[key]) {
+        return isAsc ? 1 : -1;
+      }
+      return 0;
+    });
+    setData(sortedData);
+  }
+
+  const handleSorting = (key) => {
+    if (sortKey === key) {
+      setSortedData(!isAsc)
+    } else {
+      setSortKey(key)
+      setSortedData(true)
+    }
+    sortData(key)
+  }
+
   return (
     <div className="student-container">
       <Sidebar />
       <div className="middle-content">
         <div className="middle-header">
-          <div className="middle-header-left">
-            <h4>Student Details</h4>
+          <div className="l-header">
+            <p>Student Details</p>
           </div>
           <div className="middle-header-right">
             <input type="search" placeholder="search" onChange={handleSearchInput} value={userSearchInput}/>
@@ -134,11 +160,15 @@ const Students = () => {
           <table className="std-info">
             <thead>
               <tr>
-                <th>Name </th>
+                <th>Name 
+                <button type="button" className='name-sort-btn' onClick={() => handleSorting('name')}><FontAwesomeIcon icon={faSort} /></button>
+                </th>
                 <th>Student ID</th>
                 <th>Grade</th>
                 <th>Contact Number</th>
-                <th>Admission Date</th>
+                <th>Admission Date
+                <button type="button" className='name-sort-btn' onClick={() => handleSorting('doj')}><FontAwesomeIcon icon={faSort} /></button>
+                </th>
                 <th>Due Amount</th>
                 <th>Edit</th>
               </tr>
@@ -150,9 +180,9 @@ const Students = () => {
                   return (
                     <tr className="std-row" >
                       <td className="profile">
-                        <a href={`${IMAGE_URL}/${item.photo}`} target="_blank">
-                          <img src={`${IMAGE_URL}/${item.photo}`} alt="" />
-                        </a>
+                        {/* <a href={`${IMAGE_URL}/${item.photo}`} target="_blank"> */}
+                          <img src={`${IMAGE_URL}/${item.photo}`} alt="" onClick={() => handleStudentInfo(item.studentId)} />
+                        {/* </a> */}
                         <span key={key} onClick={() => handleStudentInfo(item.studentId)}>{item.name}</span>
                       </td>
                       <td>{item.studentId}</td>

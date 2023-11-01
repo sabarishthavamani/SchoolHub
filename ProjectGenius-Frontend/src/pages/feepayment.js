@@ -3,12 +3,15 @@ import Sidebar from './components/sidebar';
 import { useNavigate, useLocation } from 'react-router-dom';
 import PaymentSummary from './components/paymentsummary';
 import { feesPaid } from '../actions/userAction';
+import CardPay from './components/CardPay';
+import UpiPay from './components/UpiPay';
+import CashPay from './components/CashPay';
 
 import toastAlert from '../lib/toast';
 
 
 
-const FeePay1 = () => {
+const FeePayment = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { data } = location.state || {};
@@ -16,6 +19,7 @@ const FeePay1 = () => {
   const [updatedDueAmount, setUpdatedDueAmount] = useState(data.dueamount);
   const [amountPayable, setAmountPayable] = useState(0); // State for Amount Payable
   const [buttonText, setButtonText] = useState('');
+  const [activeTab, setActiveTab] = useState('cardTab')
 
   useEffect(() => {
     // Calculate the initial button text when updatedDueAmount changes
@@ -45,7 +49,7 @@ const FeePay1 = () => {
   const Name = data.name;
   const StudenId=data.studentId;
   const total = updatedDueAmount + 2.24;
-  const amountpaid = amountPayable;
+  const amountpaid = (amountPayable + 2.24).toFixed(2);
   const isButtonDisable = (feeConcession > 0);
   const handleSubmit = async () => {
     try {
@@ -59,7 +63,6 @@ const FeePay1 = () => {
         }
         let { status, message } = await feesPaid(data)
         if (status === true) {
-          console.log("API Response:", status, message);
             toastAlert('success', message)
             navigate('/feecomplete')              
         } else if (status === false) {
@@ -72,69 +75,49 @@ const FeePay1 = () => {
         console.log(err, '...err')
     }
 }
+
+const handleTab = (event) => {
+  setActiveTab(event.target.value);
+}
+
+const renderPaymentForm = () => {
+  switch (activeTab) {
+      case 'cardTab':
+          return <CardPay updatedDueAmount={updatedDueAmount} setButtonText={setButtonText} amountPayable={amountPayable} setAmountPayable={setAmountPayable} handleAmountPayableChange={handleAmountPayableChange} buttonText={buttonText} handleSubmit={handleSubmit}  />;
+      case 'upiTab':
+          return <UpiPay />;
+      case 'cashTab':
+          return <CashPay amountPayable={amountPayable} setButtonText={setButtonText} setAmountPayable={setAmountPayable} handleAmountPayableChange={handleAmountPayableChange} buttonText={buttonText} handleSubmit={handleSubmit}/>;
+      default:
+          return null;
+  }
+}
+
   return (
     <div className="fee-collection">
       <Sidebar />
       <div className="payment-content">
-        <div className="payment">
-          <form action="" className="pay-form">
+          <div className="payment">
             <h3>Payment</h3>
-            <label style={{ paddingTop: 25 }}>Pay With:</label>
-  <div className="paywith">
-    <div className="pay">
-      <input type="radio" selected />
-      <span>
-        Credit/Debit<span className="card1">Card</span>
-      </span>
-    </div>
-    <div className="pay">
-      <input type="radio"  />
-      <span>UPI</span>
-    </div>
-    <div className="pay">
-      <input type="radio" />
-      <span>Cash</span>
-    </div>
-  </div>
-  <div className="pay-part">
-              <label>Amount Payable</label>
-              <input
-                className="card"
-                type="Number"
-                value={amountPayable} // Bind to the state variable
-                onChange={handleAmountPayableChange} // Handle input changes
-              />
+                <label style={{ paddingTop: 25 }}>Pay With:</label>
+                <div className="paywith">
+                <div className="pay">
+                    <input type="radio" id='Credit/Debit' value="cardTab" name="pay" onChange={handleTab} checked={activeTab === 'cardTab'} />
+                    <label htmlFor='Credit/Debit'>
+                    Credit/Debit<span className="card1">Card</span>
+                    </label>
+                </div>
+                <div className="pay">
+                    <input type="radio" id='upi' name="pay" value="upiTab" onChange={handleTab} checked={activeTab === 'upiTab'} />
+                    <label htmlFor='upi'>UPI</label>
+                </div>
+                <div className="pay">
+                    <input type="radio" id='cash' name="pay" value="cashTab" onChange={handleTab} checked={activeTab === 'cashTab'} />
+                    <label htmlFor='cash'>Cash</label>
+                </div>
+                </div>
+            {renderPaymentForm()}
             </div>
-  <div className="pay-part">
-    <label>Card Number</label>
-    <input className="card" type="text" placeholder="1234 5678 9101 1121" />
-  </div>
-  <div className="exp-cv">
-    <div className="pay-box">
-      <label>Expiration Date</label>
-      <input type="date" />
-    </div>
-    <div className="pay-box">
-      <label>CV</label>
-      <input type="text" placeholder={123} />
-    </div>
-  </div>
-  <div className="save">
-    <input type="checkbox" name="save" defaultValue="save" />
-    <span>Save card details</span>
-  </div>
-            <div className="pay-button">
-              <button type="button" onClick={()=>handleSubmit()}>{buttonText}</button>
-            </div>
-            <div className="pay-details">
-              <p>
-                Your personal data will be used to process your order, support your
-                experience throughout this website, and for other purposes described
-                in our privacy policy.
-              </p>
-            </div>
-          </form>
-        </div>
         <div className="payment-summary">
           <div className="summary-content">
             <h3>Payment Summary</h3>
@@ -185,4 +168,4 @@ const FeePay1 = () => {
   );
 };
 
-export default FeePay1;
+export default FeePayment;

@@ -1,78 +1,108 @@
-import React from 'react'
+import React,{useState} from 'react'
 import { NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSignOut } from '@fortawesome/free-solid-svg-icons';
 import { removeAuthToken } from '../../lib/localstorage';
 
 const Sidebar = () => {
+
+  const [showTeacherMenu, toggleTeacherMenu] = useState(false);
+
   const navigate = useNavigate()
   const { pathname } = useLocation()
   const isLinkActive = (linkPath) => {
     return pathname === linkPath;
-  };
+  };  
+
   return (
     <div className="side-bar">
       <div className="part-one">
         <div className="logo-content">
           <div className="logo">
-            <img src="images/Polygon 3.png" />
+          <img src={`${process.env.PUBLIC_URL}/images/Polygon 3.png`} alt="" />
             <span>Genius</span>
           </div>
         </div>
         <ul>
-          <li>
-            <div className="menu-bar" style={isLinkActive('/newadmission') ?
+          <li style={isLinkActive('/newadmission') ?
               {
-                background: 'linear-gradient(to right,#fde4cb,#fcfad3)',
-                width: '100%',
-                height: '45px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              } : null}
-            >
-              <img src="images/grey-file.png" />
-              <NavLink to='/newadmission' className="mysidebar">NewAdmission</NavLink>
+                background: 'linear-gradient(to right,#fde4cb,#fcfad3)'
+              } : null}>
+            <div className="menu-bar">
+            {isLinkActive('/newadmission') ? <img src={`${process.env.PUBLIC_URL}/images/file.png`} /> : <img src={`${process.env.PUBLIC_URL}/images/grey-file.png`} />}
+              <NavLink to='/newadmission' className={`mysidebar ${isLinkActive('/newadmission') ? 'activemysidebar' : null}`}>NewAdmission</NavLink>
             </div>
 
           </li>
-          <li>
-            <div className="menu-bar" style={isLinkActive('/students') ? {
-              background: 'linear-gradient(to right,#fde4cb,#fcfad3)', width: '100%',
-              height: '45px', display: 'flex', alignItems: 'center', justifyContent: 'center'
-            } : null}>
-              <img src="images/person.png" alt="" />
-              <NavLink to='/students' className="mysidebar">Students</NavLink>
+          <li style={isLinkActive('/students') ? {
+              background: 'linear-gradient(to right,#fde4cb,#fcfad3)'
+            } : null}> 
+            <div className="menu-bar" >
+            {isLinkActive('/students') ?  <img src= {`${process.env.PUBLIC_URL}/images/blue-student.png`} alt="" />  :  <img src= {`${process.env.PUBLIC_URL}/images/edu.png`} alt="" />}
+              <NavLink to='/students' className={`mysidebar ${isLinkActive('/students') ? 'activemysidebar' : null}`}>Students</NavLink>
             </div>
           </li>
-          <li>
-            <div className="menu-bar" style={isLinkActive('/feecollection') || isLinkActive('/feepay1') || isLinkActive('/feepay2') || isLinkActive('/feepay3') || isLinkActive('/feecomplete') ? {
-              background: 'linear-gradient(to right,#fde4cb,#fcfad3)', width: '100%',
-              height: '45px', display: 'flex', alignItems: 'center', justifyContent: 'center'
+          <li style={isLinkActive('/feecollection') || isLinkActive('/feepayment/:name') || isLinkActive('/feecomplete') ? {
+              background: 'linear-gradient(to right,#fde4cb,#fcfad3)'
             } : null}>
-              <img src="images/fee.png" alt="" />
-              <NavLink to='/feecollection' className="mysidebar">Fee Collection</NavLink>
+            <div className="menu-bar" >
+            {isLinkActive('/feecollection') ||  isLinkActive('/feepayment/:name') || isLinkActive('/feecomplete') ? <img src={`${process.env.PUBLIC_URL}/images/blue-fee.png`} alt="" /> :<img src={`${process.env.PUBLIC_URL}/images/fee.png`} alt="" /> }
+              <NavLink to='/feecollection' className={`mysidebar ${isLinkActive('/feecollection') ||  isLinkActive('/feepayment/:name') || isLinkActive('/feecomplete') ? 'activemysidebar' : null}`}>Fee Collection</NavLink>
             </div>
           </li>
-          <li>
-            <div className="menu-bar" style={isLinkActive('/feesetup') ? {
-              background: 'linear-gradient(to right,#fde4cb,#fcfad3)', width: '100%',
-              height: '45px', display: 'flex', alignItems: 'center', justifyContent: 'center'
+          <li style={isLinkActive('/feesetup') ? {
+              background: 'linear-gradient(to right,#fde4cb,#fcfad3)'
             } : null}>
-              <img src="images/setup.png" alt="" />
-              <NavLink to='/feesetup' className="mysidebar">Fee Setup</NavLink>
+            <div className="menu-bar">
+             {isLinkActive('/feesetup') ? <img src={`${process.env.PUBLIC_URL}/images/blue-setup.png`} alt="" /> : <img src={`${process.env.PUBLIC_URL}/images/setup.png`} alt="" /> }
+              <NavLink to='/feesetup' className={`mysidebar ${isLinkActive('/feesetup') ? 'activemysidebar' : null}`}>Fee Setup</NavLink>
             </div>
           </li>
+          <li
+      style={
+        isLinkActive('/teacher')  ? {
+              background: 'linear-gradient(to right,#fde4cb,#fcfad3)'
+            }: null} >
+      <div className="menu-bar">
+        {isLinkActive('/teacher') ? (
+          <img src={`${process.env.PUBLIC_URL}/images/blue-contact.png`} alt="" />
+        ) : (
+          <img src={`${process.env.PUBLIC_URL}/images/person.png`} alt="" />
+        )}
+        <NavLink to='/teacher' className={`mysidebar ${isLinkActive('/teacher')  ? 'activemysidebar' : null}`}>Teacher</NavLink>
+           <i className="fa fa-caret-down caret" onClick={() => toggleTeacherMenu(!showTeacherMenu)}
+           ></i>
+      </div>
+    </li>
+    <ul className='t-drop' style={showTeacherMenu ? {display : 'block'}: {display: 'none'}} >
+            <li>
+            <div className="menu-bar">
+              <NavLink to="/teacherview" >
+                TeacherList
+              </NavLink>
+              </div>
+            </li>
+            <li>
+            <div className="menu-bar">
+              <NavLink to="/teacherdetails" >
+                TeacherDetails
+              </NavLink>
+              </div>
+            </li>
+          </ul>
         </ul>
       </div>
       <div className="part-two">
-        <img src="images/Profile photo.png" alt="" />
+        <img src={`${process.env.PUBLIC_URL}/images/Profile photo.png`} alt="" />
         <div>
           <span>Sam Smith</span>
           <br />
           <span style={{ color: "#ccc" }}>Admin</span>
         </div>
-        <button data-bs-toggle="tooltip" title="Logout!" data-bs-placement="right" className='adminlogout' onClick={() => { removeAuthToken(); navigate('/login') }}><FontAwesomeIcon icon={faSignOut} /></button>
+        <button data-bs-toggle="tooltip" title="Logout!" data-bs-placement="right" className='adminlogout' onClick={()=>{
+          removeAuthToken()
+          navigate('/login')
+        }}><FontAwesomeIcon icon={faSignOut} /></button>
       </div>
     </div>
   )

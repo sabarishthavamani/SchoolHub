@@ -7,18 +7,18 @@ import ConditionRoute from './Routes/conditionroute';
 //pages
 import Login from './pages/login';
 import Verify from './pages/passcodeverify';
-import NewAdmission from './pages/newadmission';
-import Students from './pages/students';
+import NewAdmission from './pages/studentadmission';
+import Students from './pages/studentlist';
 import StudentEdit from './pages/studentedit';
 import FeeCollection from './pages/feecollection';
-import FeePay1 from './pages/feepay1';
-import FeePay2 from './pages/feepay2';
-import FeePay3 from './pages/feepay3';
 import FeeComplete from './pages/feesuccession';
 import FeeSetup from './pages/feesetup';
-
-
-
+import Teacher from './pages/teacheradmission';
+import TeacherList from './pages/teacherlist';
+import TeacherEdit from './pages/teacheredit';
+import TeacherDetail from './pages/teacherdetail';
+import TimeTable from './pages/teachertimetable';
+import FeePayment from './pages/feepayment';
 
 function App() {
   return (
@@ -46,19 +46,28 @@ function App() {
           <Route path="/feecollection" element={<ConditionRoute type="private"><FeeCollection /></ConditionRoute>} />
         </Routes>
         <Routes>
-          <Route path="/feepay1" element={<ConditionRoute type="private"><FeePay1 /></ConditionRoute>} />
-        </Routes>
-        <Routes>
-          <Route path="/feepay2" element={<ConditionRoute type="private"><FeePay2 /></ConditionRoute>} />
-        </Routes>
-        <Routes>
-          <Route path="/feepay3" element={<ConditionRoute type="private"><FeePay3 /></ConditionRoute>} />
+          <Route path="/feepayment/:name" element={<ConditionRoute type="private"><FeePayment /></ConditionRoute>} />
         </Routes>
         <Routes>
           <Route path="/feecomplete" element={<ConditionRoute type="private"><FeeComplete /></ConditionRoute>} />
         </Routes>
         <Routes>
           <Route path="/feesetup" element={<ConditionRoute type="private"><FeeSetup /></ConditionRoute>} />
+        </Routes>
+        <Routes>
+          <Route path="/teacher" element={<ConditionRoute type="private"><Teacher /></ConditionRoute>} />
+        </Routes>
+        <Routes>
+          <Route path="/teacherview" element={<ConditionRoute type="private"><TeacherList /></ConditionRoute>} />
+        </Routes>
+        <Routes>
+          <Route path="/teacher-edit/:Id" element={<ConditionRoute type="private"><TeacherEdit /></ConditionRoute>} />
+        </Routes>
+        <Routes>
+          <Route path="/teacherdetails" element={<ConditionRoute type="private"><TeacherDetail /></ConditionRoute>} />
+        </Routes>
+        <Routes>
+          <Route path="/teachertimetable" element={<ConditionRoute type="private"><TimeTable /></ConditionRoute>} />
         </Routes>
       </BrowserRouter>
     </div>

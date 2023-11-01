@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from './components/navbar';
 import Sidebar from './components/sidebar';
-import AdmissionFormOne from './components/AdmissionFormOne'
-import AdmissionFormTwo from './components/AdmissionFormTwo';
-import AdmissionFormFinal from './components/AdmissionFormFinal';
+import AdmissionFormOne from './components/studentpersonal'
+import AdmissionFormTwo from './components/studentcontact';
+import AdmissionFormFinal from './components/studenthistory';
 
 
 //import actions

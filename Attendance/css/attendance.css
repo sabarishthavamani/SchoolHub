@@ -1,0 +1,364 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+*{
+    margin:0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'poppins';
+}
+.attendance {
+    width: 100%;
+    display: flex;
+    flex-direction:column;
+}
+.genius-header{
+    position: relative;
+    width: 100%;
+    padding: 8px 0px;
+    display: flex;
+    justify-content: space-between;
+    box-shadow: 0px 4px 8px #e8ecf7;
+}
+.genius-logo{
+    position: relative;
+    margin-left: 30px;
+}
+.genius-logo img {
+    width: 25px;
+}
+.genius-logo span {
+    position: absolute;
+    left: 2px;
+    top: 7px;
+    color: blue;
+    font-size: 19px;
+    font-weight: 900;
+}
+.scl-std {
+    margin-right: 30px;
+}
+.scl-std span {
+    color: #012970;
+    font-weight: 600;
+    font-size: 14px;
+
+}
+.attendance-content {
+    width: 100%;
+    min-height:550px;
+    display: flex;
+}
+.side-menu-content {
+    position: relative;
+    width: 22%;
+    box-shadow: 4px 0px 8px #e8ecf7;
+}
+.att-part-one {
+    margin-top: 20px;
+}
+.att-menu {
+    width: 100%;
+}
+.att-menu span {
+    color: #899bbd;
+    font-size: 12px;
+    margin-left: 5px;
+}
+.am {
+    width: 100%;
+    padding: 7px;
+    margin: 0;
+}
+.am a {
+   text-decoration: none;
+   color: #012970;
+   font-weight: 600;
+   font-size: 14px;
+   margin-left: 13px;
+}
+.report {
+    margin-left: 10px!important;
+}
+.child {
+    margin-left: 15px!important;
+}
+.am a img {
+    margin-right: 15px;
+}
+.att-sheet {
+    width: 78%;
+    background-color: #f6f9ff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    justify-content: space-evenly;
+}
+.class-details {
+    width: 80%;
+    min-height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    justify-content: space-evenly;
+    background: #fcfad3;
+    border-radius: 7px;
+    padding: 10px 0px 20px 0px;
+}
+.std-class {
+    width: 100px;
+    display: flex;
+    flex-direction: column;
+    color: #858585;
+}
+.std-class select,input {
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+}
+.sheet-button {
+    padding: 6px 12px;
+    border-radius: 6px;
+    color: white;
+    background: #ff3672;
+    border: none;
+    font-size: 13px;
+    cursor: pointer;
+}
+.att-record {
+    width: 80%;
+    min-height: 300px;
+    background: #ffffff;
+    padding: 25px 0px;
+    border-radius: 7px;
+}
+.sheet {
+    width: 100%;
+    text-align: center;
+}
+.sheet-head {
+    text-align: center;
+    color: #2b4c87;
+    font-size: 13px;
+    background: #f9f6b8;
+}
+.sheet-head th {
+    padding: 7px 0px;
+}
+.sheet-body {
+    color: #7d7d7d;
+}
+.sheet-body td {
+    padding: 10px 0px;
+    border-bottom: 1px solid #d9d9d9;
+    font-size: 14px;
+}
+.present {
+    color: #0fa961;
+    background-color: #e3fff2;
+    padding: 3px 12px;
+    border-radius: 10px;
+    border: 1px solid #2eca6a;
+    font-size: 13px;
+}
+.absent {
+    color: #ff0000;
+    background-color: #ffe8e8;
+    padding: 3px 12px;
+    border-radius: 10px;
+    border: 1px solid #fa7e7e;
+    font-size: 13px;
+}
+.sheet-submit {
+    color: #ffffff;
+    padding: 7px 15px;
+    border-radius: 6px;
+    background: #ff3672;
+    border: none;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+.att-record p:first-child {
+    color: #012970;
+    font-weight: 600;
+    margin-left: 25px;
+}
+.p-a {
+    padding: 1px 6px;
+    border: 1px solid #ccc;
+    background: white;
+    border-radius: 7px;
+}
+.prs {
+    color: #0fa961;
+    background-color: #e3fff2;
+    border: 1px solid #2eca6a;
+    margin-right: 5px;
+}
+.abs {
+    color: #ff0000;
+    background-color: #ffe8e8;
+    border: 1px solid #fa7e7e;
+}
+.lab {
+    position: relative;
+    cursor: pointer;
+    top: 3px;
+}
+.lab input {
+    appearance: none;
+    display: none;
+}
+.lab span {
+    position: relative;
+    display: inline-block;
+    height: 20px;
+    width: 20px;
+    background:transparent;
+}
+.lab span::before {
+    position: absolute;
+    content: '';
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: #ccc;
+    transition: .5s;
+    box-shadow: 0 -19px 0 #ccc;
+}
+.lab span::after {
+    position: absolute;
+    content: '';
+    bottom: 0;
+    left: 0;
+    width: 2px;
+    height: 100%;
+    background: #ccc;
+    transition: .5s;
+    box-shadow: 18px 0 0 #ccc;
+}
+.lab input:checked ~ span.checking::before {
+    background: #0f0;
+    box-shadow: 0 0 0 transparent;
+}
+.lab input:checked ~ span.checking::after {
+    background: #0f0;
+    box-shadow: 0 0 0 transparent;
+    height: 50%;
+}
+.lab input:checked ~ span.checking {
+    transform: rotate(-45deg) translate(5px,-4px);
+}
+.lab input:checked ~ span.cross::before {
+    background: #ff0000;
+    box-shadow: 0 0 0 transparent;
+    transform: rotate(-45deg) translate(7px,-6px);
+}
+.lab input:checked ~ span.cross::after {
+    background: #ff0000;
+    box-shadow: 0 0 0 transparent;
+    transform: rotate(-45deg) translate(7px,6px);
+}
+@media(max-width:800px){
+    .am a {
+        font-size: 12px;
+        margin-left: 4px;
+    }
+    .report {
+        margin-left: 1px!important;
+    }
+    .child {
+        margin-left: 6px!important;
+    }
+}
+/* Student Mark List*/
+
+.stdmark-class {
+    width: 100px;
+    display: flex;
+    flex-direction: column;
+    color: #858585;
+}
+.stdmark-class label {
+    font-size: 14px;
+}
+.stdmark-class select {
+    border: none;
+    padding: 8px 0px;
+    box-shadow: 1px 1px 10px #e9c7c3 ;
+    border-radius: 5px;
+    outline: none;
+    padding-left: 5px;
+}
+.stc {
+    width: 250px;
+}
+.mark-record {
+    width: 90%;
+    min-height: 300px;
+    background: #ffffff;
+    padding: 25px 0px;
+    border-radius: 7px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+.mark-sheet {
+    width: 90%;
+    text-align: center;
+    min-height: 200px;
+}
+.sub1 {
+    background: #fff8eb;
+    color: #ffb432;
+    border-radius: 13px;
+    border: none;
+    padding: 4px 20px;
+    font-weight: 600;
+}
+.sub2 {
+    background: #e9faff;
+    color: #45cae9;
+    border-radius: 13px;
+    border: none;
+    padding: 4px 20px;
+    font-weight: 600;
+}
+.sub3 {
+    background: #ffebf1;
+    color: #ff185e;
+    border-radius: 13px;
+    border: none;
+    padding: 4px 20px;
+    font-weight: 600;
+}
+.sub4 {
+    background: #e5fff4;
+    color: #14a668;
+    border-radius: 13px;
+    border: none;
+    padding: 4px 20px;
+    font-weight: 600;
+}
+.sub5 {
+    background: #fff1ff;
+    color: #f074f2;
+    border-radius: 13px;
+    border: none;
+    padding: 4px 20px;
+    font-weight: 600;
+}
+.total {
+    background: #e5fff4;
+    color: #000;
+    border-radius: 13px;
+    border: none;
+    padding: 4px 20px;
+    font-weight: 600; 
+}
+.mark-record p:first-child {
+    color: #012970;
+    font-weight: 600;
+    width: 90%;
+}

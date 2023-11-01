@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Genius | Attendance</title>
+    <link rel="stylesheet" href="css/attendance.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+</head>
+<body>
+    <div class="attendance">
+        <div class="genius-header">
+            <div class="genius-logo">
+               <img src="images/Polygon 3.png">
+               <span>Genius</span>
+            </div>
+            <div class="scl-std">
+                <img src="images/profile-img.jpg.png" alt="student">
+                <span>Simon James</span>
+            </div>
+        </div>
+        <div class="attendance-content">
+            <div class="side-menu-content">
+                <div class="att-part-one">
+                    <div class="att-menu">
+                        <span>Track</span>
+                        <p class="am" style="background: #f9f6b8;"><a href="#"><img src="images/sheet.png" alt="attendance" style="margin-right: 18px;">Attendance Sheet</a></p>
+                    </div>
+                    <div class="att-menu">
+                        <span>Analyze</span>
+                        <p class="am"><a href="#"><img src="images/dashboard.png" alt="dashboard">Dashboard</a></p>
+                        <p class="am"><a href="#" class="report"><img src="images/report.png" alt="report">Report Card</a></p>
+                    </div>
+                    <div class="att-menu">
+                        <span>Manage</span>
+                        <p class="am"><a href="#" class="child"><img src="images/child.png" alt="Student">Student</a></p>
+                    </div>
+                </div>
+            </div>
+            <div class="att-sheet">
+                <div class="class-details">
+                    <div class="std-class">
+                        <label>class</label>
+                        <select>
+                            <option></option>
+                            <option>Pre School</option>
+                            <option>LKG</option>
+                            <option>UKG</option>
+                            <option>I</option>
+                            <option>II</option>
+                            <option>III</option>
+                            <option>IV</option>
+                            <option>V</option>
+                            <option>VI</option>
+                            <option>VII</option>
+                            <option>VIII</option>
+                            <option>IX</option>
+                            <option>X</option>
+                            <option>XI</option>
+                            <option>XII</option>
+                        </select>
+                    </div>
+                    <div class="std-class">
+                        <label>Section</label>
+                        <select>
+                            <option>A</option>
+                            <option>B</option>
+                            <option>C</option>
+                            <option>D</option>
+                            <option>E</option>
+                            <option>F</option>
+                        </select>
+                    </div>
+                    <div class="std-class">
+                        <label>Date</label>
+                        <input type="date">
+                    </div>
+                    <button class="sheet-button">Generate Sheet</button>
+                </div>
+                <div class="att-record">
+                    <p>Attendance Sheet</p>
+                    <table class="sheet">
+                        <thead>
+                            <tr class="sheet-head">
+                                <th>
+                                    <span class="p-a prs">P</span>
+                                    <span class="p-a abs">A</span>
+                                </th>
+                                <th>Student Name</th>
+                                <th>Student ID</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="sheet-body">
+                                <td>
+                                    <label class="lab" style="margin-right: 8px;">
+                                        <input type="checkbox" name="attendance">
+                                        <span class="checking"></span>
+                                    </label>
+                                    <label class="lab">
+                                        <input type="checkbox" name="attendance">
+                                        <span class="cross"></span>
+                                    </label>
+                                </td>
+                                <td>Maria DB</td>
+                                <td>2023473</td>
+                                <td><Span class="present">Present</Span></td>
+                            </tr>
+                            <tr class="sheet-body">
+                                <td>
+                                    <label class="lab" style="margin-right: 8px;">
+                                        <input type="checkbox" name="attendance">
+                                        <span class="checking"></span>
+                                    </label>
+                                    <label class="lab">
+                                        <input type="checkbox" name="attendance">
+                                        <span class="cross"></span>
+                                    </label>
+                                </td>
+                                <td>Maria DB</td>
+                                <td>2023473</td>
+                                <td><Span class="absent">Absent</Span></td>
+                            </tr>
+                            <tr class="sheet-body">
+                                <td>
+                                    <label class="lab" style="margin-right: 8px;">
+                                        <input type="checkbox" name="attendance">
+                                        <span class="checking"></span>
+                                    </label>
+                                    <label class="lab">
+                                        <input type="checkbox" name="attendance">
+                                        <span class="cross"></span>
+                                    </label>
+                                </td>
+                                <td>Maria DB</td>
+                                <td>2023473</td>
+                                <td><Span class="present">Present</Span></td>
+                            </tr>
+                            <tr class="sheet-body">
+                                <td>
+                                    <label class="lab" style="margin-right: 8px;">
+                                        <input type="checkbox" name="attendance">
+                                        <span class="checking"></span>
+                                    </label>
+                                    <label class="lab">
+                                        <input type="checkbox" name="attendance">
+                                        <span class="cross"></span>
+                                    </label>
+                                </td>
+                                <td>Maria DB</td>
+                                <td>2023473</td>
+                                <td><Span class="present">Present</Span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <button class="sheet-submit">Submit</button>
+            </div>
+        </div>
+    </div>
+    <script src="js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

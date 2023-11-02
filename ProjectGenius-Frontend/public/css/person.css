@@ -192,18 +192,21 @@ form {
 
 /* date picker styles */
 
-.date-input-container {
+    .date-input-container {
     display: flex;
     justify-content: flex-end;
     align-items: center;
 }
 
 .date-input-container  input[type="date"] {
-    width: 30px !important;
-    border: none;
+    width: 33px !important;
+    border: 1px solid #ccc;
+    border-radius: 0px 4px 4px 0px;
     outline: none;
-    background-color: transparent;
+    background-color: #ffffff;
+    padding: 0% 5px;
 }
+
 
 .date-input-container  input[type="text"] {
     width: 100%;
@@ -355,89 +358,6 @@ form {
 }
 .text-error{
      color:red;
-}
-
-.progressbar li {
-    list-style-type: none;
-    width: 25%;
-    float: left;
-    font-size: 12px;
-    position: relative;
-    text-align: center;
-    color: #7d7d7d;
-}
-.progressbar li:before {
-    width: 30px;
-    height: 30px;
-    content: "";
-    line-height: 30px;
-    border: 2px solid #7d7d7d;
-    display: block;
-    text-align: center;
-    margin: 0 auto 10px auto;
-    border-radius: 50%;
-    background-color: white;
-}
-.progressbar li:after {
-    width: 100%;
-    height: 2px;
-    content: '';
-    position: absolute;
-    background-color: #7d7d7d;
-    top: 15px;
-    left: -50%;
-    z-index: -1;
-}
-.progressbar li:first-child:after {
-    content: none;
-}
-.progressbar li.active {
-    color: green;
-}
-.progressbar li.active:before {
-    border-color: #55b776;
-    background-color: #55b776;
-}
-.progressbar li.active + li:after {
-    background-color: #55b776;
-}
-.progressbar li.done:before {
-    border-color: #55b776;
-    background-color: #55b776;
-}
-.progressbar li.done + li:after {
-    background-color: #55b776;
-}
-.progressbar li.inactive:before {
-    border-color: #7d7d7d;
-    background-color: #7d7d7d;
-}
-.progressbar li.inactive + li:after {
-    background-color: #7d7d7d;
-}
-
-.progressbar li.done {
-  font-size: 16px;
-  position: relative;
-}
-
-.progressbar li.done:after {
-  content: " ";
-  display: block;
-  width: 0.3em;
-  height: 0.6em;
-  border: solid white;
-  border-width: 0 0.2em 0.2em 0;
-  position: absolute;
-  left: 4.2em;
-  top: 26%;
-  margin-top: -0.2em;
-  -webkit-transform: rotate(45deg);
-  -moz-transform: rotate(45deg);
-  -o-transform: rotate(45deg);
-  transform: rotate(45deg);
-  z-index:9;
-  background-color: #55b776;
 }
 .container-two {
     width: 600px;

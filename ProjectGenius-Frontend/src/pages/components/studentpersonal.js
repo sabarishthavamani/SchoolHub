@@ -11,17 +11,23 @@ const AdmissionFormOne = (props) => {
     }
 
     const handleChange = (e) => {
-        const { name, value } = e.target;
-        if (name === "dob") {
-          // Calculate age based on the selected date of birth
-          const birthdate = moment(value, "YYYY-MM-DD");
-          const today = moment();
-          const age = today.diff(birthdate, "years");
-          setFormValue({ ...formValue, age, [name]: value });
-        } else {
-          setFormValue({ ...formValue, [name]: value });
-        }
+      const { name, value } = e.target;
+      if (name === 'dob') {
+        const dateValue = new Date(value)
+        const day = dateValue.getDate().toString().padStart(2, '0');
+        const month = (dateValue.getMonth() + 1).toString().padStart(2, '0');
+        const year = dateValue.getFullYear();
+        const dateOfBirth = `${day}/${month}/${year}`;
+
+        const birthDate = moment(dateOfBirth, "DD/MM/YYYY");
+        const today = moment();
+        const age = today.diff(birthDate, "years");
+
+        setFormValue({ ...formValue, age, [name]: dateOfBirth });
+      } else {
+        setFormValue({ ...formValue, [name]: value });
       }
+    }
 
     const handleFileChange = (e) => {
         const { name, files } = e.target;
@@ -30,7 +36,7 @@ const AdmissionFormOne = (props) => {
 
     const {firstName, dob, fathername, placeofbirth, lastName, age, mothername, photo} = formValue
 
-    const isButtonDisable = (firstName !== "" && lastName !== "" && dob !== "" && age !== "" && fathername !== "" && mothername !== "" && placeofbirth !== "" && photo !== "");
+    const isButtonDisable = (firstName !== "" && lastName !== "" && dob !== "" && age !== "" && fathername !== "" && mothername !== "" && placeofbirth !== "" );
 
     return (
         // Personal Details form JSX
@@ -54,7 +60,7 @@ const AdmissionFormOne = (props) => {
                   Date of Birth<sup>*</sup>
                 </label>
                 <div className='date-input-container '>
-                  <input type="text" value={ dob }  readOnly />
+                  <input type="text" style={{borderRadius: '4px 0px 0px 4px '}} value={ dob } placeholder='DD/MM/YYYY' />
                   <input type='date' name='dob' onChange={handleChange} />
                 </div>
                 {errors.dob !== "" && <span className='text-error'>{errors.dob}</span> }

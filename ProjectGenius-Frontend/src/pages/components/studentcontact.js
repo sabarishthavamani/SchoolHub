@@ -1,10 +1,14 @@
-import React, { useState} from 'react';
+import React, { useState,useEffect} from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faPhone} from '@fortawesome/free-solid-svg-icons';
+import { studentAadhar } from '../../actions/userAction';
 
 const AdmissionFormTwo = (props) => {
     const {formValue, setFormValue, handlePreClick, handleNextClick, errors} = props 
-
+    const {contactNumber, email, fatherphonenumber, permanentaddress, whatsappNumber, aadhaarNumber, motherphonenumber, temporaryaddress} = formValue
+    const isButtonDisable = (contactNumber !== "" && email !== "" && fatherphonenumber !== "" && permanentaddress !== "" && whatsappNumber !== "" && aadhaarNumber !== "" && motherphonenumber !== "" && temporaryaddress !== "");
+    const [data,setData] =useState('')
+    const [aadharError, setAadharError] = useState("");
     const triggerPreviousForm = () => {
         handlePreClick()
     }
@@ -18,8 +22,37 @@ const AdmissionFormTwo = (props) => {
         setFormValue({ ...formValue, [name]: value });
       }
 
-    const {contactNumber, email, fatherphonenumber, permanentaddress, whatsappNumber, aadhaarNumber, motherphonenumber, temporaryaddress} = formValue
-    const isButtonDisable = (contactNumber !== "" && email !== "" && fatherphonenumber !== "" && permanentaddress !== "" && whatsappNumber !== "" && aadhaarNumber !== "" && motherphonenumber !== "" && temporaryaddress !== "");
+  
+    const getData =async ()=>{
+      let {status,result} = await studentAadhar()
+      if(status == true){
+       setData(result)
+      }
+     }
+useEffect(()=>{
+getData()
+}, [])
+
+useEffect(()=>{
+   let isAadharExists = false;
+
+   for (let i = 0; i < data.length; i++) {
+     const ans = data[i];
+     const ans2 = ans.aadhaarNumber;
+   
+     if (ans2 === aadhaarNumber) {
+       isAadharExists = true;
+       break; 
+     }
+   }
+   
+   if (isAadharExists) {
+     setAadharError("Aadhar number already exists");
+   } else {
+     setAadharError(""); 
+   }
+},[data, aadhaarNumber])
+
 
     return (
         // Contact Details form JSX
@@ -86,7 +119,8 @@ const AdmissionFormTwo = (props) => {
                 name="aadhaarNumber" value={aadhaarNumber} onChange={handleChange}
                 placeholder="xxxx - xxxx - xxxx - xxxx"
               />
-              {errors.aadhaarNumber !== "" &&<span className='text-error'>{errors.aadhaarNumber}</span>}
+              {/* {errors.aadhaarNumber !== "" &&<span className='text-error'>{errors.aadhaarNumber}</span>} */}
+              {aadharError && <span className='text-error'>{aadharError}</span>}
             </div>
             <div className="field-box">
 

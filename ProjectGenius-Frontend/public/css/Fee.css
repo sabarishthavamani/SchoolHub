@@ -599,3 +599,73 @@
   .selected .checkmark {
     color: green; /* Change the color of the checkmark for selected options */
   }
+
+  /*Payment Failure*/
+.payment-failure {
+    width: 80%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 30px 0px;
+}
+.payment-failure a {
+    font-weight: 600;
+}
+.payment-failure a img {
+    margin-left: 10px;
+}
+.failure {
+    width: 35%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    justify-content: space-evenly;
+    min-height: 200px;
+    background: #f7f7f8;
+    color: #dc0b0b;
+    font-weight: 600;
+}
+.fail img {
+    width: 25px;
+}
+.fail {
+    background: #dc0b0b;
+    padding: 13px 13px 13px 13px;
+    border-radius: 50%;
+}
+@media(max-width:800px){
+    .failure {
+        width: 50%;
+    }
+    .failure p {
+        font-size: 14px;
+    }
+    .failure h2 {
+        font-size: 20px;
+    }
+}
+.blc {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    gap: 0px 20px;
+    padding-top: 20px;
+}
+.blc-amt {
+    width: 80px;
+    height: 40px;
+    padding: 5px 0px 0px 5px;
+    border: 1px solid;
+}
+.hrs {
+    width: 100%;
+    margin-top: 10px;
+    display: flex;
+    justify-content: end;
+}
+.hrs hr {
+    width: 50%;
+}
+

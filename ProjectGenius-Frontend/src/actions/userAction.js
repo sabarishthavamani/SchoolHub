@@ -270,6 +270,7 @@ export const registerTeacher = async (formData) => {
         return {
             'status': respData.data.status,
             'message': respData.data.message,
+            'result':respData.data.result,
         }
     } catch (err) {
         return {
@@ -296,6 +297,36 @@ export const viewTeacher = async () => {
             'status': err.response.data.status,
             'message': err.response.data.message,
         }
+    }
+}
+export const teacherAadhar = async () => {
+
+    try {
+        let respData = await axios({
+            'url': '/getteacheraadhaar',
+            'method': 'get',
+        })
+        return {
+            'status': respData.data.status,
+            'result': respData.data.result,
+        }
+    } catch (err) {
+           console.log(err,'---err')
+    }
+}
+export const studentAadhar = async () => {
+
+    try {
+        let respData = await axios({
+            'url': '/getstudentaadhaar',
+            'method': 'get',
+        })
+        return {
+            'status': respData.data.status,
+            'result': respData.data.result,
+        }
+    } catch (err) {
+           console.log(err,'---err')
     }
 }
 export const updateTeacher = async (formData) => {

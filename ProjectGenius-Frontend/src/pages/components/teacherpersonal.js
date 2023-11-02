@@ -12,12 +12,18 @@ const TeacherPersonal = (props) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    if (name === "dob") {
-      // Calculate age based on the selected date of birth
-      const birthdate = moment(value, "YYYY-MM-DD");
+    if (name === 'dob') {
+      const dateValue = new Date(value)
+      const day = dateValue.getDate().toString().padStart(2, '0');
+      const month = (dateValue.getMonth() + 1).toString().padStart(2, '0');
+      const year = dateValue.getFullYear();
+      const dateOfBirth = `${day}/${month}/${year}`;
+
+      const birthDate = moment(dateOfBirth, "DD/MM/YYYY");
       const today = moment();
-      const age = today.diff(birthdate, "years");
-      setFormValue({ ...formValue, age, [name]: value });
+      const age = today.diff(birthDate, "years");
+
+      setFormValue({ ...formValue, age, [name]: dateOfBirth });
     } else {
       setFormValue({ ...formValue, [name]: value });
     }
@@ -52,7 +58,7 @@ const TeacherPersonal = (props) => {
                 Date of Birth<sup>*</sup>
               </label>
               <div className='date-input-container '>
-                  <input type="text" value={ dob }  readOnly />
+                  <input type="text" style={{borderRadius: '4px 0px 0px 4px '}} value={ dob } placeholder='DD/MM/YYYY' />
                   <input type='date' name='dob' onChange={handleChange} />
                 </div>
               {errors.dob !== "" && <span className='text-error'>{errors.dob}</span>}

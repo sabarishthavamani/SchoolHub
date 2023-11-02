@@ -205,7 +205,7 @@ const Students = () => {
                               </a>
                             </li>
                             <li className="edit-box">
-                              <a className="dropdown-item" href="#">
+                              <a className="dropdown-item" href="#" >
                                 <i className="fa fa-tags" />
                                 More
                               </a>

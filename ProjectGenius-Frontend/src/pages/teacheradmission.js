@@ -1,9 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState,useEffect } from 'react'
 import { useNavigate } from 'react-router-dom';
 import Sidebar from './components/sidebar';
 import Navbar from './components/navbar';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft, faHistory, faPhone, faUpload, faUser } from '@fortawesome/free-solid-svg-icons';
+
 
 //import actions
 import { registerTeacher } from '../actions/userAction';
@@ -46,6 +45,7 @@ const Teacher = () => {
     const [currentForm, setCurrentForm] = useState(1);
     const [formValue, setFormValue] = useState(initialFormValue);
     const [errors, setErrors] = useState({});
+    const [data,setData] = useState('')
 
     const {
         firstName,
@@ -138,13 +138,12 @@ const Teacher = () => {
 
         }
     }
-    console.log(formValue,'---form')
     const renderForm = () => {
         switch (currentForm) {
             case 1:
                 return <TeacherPersonal formValue={formValue} setFormValue={setFormValue} handleNextClick={handleNextClick} errors={errors} />;
             case 2:
-                return <TeacherContact formValue={formValue} setFormValue={setFormValue} handlePreClick={handlePreClick} handleNextClick={handleNextClick} errors={errors} />;
+                return <TeacherContact  formValue={formValue} setFormValue={setFormValue} handlePreClick={handlePreClick} handleNextClick={handleNextClick} errors={errors} />;
             case 3:
                 return <TeacherHistory formValue={formValue} setFormValue={setFormValue} handlePreClick={handlePreClick} handleSubmit={handleSubmit}  errors={errors} />;
             default:

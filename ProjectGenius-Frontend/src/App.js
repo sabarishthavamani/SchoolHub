@@ -19,6 +19,7 @@ import TeacherEdit from './pages/teacheredit';
 import TeacherDetail from './pages/teacherdetail';
 import TimeTable from './pages/teachertimetable';
 import FeePayment from './pages/feepayment';
+import PaymentFailure from './pages/paymentfailure';
 
 function App() {
   return (
@@ -64,10 +65,13 @@ function App() {
           <Route path="/teacher-edit/:Id" element={<ConditionRoute type="private"><TeacherEdit /></ConditionRoute>} />
         </Routes>
         <Routes>
-          <Route path="/teacherdetails" element={<ConditionRoute type="private"><TeacherDetail /></ConditionRoute>} />
+          <Route path="/teacherdetails/:Id" element={<ConditionRoute type="private"><TeacherDetail /></ConditionRoute>} />
         </Routes>
         <Routes>
           <Route path="/teachertimetable" element={<ConditionRoute type="private"><TimeTable /></ConditionRoute>} />
+        </Routes>
+        <Routes>
+          <Route path="/paymentfailure" element={<ConditionRoute type="private"><PaymentFailure /></ConditionRoute>} />
         </Routes>
       </BrowserRouter>
     </div>

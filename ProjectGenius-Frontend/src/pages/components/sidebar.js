@@ -70,26 +70,24 @@ const Sidebar = () => {
           <img src={`${process.env.PUBLIC_URL}/images/person.png`} alt="" />
         )}
         <NavLink to='/teacher' className={`mysidebar ${isLinkActive('/teacher')  ? 'activemysidebar' : null}`}>Teacher</NavLink>
-           <i className="fa fa-caret-down caret" onClick={() => toggleTeacherMenu(!showTeacherMenu)}
-           ></i>
+        
       </div>
     </li>
-    <ul className='t-drop' style={showTeacherMenu ? {display : 'block'}: {display: 'none'}} >
-            <li>
+            <li  style={
+        isLinkActive('/teacherview')  ? {
+              background: 'linear-gradient(to right,#fde4cb,#fcfad3)'
+            }: null}>
             <div className="menu-bar">
-              <NavLink to="/teacherview" >
+            {isLinkActive('/teacherview') ? (
+          <img src={`${process.env.PUBLIC_URL}/images/blue-contact.png`} alt="" />
+        ) : (
+          <img src={`${process.env.PUBLIC_URL}/images/person.png`} alt="" />
+        )}
+              <NavLink to="/teacherview" className={`mysidebar ${isLinkActive('/teacherview')  ? 'activemysidebar' : null}`} >
                 TeacherList
               </NavLink>
               </div>
             </li>
-            <li>
-            <div className="menu-bar">
-              <NavLink to="/teacherdetails" >
-                TeacherDetails
-              </NavLink>
-              </div>
-            </li>
-          </ul>
         </ul>
       </div>
       <div className="part-two">

@@ -1,7 +1,32 @@
-import React from 'react';
+import React,{useEffect, useState} from 'react';
+import { useNavigate } from 'react-router-dom';
 import Sidebar from './components/sidebar';
+import { getSingleteacher } from '../actions/userAction';
+import { useParams } from 'react-router-dom';
+
+
+
 
 const TeacherDetail = ()=>{
+const[data,setData] =useState('')
+const {Id} =useParams()
+
+const navigate = useNavigate()
+
+const getData =async (id) =>{
+  try{
+   let {status,result} = await getSingleteacher(id)
+   if(status == true){
+    setData(result)
+   }
+  }catch(err){
+    console.log(err,'---err')
+  }
+}
+useEffect(() => {
+  getData(Id)
+}, [])
+console.log(data,'---data')
 return(
     <div className="teacher">
 <Sidebar />
@@ -10,85 +35,60 @@ return(
       <div className="l-header">
         <p>Teacher Details</p>
       </div>
-      <div className="r-header" style={{ width: 600 }}>
-        <input type="search" />
-        <img src="images/filter.png" />
-        <a href="#" className="notify">
-          <img
-            src="images/bell.png"
-            alt=""
-            title="notification"
-            style={{ height: 25 }}
-          />
-        </a>
-        <a href="#" className="notify">
-          <img
-            src="images/setting.png"
-            alt=""
-            title="setting"
-            style={{ height: 25 }}
-          />
-        </a>
-        <div>
-          <span>Sam Smith</span>
-          <br />
-          <span style={{ color: "#ccc" }}>Admin</span>
-        </div>
-        <img src="images/Profile photo.png" alt="" title="profile" />
-      </div>
     </div>
     <div className="teacher-docs">
-      <div className="left-docs">
-        <div className="doc-profile">
-          <img src="images/teacher.png" alt="Teacher Image" />
-          <div className="tchr-name">
-            <p>Maria Daffodil</p>
-            <p>History Teacher</p>
+          <div className="left-docs" >
+          <div className="doc-profile">
+            <img src={data.teacherphoto}/>
+            <div className="tchr-name">
+              <p>{data.name}</p>
+              <p>History Teacher</p>
+            </div>
+            <div className="tchr-adrs">
+              <div className="ad">
+                <i className="fa fa-phone" />
+                <span>(+91){data.phoneNumber}</span>
+              </div>
+              <div className="ad">
+                <i className="fa fa-envelope-o" />
+                <span>{data.email}</span>
+              </div>
+              <div className="ad">
+                <i className="fa fa-address-card-o" />
+                <span>{data.permanentaddress}</span>
+              </div>
+            </div>
           </div>
-          <div className="tchr-adrs">
-            <div className="ad">
-              <i className="fa fa-phone" />
-              <span>(+91)33757005467</span>
+          <div className="doc-details">
+            <div className="abt" style={{ marginTop: 35 }}>
+              <h3>About</h3>
+              <p>
+                Dedicated to fostering a passion for learning and encouraging
+                intellectual growth in students, I am committed to delivering a
+                dynamic and engaging educational experience.
+              </p>
+              <p>
+                My teaching philosophy revolves around instilling critical
+                thinking, creativity, and a thirst for knowledge.
+              </p>
             </div>
-            <div className="ad">
-              <i className="fa fa-envelope-o" />
-              <span>mariadaffodil@gmail.com</span>
+            <div className="abt">
+              <h3>Education</h3>
+              <ul>
+                <li>
+                {data.higherqualification} 2013-2017
+                </li>
+                <li>{data.teachingcertificates} 2013-2017</li>
+              </ul>
             </div>
-            <div className="ad">
-              <i className="fa fa-address-card-o" />
-              <span>2239 Hog Camp Road Schaumburg</span>
+            <div className="abt">
+              <h3>Expertise</h3>
+              <p>World History, Philosophy, Prehistoric, Culture, Ancient</p>
             </div>
           </div>
         </div>
-        <div className="doc-details">
-          <div className="abt" style={{ marginTop: 35 }}>
-            <h3>About</h3>
-            <p>
-              Dedicated to fostering a passion for learning and encouraging
-              intellectual growth in students, I am committed to delivering a
-              dynamic and engaging educational experience.
-            </p>
-            <p>
-              My teaching philosophy revolves around instilling critical
-              thinking, creativity, and a thirst for knowledge.
-            </p>
-          </div>
-          <div className="abt">
-            <h3>Education</h3>
-            <ul>
-              <li>
-                History Major, Bachelor of Education (B.Ed), University of
-                Education Excellence 2013-2017
-              </li>
-              <li>Master of History, University Akademi Historia 2013-2017</li>
-            </ul>
-          </div>
-          <div className="abt">
-            <h3>Expertise</h3>
-            <p>World History, Philosophy, Prehistoric, Culture, Ancient</p>
-          </div>
-        </div>
-      </div>
+        {/* )
+      })} */}
       <div className="right-docs">
         <div className="assign-task">
           <button>+ Assign Task</button>
@@ -106,7 +106,7 @@ return(
           <p style={{ color: "#4a86f9" }}>Schedule</p>
           <p>History-Class VI &amp; VII</p>
           <p>Social Science - Class V</p>
-          <button className="schedule">
+          <button className="schedule" onClick={()=>{navigate('/teachertimetable')}}>
             <i className="fa fa-eye" style={{ marginRight: 8 }} />
             View Schedule
           </button>

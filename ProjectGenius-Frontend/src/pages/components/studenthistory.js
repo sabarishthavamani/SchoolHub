@@ -37,7 +37,7 @@ const AdmissionFormFinal = (props) => {
 
     const {admissiongrade, previousgrade, previousschoolhistory, emergencyrelationname, bloodgroup, vaccination, emergencycontactNumber, signature} = formValue;
 
-    const isButtonDisable = ( admissiongrade !== "" &&  previousgrade !== "" && previousschoolhistory !== "" && emergencyrelationname !== "" && bloodgroup !== "" && vaccination !== "" && emergencycontactNumber !== "" && signature !== "");
+    const isButtonDisable = ( admissiongrade !== "" &&  previousgrade !== "" && previousschoolhistory !== "" && emergencyrelationname !== "" && bloodgroup !== "" && vaccination !== "" && emergencycontactNumber !== "" );
 
     return (
         // Student History form JSX

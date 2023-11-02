@@ -34,6 +34,9 @@ const TeacherList = () => {
     const editteacher = (id) => {
         navigate('/teacher-edit/' + id)
     }
+    const teacherdetails = (id) => {
+        navigate('/teacherdetails/' + id)
+    }
     const deleteteacher = async (id) => {
         try {
 
@@ -157,9 +160,8 @@ const TeacherList = () => {
                                     return (
                                         <tr className="tchr-row" onclick="infos()" key={key}>
                                             <td className="profile">
-                                                <a href={`${IMAGE_URL}/${item.teacherphoto}`} target="_blank">
-                                                    <img src={`${IMAGE_URL}/${item.teacherphoto}`} alt="" /></a>
-                                                <span>{item.name}</span>
+                                                    <img src={`${IMAGE_URL}/${item.teacherphoto}`} alt="" onClick={() => teacherdetails(item._id)}/>
+                                                <span onClick={() => teacherdetails(item._id)}>{item.name}</span>
                                             </td>
                                             <td>{item.teacherId}</td>
                                             <td>
@@ -186,13 +188,13 @@ const TeacherList = () => {
                                                             </a>
                                                         </li>
                                                         <li className="edit-box">
-                                                            <a className="dropdown-item" href="#">
+                                                            <a className="dropdown-item" href="#" >
                                                                 <i className="fa fa-tags" />
                                                                 More
                                                             </a>
                                                         </li>
                                                         <li>
-                                                            <a className="dropdown-item" href="#" style={{ color: "red" }} onClick={() => deleteteacher(item._id)}>
+                                                            <a className="dropdown-item" href="#" style={{ color: "red" }}  onClick={() => deleteteacher(item._id)}>
                                                                 <i
                                                                     className="fa fa-trash-o"
                                                                     style={{ color: "red", marginRight: 10 }}

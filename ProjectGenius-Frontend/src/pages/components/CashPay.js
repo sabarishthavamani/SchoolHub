@@ -42,6 +42,13 @@ return(
           <label>Balance Amount:</label>
               <p>₹{amountbalance}</p>
         </div> */}
+         <div class="hrs">
+    <hr/>
+</div>
+<div class="blc" >
+    <label>Balance Amount</label>
+    <span class="blc-amt">₹</span>
+</div>
         <div className="confirm-btn">
         <button type="button" onClick={()=>triggerSubmitAction()}>{buttonText}</button>
         </div>

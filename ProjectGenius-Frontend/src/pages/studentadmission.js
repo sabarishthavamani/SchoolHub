@@ -12,6 +12,7 @@ import { registerStudent } from '../actions/userAction';
 
 // import lib
 import toastAlert from '../lib/toast';
+import FormProgressBar from './components/FormProgressBar';
 
 const initialFormValue = {
   'firstName': '',
@@ -155,6 +156,9 @@ const NewAdmission = () => {
       <Sidebar />
       <div className="right-content">
       <Navbar pageTitle="New Student" />
+      <div className='progress-bar-section'>
+        <FormProgressBar formValue={formValue} />
+        </div>
         {renderForm()}
       </div>
     </div>

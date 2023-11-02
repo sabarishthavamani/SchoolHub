@@ -173,14 +173,14 @@ const registerStudent = async (req, res) => {
     // if (!isEmpty(checkmotherphonenumber)) {
     //     return res.status(400).json({ 'status': false, 'errors': { 'motherphonenumber': 'Same Phone Number already exist' } })
     // }
-    let checkaadhaarNo = await Admission.findOne({ 'aadhaarNumber': req.body.aadhaarNumber }, { 'aadhaarNumber': 1 }).lean();
-    if (!isEmpty(checkaadhaarNo)) {
-        return res.status(400).json({ 'status': false, 'errors': { 'aadhaarNumber': 'Aadhaar Number already exist' }, 'message': 'Same Aadhaar Number  already registered,please go and check in previous page' })
-    }
-    let checkEmail = await Admission.findOne({ 'email': req.body.email }, { 'email': 1 }).lean();
-    if (!isEmpty(checkEmail)) {
-        return res.status(400).json({ 'status': false, 'errors': { 'email': 'Email Id already exist' }, 'message': 'Same EmailId  already registered,please go and check in previous page' })
-    }
+    // let checkaadhaarNo = await Admission.findOne({ 'aadhaarNumber': req.body.aadhaarNumber }, { 'aadhaarNumber': 1 }).lean();
+    // if (!isEmpty(checkaadhaarNo)) {
+    //     return res.status(400).json({ 'status': false, 'errors': { 'aadhaarNumber': 'Aadhaar Number already exist' }, 'message': 'Same Aadhaar Number  already registered,please go and check in previous page' })
+    // }
+    // let checkEmail = await Admission.findOne({ 'email': req.body.email }, { 'email': 1 }).lean();
+    // if (!isEmpty(checkEmail)) {
+    //     return res.status(400).json({ 'status': false, 'errors': { 'email': 'Email Id already exist' }, 'message': 'Same EmailId  already registered,please go and check in previous page' })
+    // }
     // let checkAddress = await Admission.findOne({ 'permanentaddress': req.body.permanentaddress }, { 'permanentaddress': 1 }).lean();
     // if (!isEmpty(checkAddress)) {
     //     return res.status(400).json({ 'status': false, 'errors': { 'permanentaddress': 'permanentaddress  already exist' } })
@@ -441,43 +441,39 @@ const feePayment = async (req, res) => {
 }
 
 const registerTeacher = async (req, res) => {
-    let checkprimaryPhone = await TeacherAdmission.findOne({ 'phoneNumber': req.body.phoneNumber }, { 'phoneNumber': 1 }).lean();
-    if (!isEmpty(checkprimaryPhone)) {
-        return res.status(400).json({ 'status': false, 'errors': { 'phoneNumber': 'Phone Nunmber already exist' },'message': 'Same Mobile Number  already registered,please go and check in previous page' })
-    }
-    let checkemergencyPhone = await TeacherAdmission.findOne({ 'emergencycontactNumber': req.body.emergencycontactNumber }, { 'emergencycontactNumber': 1 }).lean();
-    if (!isEmpty(checkemergencyPhone)) {
-        return res.status(400).json({ 'status': false, 'errors': { 'emergencycontactNumber': 'Phone Number already exist' },'message': 'Same Mobile Number  already registered,please go and check in previous page' })
-    }
-    let checkwhatsappNo = await TeacherAdmission.findOne({ 'whatsappNumber': req.body.whatsappNumber }, { 'whatsappNumber': 1 }).lean();
-    if (!isEmpty(checkwhatsappNo)) {
-        return res.status(400).json({ 'status': false, 'errors': { 'whatsappNumber': 'whatsapp Number already exist' },'message': 'Same Whatsapp Number  already registered,please go and check in previous page' })
-    }
-    let checkfatherphonenumber = await TeacherAdmission.findOne({ 'fatherphonenumber': req.body.fatherphonenumber }, { 'fatherphonenumber': 1 }).lean();
-    if (!isEmpty(checkfatherphonenumber)) {
-        return res.status(400).json({ 'status': false, 'errors': { 'fatherphonenumber': 'Same Phone Number already exist' },'message': 'Same Mobile Number  already registered,please go and check in previous page' })
-    }
-    let checkmotherphonenumber = await TeacherAdmission.findOne({ 'motherphonenumber': req.body.motherphonenumber }, { 'motherphonenumber': 1 }).lean();
-    if (!isEmpty(checkmotherphonenumber)) {
-        return res.status(400).json({ 'status': false, 'errors': { 'motherphonenumber': 'Same Phone Number already exist' },'message': 'Same Mobile Number  already registered,please go and check in previous page' })
-    }
-    let checkaadhaarNo = await TeacherAdmission.findOne({ 'aadhaarNumber': req.body.aadhaarNumber }, { 'aadhaarNumber': 1 }).lean();
-    if (!isEmpty(checkaadhaarNo)) {
-        return res.status(400).json({ 'status': false, 'errors': { 'aadhaarNumber': 'Aadhaar Number already exist' }, 'message': 'Same Aadhaar Number  already registered,please go and check in previous page' })
-    }
-    let checkEmail = await TeacherAdmission.findOne({ 'email': req.body.email }, { 'email': 1 }).lean();
-    if (!isEmpty(checkEmail)) {
-        return res.status(400).json({ 'status': false, 'errors': { 'email': 'Email Id already exist' }, 'message': 'Same EmailId  already registered,please go and check in previous page' })
-    }
-    let checkAddress = await TeacherAdmission.findOne({ 'permanentaddress': req.body.permanentaddress }, { 'permanentaddress': 1 }).lean();
-    if (!isEmpty(checkAddress)) {
-        return res.status(400).json({ 'status': false, 'errors': { 'permanentaddress': 'permanentaddress  already exist' },'message': 'Same Address already registered,please go and check in previous page' })
-    }
-    let checkAddress2 = await TeacherAdmission.findOne({ 'temporaryaddress': req.body.temporaryaddress }, { 'temporaryaddress': 1 }).lean();
-    console.log(checkAddress2, '----add')
-    if (!isEmpty(checkAddress2)) {
-        return res.status(400).json({ 'status': false, 'errors': { 'temporaryaddress': 'temporaryaddress  already exist' },'message': 'Same Address  already registered,please go and check in previous page' })
-    }
+    // let checkprimaryPhone = await TeacherAdmission.findOne({ 'phoneNumber': req.body.phoneNumber }, { 'phoneNumber': 1 }).lean();
+    // if (!isEmpty(checkprimaryPhone)) {
+    //     return res.status(400).json({ 'status': false, 'errors': { 'phoneNumber': 'Phone Nunmber already exist' },'message': 'Same Mobile Number  already registered,please go and check in previous page' })
+    // }
+    // let checkemergencyPhone = await TeacherAdmission.findOne({ 'emergencycontactNumber': req.body.emergencycontactNumber }, { 'emergencycontactNumber': 1 }).lean();
+    // if (!isEmpty(checkemergencyPhone)) {
+    //     return res.status(400).json({ 'status': false, 'errors': { 'emergencycontactNumber': 'Phone Number already exist' },'message': 'Same Mobile Number  already registered,please go and check in previous page' })
+    // }
+    // let checkwhatsappNo = await TeacherAdmission.findOne({ 'whatsappNumber': req.body.whatsappNumber }, { 'whatsappNumber': 1 }).lean();
+    // if (!isEmpty(checkwhatsappNo)) {
+    //     return res.status(400).json({ 'status': false, 'errors': { 'whatsappNumber': 'whatsapp Number already exist' },'message': 'Same Whatsapp Number  already registered,please go and check in previous page' })
+    // }
+    // let checkfatherphonenumber = await TeacherAdmission.findOne({ 'fatherphonenumber': req.body.fatherphonenumber }, { 'fatherphonenumber': 1 }).lean();
+    // if (!isEmpty(checkfatherphonenumber)) {
+    //     return res.status(400).json({ 'status': false, 'errors': { 'fatherphonenumber': 'Same Phone Number already exist' },'message': 'Same Mobile Number  already registered,please go and check in previous page' })
+    // }
+    // let checkmotherphonenumber = await TeacherAdmission.findOne({ 'motherphonenumber': req.body.motherphonenumber }, { 'motherphonenumber': 1 }).lean();
+    // if (!isEmpty(checkmotherphonenumber)) {
+    //     return res.status(400).json({ 'status': false, 'errors': { 'motherphonenumber': 'Same Phone Number already exist' },'message': 'Same Mobile Number  already registered,please go and check in previous page' })
+    // }
+    // let checkEmail = await TeacherAdmission.findOne({ 'email': req.body.email }, { 'email': 1 }).lean();
+    // if (!isEmpty(checkEmail)) {
+    //     return res.status(400).json({ 'status': false, 'errors': { 'email': 'Email Id already exist' }, 'message': 'Same EmailId  already registered,please go and check in previous page' })
+    // }
+    // let checkAddress = await TeacherAdmission.findOne({ 'permanentaddress': req.body.permanentaddress }, { 'permanentaddress': 1 }).lean();
+    // if (!isEmpty(checkAddress)) {
+    //     return res.status(400).json({ 'status': false, 'errors': { 'permanentaddress': 'permanentaddress  already exist' },'message': 'Same Address already registered,please go and check in previous page' })
+    // }
+    // let checkAddress2 = await TeacherAdmission.findOne({ 'temporaryaddress': req.body.temporaryaddress }, { 'temporaryaddress': 1 }).lean();
+    // console.log(checkAddress2, '----add')
+    // if (!isEmpty(checkAddress2)) {
+    //     return res.status(400).json({ 'status': false, 'errors': { 'temporaryaddress': 'temporaryaddress  already exist' },'message': 'Same Address  already registered,please go and check in previous page' })
+    // }
     const maxTeacher = await TeacherAdmission.findOne({}, { teacherId: 1 }).sort({ teacherId: -1 });
     let nextTeacherId = 'T0001'; 
 
@@ -525,6 +521,24 @@ const registerTeacher = async (req, res) => {
 
     await newDoc.save();
     return res.status(200).json({ 'status': true, 'message': " Register successfully" })
+}
+const teacheraadhaarValid = async (req,res) =>{
+    try{
+        let checkaadhaarNo = await TeacherAdmission.find({},{'aadhaarNumber':1}).lean();
+        console.log(checkaadhaarNo,'---aadhaar')
+            return res.status(200).json({ 'status': true, result:checkaadhaarNo})
+    }catch(err){
+       console.log(err,'---err')
+    }
+}
+const studentaadhaarValid = async (req,res) =>{
+    try{
+        let checkaadhaarNo = await Admission.find({},{'aadhaarNumber':1}).lean();
+        console.log(checkaadhaarNo,'---aadhaar')
+            return res.status(200).json({ 'status': true, result:checkaadhaarNo})
+    }catch(err){
+       console.log(err,'---err')
+    }
 }
 const ViewTeacher = async (req,res) =>{
     try {
@@ -632,5 +646,7 @@ module.exports = {
     ViewTeacher,
     deleteTeacher,
     updateTeacher,
-    getSingleTeacher
+    getSingleTeacher,
+    teacheraadhaarValid,
+    studentaadhaarValid
 };

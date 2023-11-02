@@ -59,6 +59,7 @@ router.route('/viewstudent').get(adminCtrl.viewStudent);
 router.route('/deletestudent/:id').get(adminCtrl.deleteStudent);
 router.route('/getsingle-student/:id').get(adminCtrl.getSingleStudent);
 router.route('/updatestudent').post(profileUpload.fields([{ name: 'signature', maxCount: 1 }, { name: 'photo', maxCount: 1 }]),adminValid.updateValid,adminCtrl.updateStudent);
+router.route('/getstudentaadhaar').get(adminCtrl.studentaadhaarValid);
 //feepayment
 router.route('/feessetup').post(adminCtrl.createFeeSetup);
 router.route('/feescollection').post(adminValid.feecollectionValid,adminCtrl.createFeeCollection);
@@ -71,5 +72,6 @@ router.route('/viewteacher').get(adminCtrl.ViewTeacher);
 router.route('/deleteteacher/:id').get(adminCtrl.deleteTeacher);
 router.route('/updateteacher').post(teacherprofileUpload.fields([{ name: 'teachersignature', maxCount: 1 }, { name: 'teacherphoto', maxCount: 1 }]),adminValid.teacherupdateValid,adminCtrl.updateTeacher);
 router.route('/getsingle-teacher/:id').get(adminCtrl.getSingleTeacher);
+router.route('/getteacheraadhaar').get(adminCtrl.teacheraadhaarValid);
 
 module.exports = router;

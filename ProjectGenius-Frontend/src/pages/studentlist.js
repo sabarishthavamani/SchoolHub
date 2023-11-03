@@ -5,10 +5,15 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEllipsis,faSort } from '@fortawesome/free-solid-svg-icons';
 import { viewStudent, deleteStudent } from '../actions/userAction';
 
+//Pop up package
+import 'react-alert-confirm/lib/style.css';
+import AlertConfirm, { Button } from 'react-alert-confirm';
+
 //components
 import StudentInfo from './components/StudentInfo';
 //lib
 import toastAlert from '../lib/toast';
+
 const Students = () => {
   const [data, setData] = useState();
   const [IMAGE_URL, setIMAGE_URL] = useState('');
@@ -29,14 +34,15 @@ const Students = () => {
 
       if (status === true) {
         toastAlert('success', message)
-        getData()
+          getData()
 
+      
       } else if (status === false) {
-        toastAlert('success', message)
+        toastAlert('error', message)
       }
 
     } catch (err) {
-
+       
     }
   }
 
@@ -44,8 +50,7 @@ const Students = () => {
     try {
       let { status, result, imageUrl } = await viewStudent();
       if (status === true) {
-        const studentData = await result.filter(each => each.name.toLowerCase().includes(userSearchInput.toLowerCase()))
-
+        const studentData = await result.filter(each => each.active === 1 && each.name.toLowerCase().includes(userSearchInput.toLowerCase()))
         setData(studentData)
         setIMAGE_URL(imageUrl);
       }
@@ -57,7 +62,7 @@ const Students = () => {
   useEffect(() => {
     getData();
   }, [userSearchInput]);
-
+console.log(data,'---data')
   const editstudent = (id) => {
     navigate('/student-edit/' + id)
   }
@@ -99,6 +104,15 @@ const Students = () => {
     }
     sortData(key)
   }
+
+  
+  const openBasic = async (Id) => {
+    const [action] = await AlertConfirm('Are you sure, you want to delete it');
+    // action && console.log('ok');
+    if (action) {
+      deletestudent(Id)
+         }
+  };
 
   return (
     <div className="student-container">
@@ -211,14 +225,16 @@ const Students = () => {
                               </a>
                             </li>
                             <li>
-                              <a className="dropdown-item" href="#" style={{ color: "red" }} onClick={() => deletestudent(item._id)}>
-                                <i
-                                  className="fa fa-trash-o"
-                                  style={{ color: "red", marginRight: 10 }}
-                                />
-                                Clear
-                              </a>
-                            </li>
+                            <Button className='pop-up-button' onClick={() => openBasic(item._id)}>
+                              <a className="dropdown-item" href="#" style={{ color: "red" }} >
+                                  <i
+                                    className="fa fa-trash-o"
+                                    style={{ color: "red", marginRight: 10 }}
+                                  />
+                                  Clear
+                                </a>
+                            </Button>
+                            </li  >
                           </ul>
                         </div>
                       </td>

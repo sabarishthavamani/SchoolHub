@@ -9,7 +9,7 @@
     width: 100%;
     display: flex;
 }
-.side-bar {
+/* .side-bar {
     width: 20%;
     background: #fcfad3;
     min-height: 600px;
@@ -99,7 +99,7 @@
     margin-top: 8px;
     margin-left: 15px;
     cursor: pointer;
-}
+} */
 .teacher-content {
     width: 80%;
     display: flex;
@@ -401,8 +401,10 @@
     left: 4px;
 }
 .profile img {
-    width: 25px;
-    margin-left: 20px;
+    width: 30px;
+    height: 30px;
+    margin-left: 10px;
+    border-radius: 15px;
 }
 .rupee {
     color: #fd0f56;

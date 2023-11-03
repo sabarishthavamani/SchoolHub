@@ -7,6 +7,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'react-date-picker/dist/DatePicker.css';
 import 'react-calendar/dist/Calendar.css';
+import 'react-alert-confirm/lib/style.css';
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

@@ -79,9 +79,9 @@ const Sidebar = () => {
             }: null}>
             <div className="menu-bar">
             {isLinkActive('/teacherview') ? (
-          <img src={`${process.env.PUBLIC_URL}/images/blue-contact.png`} alt="" />
+          <img src={`${process.env.PUBLIC_URL}/images/listblue.png`} alt="" />
         ) : (
-          <img src={`${process.env.PUBLIC_URL}/images/person.png`} alt="" />
+          <img src={`${process.env.PUBLIC_URL}/images/listgrey.png`} alt="" />
         )}
               <NavLink to="/teacherview" className={`mysidebar ${isLinkActive('/teacherview')  ? 'activemysidebar' : null}`} >
                 TeacherList

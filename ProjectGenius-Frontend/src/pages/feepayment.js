@@ -87,7 +87,7 @@ const renderPaymentForm = () => {
       case 'upiTab':
           return <UpiPay />;
       case 'cashTab':
-          return <CashPay amountPayable={amountPayable} setButtonText={setButtonText} setAmountPayable={setAmountPayable} handleAmountPayableChange={handleAmountPayableChange} buttonText={buttonText} handleSubmit={handleSubmit}/>;
+          return <CashPay updatedDueAmount={updatedDueAmount}  amountPayable={amountPayable} setButtonText={setButtonText} setAmountPayable={setAmountPayable} handleAmountPayableChange={handleAmountPayableChange} buttonText={buttonText} handleSubmit={handleSubmit}/>;
       default:
           return null;
   }

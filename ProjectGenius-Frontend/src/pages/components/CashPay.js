@@ -17,6 +17,7 @@ const CashPay = (props) => {
 const triggerSubmitAction = () => {
     handleSubmit()
 }
+
 return(
     <>
       <form action="" className="cash-form">
@@ -47,7 +48,7 @@ return(
 </div>
 <div class="blc" >
     <label>Balance Amount</label>
-    <span class="blc-amt">₹</span>
+    <span class="blc-amt">₹{parseInt(updatedDueAmount + 2.24)-(amountPayable)}</span>
 </div>
         <div className="confirm-btn">
         <button type="button" onClick={()=>triggerSubmitAction()}>{buttonText}</button>

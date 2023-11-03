@@ -8,6 +8,10 @@ import { faEllipsis } from '@fortawesome/free-solid-svg-icons';
 import toastAlert from '../lib/toast';
 import { deleteTeacher, viewTeacher } from '../actions/userAction';
 
+//Pop up package
+import 'react-alert-confirm/lib/style.css';
+import AlertConfirm, { Button } from 'react-alert-confirm';
+
 const TeacherList = () => {
     const [data, setData] = useState();
     const [IMAGE_URL, setIMAGE_URL] = useState('');
@@ -18,7 +22,7 @@ const TeacherList = () => {
         try {
             let { status, result, imageUrl } = await viewTeacher();
             if (status === true) {
-                const teacherData = await result.filter(each => each.name.toLowerCase().includes(userSearchInput.toLowerCase()))
+                const teacherData = await result.filter(each => each.active === 1 && each.name.toLowerCase().includes(userSearchInput.toLowerCase()))
                 setData(teacherData)
                 setIMAGE_URL(imageUrl);
             }
@@ -47,7 +51,7 @@ const TeacherList = () => {
                 getData()
 
             } else if (status === false) {
-                toastAlert('success', message)
+                toastAlert('error', message)
             }
 
         } catch (err) {
@@ -57,6 +61,13 @@ const TeacherList = () => {
     const handleSearchInput = (event) => {
         setUserSearchInput(event.target.value)
     }
+    const openBasic = async (Id) => {
+        const [action] = await AlertConfirm('Are you sure, you want to delete it');
+        // action && console.log('ok');
+        if (action) {
+          deleteteacher(Id)
+             }
+      };
     return (
         <div className="teacher">
             <Sidebar />
@@ -194,13 +205,15 @@ const TeacherList = () => {
                                                             </a>
                                                         </li>
                                                         <li>
-                                                            <a className="dropdown-item" href="#" style={{ color: "red" }}  onClick={() => deleteteacher(item._id)}>
-                                                                <i
-                                                                    className="fa fa-trash-o"
-                                                                    style={{ color: "red", marginRight: 10 }}
-                                                                />
-                                                                Clear
-                                                            </a>
+                                                        <Button className='pop-up-button' onClick={() => openBasic(item._id)}>
+                              <a className="dropdown-item" href="#" style={{ color: "red" }} >
+                                  <i
+                                    className="fa fa-trash-o"
+                                    style={{ color: "red", marginRight: 10 }}
+                                  />
+                                  Clear
+                                </a>
+                            </Button>
                                                         </li>
                                                     </ul>
                                                 </div>

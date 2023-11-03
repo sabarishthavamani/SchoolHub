@@ -27,6 +27,10 @@ const teacheradmissionSchema = new Schema ({
     'teachersignature':String,
     'fatherphonenumber':Number,
     'motherphonenumber': Number,
+    'active':{
+        type: Number,
+        default: 1
+    },
 })
 
 let teacheradmissionModel = mongoose.model('teacheradmission', teacheradmissionSchema, 'teacheradmission' )

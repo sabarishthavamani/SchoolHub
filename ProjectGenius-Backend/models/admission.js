@@ -29,8 +29,11 @@ const admissionSchema = new Schema ({
     'mothername':String,
     'fatherphonenumber':Number,
     'motherphonenumber': Number,
-    'doj':String
-
+    'doj':String,
+    'active':{
+        type: Number,
+        default: 1
+    },
 })
 
 let admissionModel = mongoose.model('admission', admissionSchema, 'admission' )

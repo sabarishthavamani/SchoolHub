@@ -256,19 +256,29 @@ const viewStudent = async (req, res) => {
         return res.status(500).json({ 'status': false, 'message': 'Error on server' })
     }
 }
-const deleteStudent = async (req, res) => {
 
+const deletStudent = async (req, res) => {
     if (isEmpty(req.params.id)) {
-        return res.status(400).json({ 'status': false, 'message': "_Id is empty" })
+        return res.status(400).json({ 'status': false, 'message': '_Id is empty' });
     }
 
-    let deletedata = await Admission.deleteOne({ _id: req.params.id });
-    if (deletedata && deletedata.deletedCount != 0) {
-        return res.status(200).json({ 'status': true, 'message': "Data Deleted successfully" })
-    }
+    try {
+        const filter = { _id: req.params.id };
+        const update = { active: '0' }; // You can set the new status here
 
-    return res.status(200).json({ 'status': true, 'message': "Already Deleted" })
+        const updatedData = await Admission.updateOne(filter, { $set: update });
+        console.log(updatedData,'--data')
+        if (updatedData && updatedData.modifiedCount > 0) {
+            return res.status(200).json({ 'status': true, 'message': ' Data Deleted successfully' });
+        } else {
+            return res.status(200).json({ 'status': true, 'message': 'No matching records found' });
+        }
+    } catch (error) {
+        console.log(error,'--errr')
+        return res.status(500).json({ 'status': false, 'message': 'Internal Server Error' });
+    }
 }
+
 
 const getSingleStudent = async (req, res) => {
     try {
@@ -358,6 +368,24 @@ const createFeeSetup = async (req, res) => {
         return res.status(500).json({ 'status': false, 'message': 'Error on the server' });
     }
 }
+const updateFeeSetup = async (req, res) => {
+    try {
+
+        let newDocument = {
+            'term1': req.body.term1,
+            'term2': req.body.term2,
+            'term3': req.body.term3,
+        }
+
+       
+        let userData = await FeeSetup.findOneAndUpdate({ grade: req.body.grade }, { '$set': newDocument }, { new: true });
+        console.log( userData , '--doc')
+        return res.status(200).json({ 'status': true, 'message': 'Feesetup saved successfully' })
+    } catch (err) {
+        console.log(err);
+        return res.status(500).json({ 'status': false, 'message': 'Error on the server' });
+    }
+}
 const findFeeSetup = async (req, res) => {
     try {
         let newDocument = await FeeSetup.find({}).lean();
@@ -368,6 +396,7 @@ const findFeeSetup = async (req, res) => {
         return res.status(500).json({ 'status': false, 'message': 'Error on the server' });
     }
 }
+
 const createFeeCollection = async (req, res) => {
     try {
         console.log(req.body, '---body');
@@ -552,15 +581,24 @@ const ViewTeacher = async (req,res) =>{
 const deleteTeacher = async (req, res) => {
 
     if (isEmpty(req.params.id)) {
-        return res.status(400).json({ 'status': false, 'message': "_Id is empty" })
+        return res.status(400).json({ 'status': false, 'message': '_Id is empty' });
     }
 
-    let deletedata = await TeacherAdmission.deleteOne({ _id: req.params.id });
-    if (deletedata && deletedata.deletedCount != 0) {
-        return res.status(200).json({ 'status': true, 'message': "Data Deleted successfully" })
-    }
+    try {
+        const filter = { _id: req.params.id };
+        const update = { active: '0' }; // You can set the new status here
 
-    return res.status(200).json({ 'status': true, 'message': "Already Deleted" })
+        const updatedData = await TeacherAdmission.updateOne(filter, { $set: update });
+        console.log(updatedData,'--data')
+        if (updatedData && updatedData.modifiedCount > 0) {
+            return res.status(200).json({ 'status': true, 'message': ' Data Deleted successfully' });
+        } else {
+            return res.status(200).json({ 'status': true, 'message': 'No matching records found' });
+        }
+    } catch (error) {
+        console.log(error,'--errr')
+        return res.status(500).json({ 'status': false, 'message': 'Internal Server Error' });
+    }
 }
 const updateTeacher = async (req, res) => {
     try {
@@ -634,7 +672,6 @@ module.exports = {
     createadmin,
     ReverifyCode,
     viewStudent,
-    deleteStudent,
     getSingleStudent,
     updateStudent,
     createFeeSetup,
@@ -648,5 +685,7 @@ module.exports = {
     updateTeacher,
     getSingleTeacher,
     teacheraadhaarValid,
-    studentaadhaarValid
+    studentaadhaarValid,
+    deletStudent,
+    updateFeeSetup
 };

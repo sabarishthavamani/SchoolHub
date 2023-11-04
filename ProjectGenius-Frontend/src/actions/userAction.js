@@ -220,6 +220,43 @@ export const viewFees = async () => {
     }
 }
 
+export const getSinglefees = async (id) => {
+    try {
+        let respData = await axios({
+
+            'url': '/getsingle-fees/' + id,
+            'method': 'get',
+
+        })
+
+        return {
+            'status': respData.data.status,
+            'result': respData.data.result
+        }
+
+    } catch (err) {
+        console.log(err, 'errrr')
+    }
+}
+
+export const feeUpdate = async (data) => {
+
+    try {
+        let respData = await axios({
+            'url': '/feesupdate',
+            'method': 'post',
+            'data':data
+        })
+        return {
+            'status': respData.data.status,
+            'message': respData.data.message,
+        }
+    } catch (err) {
+           console.log(err,'--err')
+    }
+
+}
+
 export const feeCollection = async (data) => {
 
     try {

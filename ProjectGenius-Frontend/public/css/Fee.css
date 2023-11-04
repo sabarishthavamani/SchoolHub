@@ -674,3 +674,23 @@ input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
+.fee-view {
+    width: 100%;
+    height: 90px;
+    display: flex;
+    align-items: end;
+    justify-content: end;
+}
+.fee-view button {
+    border-radius: 16px;
+    background:transparent;
+    color: white;
+    border: none;
+    margin-right: 15px;
+    outline: none;
+    color:#303972;
+    font-weight: 600;
+}
+.fee-view button i:first-child {
+    margin-left: 10px;
+}

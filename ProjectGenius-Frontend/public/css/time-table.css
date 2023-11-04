@@ -109,6 +109,12 @@
     margin-left: 15px;
     cursor: pointer;
 }
+.right-content {
+    width: 80%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
 .teacher-content {
     width: 80%;
     display: flex;

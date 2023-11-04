@@ -8,6 +8,8 @@
 .fee-collection {
     width: 100%;
     display: flex;
+    justify-content: center;
+    align-items: center;
 }
 .fee-side-bar {
     width: 20%;

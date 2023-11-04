@@ -2,12 +2,15 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from './components/sidebar';
 import Navbar from './components/navbar';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faGreaterThan } from '@fortawesome/free-solid-svg-icons';
 
 //lib
 import toastAlert from '../lib/toast';
 
 //actions
 import { feeSetup } from '../actions/userAction';
+
 
 const initialFormValue = {
   grade: '',
@@ -24,36 +27,39 @@ const FeeSetup = () => {
   // state
   const [formValue, setFormValue] = useState(initialFormValue);
 
-  const { grade, term1, term2, term3  } = formValue;
+  const { grade, term1, term2, term3 } = formValue;
 
 
   const handleChange = (e) => {
-      const { name, value } = e.target;
-      setFormValue({ ...formValue, ...{ [name]: value } })
+    const { name, value } = e.target;
+    setFormValue({ ...formValue, ...{ [name]: value } })
   }
   const handleSubmit = async () => {
-      try {
+    try {
 
-          let data = {
-              grade: grade,
-              term1: term1,
-              term2: term2,
-              term3: term3,
-          }
-          let { status, message } = await feeSetup(data)
-          if (status === true) {
-              setFormValue(initialFormValue)
-              toastAlert('success', message)
-              // navigate('/feecollection')              
-          } else if (status === false) {
-              if (message) {
-                  toastAlert('error', message)
-              }
-          }
-
-      } catch (err) {
-          console.log(err, '...err')
+      let data = {
+        grade: grade,
+        term1: term1,
+        term2: term2,
+        term3: term3,
       }
+      let { status, message } = await feeSetup(data)
+      if (status === true) {
+        setFormValue(initialFormValue)
+        toastAlert('success', message)
+      } else if (status === false) {
+        if (message) {
+          toastAlert('error', message)
+        }
+      }
+
+    } catch (err) {
+      console.log(err, '...err')
+    }
+  }
+
+  const handleClick = () =>{
+    navigate('/feeslist')
   }
 
   return (
@@ -109,6 +115,9 @@ const FeeSetup = () => {
             </div>
             <div className="save-changes">
               <button type="button" onClick={handleSubmit}>Save Changes</button>
+            </div>
+            <div className="fee-view">
+              <button type="button" onClick={handleClick} >View Fees List<FontAwesomeIcon icon={faGreaterThan} style={{marginLeft:'10px', color:'#ff80a6'}} ></FontAwesomeIcon><FontAwesomeIcon icon={faGreaterThan} style={{color:'#ff80a6'}} ></FontAwesomeIcon></button>
             </div>
           </form>
         </div>

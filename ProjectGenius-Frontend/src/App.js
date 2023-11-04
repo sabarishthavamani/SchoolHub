@@ -20,6 +20,8 @@ import TeacherDetail from './pages/teacherdetail';
 import TimeTable from './pages/teachertimetable';
 import FeePayment from './pages/feepayment';
 import PaymentFailure from './pages/paymentfailure';
+import FeesList from './pages/feeslist';
+import FeesEdit from './pages/feesedit';
 
 function App() {
   return (
@@ -72,6 +74,12 @@ function App() {
         </Routes>
         <Routes>
           <Route path="/paymentfailure" element={<ConditionRoute type="private"><PaymentFailure /></ConditionRoute>} />
+        </Routes>
+        <Routes>
+          <Route path="/feeslist" element={<ConditionRoute type="private"><FeesList /></ConditionRoute>} />
+        </Routes>
+        <Routes>
+          <Route path="/fees-edit/:Id" element={<ConditionRoute type="private"><FeesEdit /></ConditionRoute>} />
         </Routes>
       </BrowserRouter>
     </div>

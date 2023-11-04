@@ -370,20 +370,37 @@ const createFeeSetup = async (req, res) => {
 }
 const updateFeeSetup = async (req, res) => {
     try {
-
+        const currentDate = new Date();
+        const day = currentDate.getDate();
+        const month = currentDate.getMonth() + 1; // Months are zero-based, so add 1
+        const year = currentDate.getFullYear();
+        const hours = currentDate.getHours();
+        const minutes = currentDate.getMinutes();
+        const seconds = currentDate.getSeconds();
+        
+        // Create a formatted string
+        const formattedDate = `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;
         let newDocument = {
+            'grade':req.body.grade,
             'term1': req.body.term1,
             'term2': req.body.term2,
             'term3': req.body.term3,
-        }
-
-       
-        let userData = await FeeSetup.findOneAndUpdate({ grade: req.body.grade }, { '$set': newDocument }, { new: true });
+            'updateddate':formattedDate,
+        }      
+        let userData = await FeeSetup.findOneAndUpdate({_id: req.body.Id }, { '$set': newDocument }, { new: true });
         console.log( userData , '--doc')
-        return res.status(200).json({ 'status': true, 'message': 'Feesetup saved successfully' })
+        return res.status(200).json({ 'status': true,'message':'Feesetup Updated Successfully' })
     } catch (err) {
         console.log(err);
         return res.status(500).json({ 'status': false, 'message': 'Error on the server' });
+    }
+}
+const getSingleFees = async (req, res) => {
+    try {
+        let feesData = await FeeSetup.findOne({ _id: req.params.id }).lean();
+        return res.status(200).json({ 'status': true, 'result': feesData });
+    } catch (err) {
+        return res.status(500).json({ 'status': false });
     }
 }
 const findFeeSetup = async (req, res) => {
@@ -687,5 +704,6 @@ module.exports = {
     teacheraadhaarValid,
     studentaadhaarValid,
     deletStudent,
-    updateFeeSetup
+    updateFeeSetup,
+    getSingleFees,
 };

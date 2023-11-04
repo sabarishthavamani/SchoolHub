@@ -60,8 +60,10 @@ router.route('/deletestudent/:id').get(adminCtrl.deletStudent);
 router.route('/getsingle-student/:id').get(adminCtrl.getSingleStudent);
 router.route('/updatestudent').post(profileUpload.fields([{ name: 'signature', maxCount: 1 }, { name: 'photo', maxCount: 1 }]),adminValid.updateValid,adminCtrl.updateStudent);
 router.route('/getstudentaadhaar').get(adminCtrl.studentaadhaarValid);
-//feepayment
+//feesetup & feepayment
 router.route('/feessetup').post(adminCtrl.createFeeSetup);
+router.route('/feesupdate').post(adminCtrl.updateFeeSetup);
+router.route('/getsingle-fees/:id').get(adminCtrl.getSingleFees);
 router.route('/feescollection').post(adminValid.feecollectionValid,adminCtrl.createFeeCollection);
 router.route('/viewfees').get(adminCtrl.findFeeSetup);
 router.route('/feepayment/:name').post(adminCtrl.feePayment);

@@ -11,7 +11,7 @@ const feecollectionSchema = new Schema ({
         enum: ['term1', 'term2', 'term3'],
         default: null
     }],
-    'grade':String
+    'admissiongrade':String
 })
 
 let feecollectionModel = mongoose.model('feescollection', feecollectionSchema, 'feescollection' )

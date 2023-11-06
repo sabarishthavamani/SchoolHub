@@ -3,11 +3,12 @@ const { Schema } = mongoose;
 
 
 const studentSchema = new Schema ({
-    'grade' :String,
+    'admissiongrade' :String,
     'term1' :Number,
     'term2':Number,
     'term3':Number,
     'updateddate':String,
+    'totalfees':Number,
 })
 
 let studentModel = mongoose.model('fees', studentSchema, 'fees' )

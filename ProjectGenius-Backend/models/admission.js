@@ -34,6 +34,7 @@ const admissionSchema = new Schema ({
         type: Number,
         default: 1
     },
+    'feesamount':Number,
 })
 
 let admissionModel = mongoose.model('admission', admissionSchema, 'admission' )

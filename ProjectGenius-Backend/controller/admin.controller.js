@@ -153,43 +153,6 @@ const jwtVerify = (token) => {
 }
 
 const registerStudent = async (req, res) => {
-    // let checkprimaryPhone = await Admission.findOne({ 'contactNumber': req.body.contactNumber }, { 'contactNumber': 1 }).lean();
-    // if (!isEmpty(checkprimaryPhone)) {
-    //     return res.status(400).json({ 'status': false, 'errors': { 'contactNumber': 'Phone Nunmber already exist' },'message': 'Same Mobile Number  already registered,please go and check in previous page' })
-    // }
-    // let checksecondaryPhone = await Admission.findOne({ 'emergencycontactNumber': req.body.emergencycontactNumber }, { 'emergencycontactNumber': 1 }).lean();
-    // if (!isEmpty(checksecondaryPhone)) {
-    //     return res.status(400).json({ 'status': false, 'errors': { 'emergencycontactNumber': 'Phone Number already exist' },'message': 'Same Mobile Number  already registered,please go and check in previous page' })
-    // }
-    // let checkwhatsappNo = await Admission.findOne({ 'whatsappNumber': req.body.whatsappNumber }, { 'whatsappNumber': 1 }).lean();
-    // if (!isEmpty(checkwhatsappNo)) {
-    //     return res.status(400).json({ 'status': false, 'errors': { 'whatsappNumber': 'whatsapp Number already exist' }, })
-    // }
-    // let checkfatherphonenumber = await Admission.findOne({ 'fatherphonenumber': req.body.fatherphonenumber }, { 'fatherphonenumber': 1 }).lean();
-    // if (!isEmpty(checkfatherphonenumber)) {
-    //     return res.status(400).json({ 'status': false, 'errors': { 'fatherphonenumber': 'Same Phone Number already exist' } })
-    // }
-    // let checkmotherphonenumber = await Admission.findOne({ 'motherphonenumber': req.body.motherphonenumber }, { 'motherphonenumber': 1 }).lean();
-    // if (!isEmpty(checkmotherphonenumber)) {
-    //     return res.status(400).json({ 'status': false, 'errors': { 'motherphonenumber': 'Same Phone Number already exist' } })
-    // }
-    // let checkaadhaarNo = await Admission.findOne({ 'aadhaarNumber': req.body.aadhaarNumber }, { 'aadhaarNumber': 1 }).lean();
-    // if (!isEmpty(checkaadhaarNo)) {
-    //     return res.status(400).json({ 'status': false, 'errors': { 'aadhaarNumber': 'Aadhaar Number already exist' }, 'message': 'Same Aadhaar Number  already registered,please go and check in previous page' })
-    // }
-    // let checkEmail = await Admission.findOne({ 'email': req.body.email }, { 'email': 1 }).lean();
-    // if (!isEmpty(checkEmail)) {
-    //     return res.status(400).json({ 'status': false, 'errors': { 'email': 'Email Id already exist' }, 'message': 'Same EmailId  already registered,please go and check in previous page' })
-    // }
-    // let checkAddress = await Admission.findOne({ 'permanentaddress': req.body.permanentaddress }, { 'permanentaddress': 1 }).lean();
-    // if (!isEmpty(checkAddress)) {
-    //     return res.status(400).json({ 'status': false, 'errors': { 'permanentaddress': 'permanentaddress  already exist' } })
-    // }
-    // let checkAddress2 = await Admission.findOne({ 'temporaryaddress': req.body.temporaryaddress }, { 'temporaryaddress': 1 }).lean();
-    // console.log(checkAddress2, '----add')
-    // if (!isEmpty(checkAddress2)) {
-    //     return res.status(400).json({ 'status': false, 'errors': { 'temporaryaddress': 'temporaryaddress  already exist' } })
-    // }
     const maxStudent = await Admission.findOne({}, { studentId: 1 }).sort({ studentId: -1 });
     console.log(maxStudent, '---studenttt');
 
@@ -217,6 +180,10 @@ const registerStudent = async (req, res) => {
     const year = currentDate.getFullYear();
     const formattedDate = `${day}-${month}-${year}`;
 
+    //for declare fees by admissiongrade wise
+    const Feesdeclare = await FeeSetup.findOne({ admissiongrade: req.body.admissiongrade }, { totalfees: 1 }).lean()
+    console.log(Feesdeclare, '--feesdeclare')
+    const FeesAmount = Feesdeclare.totalfees;
     let newDoc = new Admission({
         'studentId': nextStudentId,
         'name': FullName,
@@ -242,7 +209,8 @@ const registerStudent = async (req, res) => {
         'mothername': req.body.mothername,
         'fatherphonenumber': req.body.fatherphonenumber,
         'motherphonenumber': req.body.motherphonenumber,
-        'doj': formattedDate
+        'doj': formattedDate,
+        'feesamount': FeesAmount,
     })
 
     await newDoc.save();
@@ -267,14 +235,14 @@ const deletStudent = async (req, res) => {
         const update = { active: '0' }; // You can set the new status here
 
         const updatedData = await Admission.updateOne(filter, { $set: update });
-        console.log(updatedData,'--data')
+        console.log(updatedData, '--data')
         if (updatedData && updatedData.modifiedCount > 0) {
             return res.status(200).json({ 'status': true, 'message': ' Data Deleted successfully' });
         } else {
             return res.status(200).json({ 'status': true, 'message': 'No matching records found' });
         }
     } catch (error) {
-        console.log(error,'--errr')
+        console.log(error, '--errr')
         return res.status(500).json({ 'status': false, 'message': 'Internal Server Error' });
     }
 }
@@ -310,6 +278,11 @@ const updateStudent = async (req, res) => {
         if (surName !== undefined && surName !== "") {
             FullName += ` ${surName}`;
         }
+
+        const Feesdeclare = await FeeSetup.findOne({ admissiongrade: req.body.admissiongrade }, { totalfees: 1 }).lean()
+        console.log(Feesdeclare, '--feesdeclare')
+        const FeesAmount = Feesdeclare.totalfees;
+
         let updateDoc = {
             'name': FullName,
             'dob': req.body.dob,
@@ -332,6 +305,7 @@ const updateStudent = async (req, res) => {
             'mothername': req.body.mothername,
             'fatherphonenumber': req.body.fatherphonenumber,
             'motherphonenumber': req.body.motherphonenumber,
+            'feesamount':FeesAmount
         }
 
         if (!isEmpty(req.files) && req.files.photo && req.files.photo.length > 0) {
@@ -352,13 +326,17 @@ const updateStudent = async (req, res) => {
 }
 const createFeeSetup = async (req, res) => {
     try {
+        const term1 = parseInt(req.body.term1, 10);
+        const term2 = parseInt(req.body.term2, 10);
+        const term3 = parseInt(req.body.term3, 10);
 
+        const totalfees = term1 + term2 + term3;
         let newDocument = new FeeSetup({
-            'grade': req.body.grade,
+            'admissiongrade': req.body.admissiongrade,
             'term1': req.body.term1,
             'term2': req.body.term2,
             'term3': req.body.term3,
-
+            'totalfees': totalfees
         })
         await newDocument.save();
         console.log(newDocument, '--doc')
@@ -377,19 +355,25 @@ const updateFeeSetup = async (req, res) => {
         const hours = currentDate.getHours();
         const minutes = currentDate.getMinutes();
         const seconds = currentDate.getSeconds();
-        
+
         // Create a formatted string
         const formattedDate = `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;
+        const term1 = parseInt(req.body.term1, 10);
+        const term2 = parseInt(req.body.term2, 10);
+        const term3 = parseInt(req.body.term3, 10);
+
+        const totalfees = term1 + term2 + term3;
         let newDocument = {
-            'grade':req.body.grade,
+            'admissiongrade': req.body.admissiongrade,
             'term1': req.body.term1,
             'term2': req.body.term2,
             'term3': req.body.term3,
-            'updateddate':formattedDate,
-        }      
-        let userData = await FeeSetup.findOneAndUpdate({_id: req.body.Id }, { '$set': newDocument }, { new: true });
-        console.log( userData , '--doc')
-        return res.status(200).json({ 'status': true,'message':'Feesetup Updated Successfully' })
+            'updateddate': formattedDate,
+            'totalfees': totalfees
+        }
+        let userData = await FeeSetup.findOneAndUpdate({ _id: req.body.Id }, { '$set': newDocument }, { new: true });
+        console.log(userData, '--doc')
+        return res.status(200).json({ 'status': true, 'message': 'Feesetup Updated Successfully' })
     } catch (err) {
         console.log(err);
         return res.status(500).json({ 'status': false, 'message': 'Error on the server' });
@@ -419,8 +403,8 @@ const createFeeCollection = async (req, res) => {
         console.log(req.body, '---body');
 
         // Retrieve the FeeSetup document for the selected grade
-        const feeSetup = await FeeSetup.findOne({ grade: req.body.grade });
-
+        const feeSetup = await FeeSetup.findOne({ admissiongrade: req.body.admissiongrade });
+        console.log(feeSetup,'---feesetup')
         if (!feeSetup) {
             return res.status(400).json({ status: false, message: 'Fee setup not found for the selected grade' });
         }
@@ -442,7 +426,7 @@ const createFeeCollection = async (req, res) => {
             studentId: req.body.studentId,
             dueamount: totalDueAmount,
             paymentterm: selectedTerms, // Use the selected terms
-            grade: req.body.grade,
+            admissiongrade: req.body.admissiongrade,
         });
 
         await newDocument.save();
@@ -456,15 +440,15 @@ const createFeeCollection = async (req, res) => {
 
 const feesPaid = async (req, res) => {
     try {
-        console.log(req.body,'----bodyyy')
-        const balanceamount =( parseFloat(req.body.total)-parseFloat(req.body.amountpaid)).toFixed(2)
+        console.log(req.body, '----bodyyy')
+        const balanceamount = (parseFloat(req.body.total) - parseFloat(req.body.amountpaid)).toFixed(2)
         const newDocument = new FeesPaid({
             name: req.body.name,
             studentId: req.body.studentId,
             dueamount: req.body.dueamount,
             total: req.body.total,
             amountpaid: req.body.amountpaid,
-            balanceamount :  balanceamount,
+            balanceamount: balanceamount,
         });
         await newDocument.save();
         return res.status(200).json({ 'status': true, 'message': 'Amount Paid successfully' });
@@ -521,7 +505,7 @@ const registerTeacher = async (req, res) => {
     //     return res.status(400).json({ 'status': false, 'errors': { 'temporaryaddress': 'temporaryaddress  already exist' },'message': 'Same Address  already registered,please go and check in previous page' })
     // }
     const maxTeacher = await TeacherAdmission.findOne({}, { teacherId: 1 }).sort({ teacherId: -1 });
-    let nextTeacherId = 'T0001'; 
+    let nextTeacherId = 'T0001';
 
     if (maxTeacher && maxTeacher.teacherId) {
         const currentMaxId = maxTeacher.teacherId;
@@ -543,7 +527,7 @@ const registerTeacher = async (req, res) => {
         'name': FullName,
         'dob': req.body.dob,
         'age': req.body.age,
-        'teachingexperience':req.body.teachingexperience,
+        'teachingexperience': req.body.teachingexperience,
         'email': req.body.email,
         'teacherphoto': req.files.teacherphoto[0].filename,
         'emergencycontactNumber': req.body.emergencycontactNumber,
@@ -562,31 +546,31 @@ const registerTeacher = async (req, res) => {
         'subjects': req.body.subjects,
         'fatherphonenumber': req.body.fatherphonenumber,
         'motherphonenumber': req.body.motherphonenumber,
-        'currentsalary': req.body.currentsalary,     
+        'currentsalary': req.body.currentsalary,
     })
 
     await newDoc.save();
     return res.status(200).json({ 'status': true, 'message': " Register successfully" })
 }
-const teacheraadhaarValid = async (req,res) =>{
-    try{
-        let checkaadhaarNo = await TeacherAdmission.find({},{'aadhaarNumber':1}).lean();
-        console.log(checkaadhaarNo,'---aadhaar')
-            return res.status(200).json({ 'status': true, result:checkaadhaarNo})
-    }catch(err){
-       console.log(err,'---err')
+const teacheraadhaarValid = async (req, res) => {
+    try {
+        let checkaadhaarNo = await TeacherAdmission.find({}, { 'aadhaarNumber': 1 }).lean();
+        console.log(checkaadhaarNo, '---aadhaar')
+        return res.status(200).json({ 'status': true, result: checkaadhaarNo })
+    } catch (err) {
+        console.log(err, '---err')
     }
 }
-const studentaadhaarValid = async (req,res) =>{
-    try{
-        let checkaadhaarNo = await Admission.find({},{'aadhaarNumber':1}).lean();
-        console.log(checkaadhaarNo,'---aadhaar')
-            return res.status(200).json({ 'status': true, result:checkaadhaarNo})
-    }catch(err){
-       console.log(err,'---err')
+const studentaadhaarValid = async (req, res) => {
+    try {
+        let checkaadhaarNo = await Admission.find({}, { 'aadhaarNumber': 1 }).lean();
+        console.log(checkaadhaarNo, '---aadhaar')
+        return res.status(200).json({ 'status': true, result: checkaadhaarNo })
+    } catch (err) {
+        console.log(err, '---err')
     }
 }
-const ViewTeacher = async (req,res) =>{
+const ViewTeacher = async (req, res) => {
     try {
         const teacherView = await TeacherAdmission.find({}).lean();
         return res.status(200).json({ 'status': true, 'result': teacherView, 'imageUrl': config.IMAGE.TEACHER_FILE_URL_PATH })
@@ -606,14 +590,14 @@ const deleteTeacher = async (req, res) => {
         const update = { active: '0' }; // You can set the new status here
 
         const updatedData = await TeacherAdmission.updateOne(filter, { $set: update });
-        console.log(updatedData,'--data')
+        console.log(updatedData, '--data')
         if (updatedData && updatedData.modifiedCount > 0) {
             return res.status(200).json({ 'status': true, 'message': ' Data Deleted successfully' });
         } else {
             return res.status(200).json({ 'status': true, 'message': 'No matching records found' });
         }
     } catch (error) {
-        console.log(error,'--errr')
+        console.log(error, '--errr')
         return res.status(500).json({ 'status': false, 'message': 'Internal Server Error' });
     }
 }
@@ -623,11 +607,11 @@ const updateTeacher = async (req, res) => {
         const firstName = req.body.firstName;
         const lastName = req.body.lastName;
         let FullName = `${firstName} ${lastName}`;
-        let updateDoc =({
+        let updateDoc = ({
             'name': FullName,
             'dob': req.body.dob,
             'age': req.body.age,
-            'teachingexperience':req.body.teachingexperience,
+            'teachingexperience': req.body.teachingexperience,
             'email': req.body.email,
             'emergencycontactNumber': req.body.emergencycontactNumber,
             'phoneNumber': req.body.phoneNumber,
@@ -644,7 +628,7 @@ const updateTeacher = async (req, res) => {
             'subjects': req.body.subjects,
             'fatherphonenumber': req.body.fatherphonenumber,
             'motherphonenumber': req.body.motherphonenumber,
-            'currentsalary': req.body.currentsalary,    
+            'currentsalary': req.body.currentsalary,
         })
 
         if (!isEmpty(req.files) && req.files.teacherphoto && req.files.teacherphoto.length > 0) {

@@ -6,6 +6,27 @@ import moment from "moment-timezone";
 const AdmissionFormOne = (props) => {
     const {formValue, setFormValue, handleNextClick, errors} = props
 
+    //state
+    const [onFocusFirstName, setFocusOnFirstName] = useState(false);
+    const [onFocusLastName, setFocusOnLastName] = useState(false);
+    const [onFocusFather, setFocusOnFather] = useState(false);
+    const [onFocusMother, setFocusOnMother] = useState(false);
+  
+  const [isValid, setIsValid] = useState(true);
+
+  const handleFileChange = (event) => {
+    const selectedFile = event.target.files[0];
+    if (selectedFile) {
+      if (selectedFile.size > 300000 || selectedFile.size < 30000) {
+        setFormValue({ ...formValue, ...{ [event.target.name]: null } });
+        setIsValid(false);
+      } else {
+        setFormValue({ ...formValue, ...{ [event.target.name]: selectedFile } });
+        setIsValid(true);
+      }
+    }
+  };
+
     const triggerNextForm = () => {
       handleNextClick()
     }
@@ -29,10 +50,7 @@ const AdmissionFormOne = (props) => {
       }
     }
 
-    const handleFileChange = (e) => {
-        const { name, files } = e.target;
-        setFormValue({ ...formValue, ...{ [name]: files[0] } })
-      }
+
 
     const {firstName, dob, fathername, placeofbirth, lastName, age, mothername, photo} = formValue
 
@@ -52,32 +70,30 @@ const AdmissionFormOne = (props) => {
                 <label htmlFor="">
                   First Name<sup>*</sup>
                 </label>
-                <input type="text" name="firstName" value={firstName} onChange={handleChange} />
-                {errors.firstName !== "" &&<span className='text-error'>{errors.firstName}</span>}
+                <input type="text" name="firstName" value={firstName} onChange={handleChange} maxLength={15} onFocus={() => setFocusOnFirstName(true)} onBlur={() => setFocusOnFirstName(false)} />
+                {onFocusFirstName && firstName.length >= 15 &&<span className='text-error'>Reached max characters limit 15</span>}
               </div>
               <div className="field-box">
                 <label htmlFor="">
                   Date of Birth<sup>*</sup>
                 </label>
                 <div className='date-input-container '>
-                  <input type="text" style={{borderRadius: '4px 0px 0px 4px '}} value={ dob } placeholder='DD/MM/YYYY' />
+                  <input type="text" style={{borderRadius: '4px 0px 0px 4px '}} value={ dob } placeholder='DD/MM/YYYY' readOnly />
                   <input type='date' name='dob' onChange={handleChange} />
                 </div>
-                {errors.dob !== "" && <span className='text-error'>{errors.dob}</span> }
               </div>
               <div className="field-box">
                 <label htmlFor="">
                   Father Name<sup>*</sup>
                 </label>
-                <input type="text" name="fathername" value={fathername} onChange={handleChange} />
-                {errors.fathername !== "" && <span className='text-error'>{errors.fathername}</span> }
+                <input type="text" name="fathername" value={fathername} onChange={handleChange} maxLength={20} onFocus={() => setFocusOnFather(true)} onBlur={() => setFocusOnFather(false)}/>
+                {onFocusFather && fathername.length >= 20 &&<span className='text-error'>Reached max characters limit 20</span>}
               </div>
               <div className="field-box">
                 <label htmlFor="">
                   Place of Birth<sup>*</sup>
                 </label>
                 <input type="text" name="placeofbirth" value={placeofbirth} onChange={handleChange} />
-                { errors.placeofbirth !== "" && <span className='text-error'>{errors.placeofbirth}</span> }
               </div>
             </div>
             <div className="form-right">
@@ -85,27 +101,26 @@ const AdmissionFormOne = (props) => {
                 <label htmlFor="">
                   Last Name<sup>*</sup>
                 </label>
-                <input type="text" name="lastName" value={lastName} onChange={handleChange} />
-                { errors.lastName!== "" && <span className='text-error'>{errors.lastName}</span> }
+                <input type="text" name="lastName" value={lastName} onChange={handleChange} maxLength={15} onFocus={() => setFocusOnLastName(true)} onBlur={() => setFocusOnLastName(false)} />
+                {onFocusLastName && lastName.length >= 15 &&<span className='text-error'>Reached max characters limit 15</span>}
               </div>
               <div className="field-box">
                 <label htmlFor="">
                   Age<sup>*</sup>
                 </label>
-                <input type="text" name="age" value={age} onChange={handleChange} />
-                {errors.age !== "" && <span className='text-error'>{errors.age}</span> }
+                <input type="text" name="age" value={age} onChange={handleChange} readOnly  />
               </div>
               <div className="field-box">
                 <label htmlFor="">
                   Mother Name<sup>*</sup>
                 </label>
                 <input
-                  type="text" name="mothername" value={mothername} onChange={handleChange} />
-                { errors.mothername !== "" &&  <span className='text-error'>{errors.mothername}</span> }
+                  type="text" name="mothername" value={mothername} onChange={handleChange} maxLength={20} onFocus={() => setFocusOnMother(true)} onBlur={() => setFocusOnMother(false)} />
+                {onFocusMother && mothername.length >= 20 &&<span className='text-error'>Reached max characters limit 20</span>}
               </div>
               <div className="field-box">
                 <label>
-                  Upload Student Photo<sup>*</sup>
+                  Upload Student Photo
                 </label>
                 <input type="file" id="file" name="photo" onChange={handleFileChange} />
                 <label htmlFor="file" className="photo">
@@ -113,7 +128,8 @@ const AdmissionFormOne = (props) => {
                   {photo ? (<span>{photo.name}</span>) : (<span>Drag and Drop or Browse Files</span>)}
                 </label>
                 {photo && <img src={URL.createObjectURL(photo)} style={{ 'width': '70px', 'marginTop': "5px" }} />}
-                {errors.photo !== "" &&  <span className='text-error'>{errors.photo}</span> }
+                {!isValid && <span className='text-error'>File size is Minimum 30Kb to Maximum 300Kb</span> } 
+                {photo === "" && <span className='text-error'>*No file uploaded</span>}
               </div>
             </div>
           </form>

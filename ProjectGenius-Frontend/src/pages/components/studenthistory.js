@@ -5,6 +5,13 @@ import { faArrowLeft, faHistory, faUpload } from '@fortawesome/free-solid-svg-ic
 const AdmissionFormFinal = (props) => {
     const {formValue, setFormValue, handlePreClick, handleSubmit, errors} = props
 
+    //state
+    const [onFocusPrevSchool, setFocusOnPrevSchool] = useState(false )
+    const [onFocusRelNam, setFocusOnRelNam] = useState(false)
+    const [onFocusRelNum, setFocusOnRelNum] = useState(false)
+    const [onFocusVaccination, setFocusOnVaccination] = useState(false)
+    const [isValid, setIsValid] = useState(true);
+
     const triggerPreviousForm = () => {
         handlePreClick()
     }
@@ -18,10 +25,18 @@ const AdmissionFormFinal = (props) => {
         setFormValue({ ...formValue, [name]: value });
       }
     
-    const handleFileChange = (e) => {
-    const { name, files } = e.target;
-    setFormValue({ ...formValue, ...{ [name]: files[0] } })
-    }
+      const handleFileChange = (event) => {
+        const selectedFile = event.target.files[0];
+        if (selectedFile) {
+          if (selectedFile.size > 300000 || selectedFile.size < 30000) {
+            setFormValue({ ...formValue, ...{ [event.target.name]: null } });
+            setIsValid(false);
+          } else {
+            setFormValue({ ...formValue, ...{ [event.target.name]: selectedFile } });
+            setIsValid(true);
+          }
+        }
+      };
 
     const displayFile = (file) => {
     if (file) {
@@ -42,7 +57,7 @@ const AdmissionFormFinal = (props) => {
     return (
         // Student History form JSX
         <>
-          <div className="person-details">
+           <div className="person-details">
             <div className="person-header">
               <span><FontAwesomeIcon icon={faHistory} className='personicon' />Student History</span>
             </div>
@@ -70,7 +85,6 @@ const AdmissionFormFinal = (props) => {
                     <option>Class 11</option>
                     <option>Class 12</option>
                   </select>
-                  {errors.admissiongrade !== "" &&  <span className='text-error'>{errors.admissiongrade}</span> }
                 </div>
                 <div className="field-box">
                   <label htmlFor="">
@@ -95,21 +109,20 @@ const AdmissionFormFinal = (props) => {
                     <option>Class 11</option>
                     <option>Class 12</option>
                   </select>
-                  {errors.previousgrade !== "" &&  <span className='text-error'>{errors.previousgrade}</span> }
                 </div>
                 <div className="field-box">
                   <label htmlFor="">
                     Previous School Name<sup>*</sup>
                   </label>
-                  <input type="text" name="previousschoolhistory" value={previousschoolhistory} onChange={handleChange} />
-                  {errors.previousschoolhistory !== "" &&  <span className='text-error'>{errors.previousschoolhistory}</span> }
+                  <input type="text" name="previousschoolhistory" value={previousschoolhistory} onChange={handleChange} maxLength={30} onFocus={() => setFocusOnPrevSchool(true)} onBlur={() => setFocusOnPrevSchool(false)} />
+                  { previousschoolhistory.length >= 30 && onFocusPrevSchool &&  <span className='text-error'>Reached max characters limit 30</span> }
                 </div>
                 <div className="field-box">
                   <label htmlFor="">
                     Emergency Relation Name<sup>*</sup>
                   </label>
-                  <input type="text" name="emergencyrelationname" value={emergencyrelationname} onChange={handleChange} />
-                  {errors.emergencyrelationname !== "" &&  <span className='text-error'>{errors.emergencyrelationname}</span> }
+                  <input type="text" name="emergencyrelationname" value={emergencyrelationname} onChange={handleChange} maxLength={20} onFocus={() => setFocusOnRelNam(true)} onBlur={() => setFocusOnRelNam(false)} />
+                  {onFocusRelNam && emergencyrelationname.length >= 20 &&<span className='text-error'>Reached max characters limit 20</span>}
                 </div>
               </div>
               <div className="form-right">
@@ -137,21 +150,21 @@ const AdmissionFormFinal = (props) => {
                 </div>
                 <div className="field-box">
                   <label htmlFor="">
-                    Vaccination Details<sup>*</sup>
+                    Vaccination Details
                   </label>
-                  <input type="text" name="vaccination" value={vaccination} onChange={handleChange} />
-                  {errors.vaccination !== "" &&  <span className='text-error'>{errors.vaccination}</span> }
+                  <input type="text" name="vaccination" value={vaccination} onChange={handleChange} maxLength={20} onFocus={() => setFocusOnVaccination(true)} onBlur={() => setFocusOnVaccination(false)} />
+                  {vaccination.length >= 20 && onFocusVaccination &&<span className='text-error'>Reached max characters limit 20</span>}
                 </div>
                 <div className="field-box">
                   <label htmlFor="">
                     Emergency Contact Number<sup>*</sup>
                   </label>
-                  <input type="text" name="emergencycontactNumber" value={emergencycontactNumber} onChange={handleChange} />
-                  {errors.emergencycontactNumber !== "" &&  <span className='text-error'>{errors.emergencycontactNumber}</span> }
+                  <input type="text" name="emergencycontactNumber" value={emergencycontactNumber} onChange={handleChange} maxLength={10} onBlur={() => (emergencycontactNumber.length < 10  ? setFocusOnRelNum(true) : setFocusOnRelNum (false))} />
+                  {emergencycontactNumber.length < 10 && onFocusRelNum && <span className='text-error'>Please enter valid Mobile Number</span> }
                 </div>
                 <div className="field-box">
                   <label>
-                    Digital Signature<sup>*</sup>
+                    Digital Signature
                   </label>
                   <input type="file" id="file" name="signature" onChange={handleFileChange} accept="image/*,application/pdf" />
                   <label htmlFor="file" className="photo">
@@ -159,7 +172,8 @@ const AdmissionFormFinal = (props) => {
                     {signature ? (<span>{signature.name}</span>) : <span>Drag and Drop or Browse Files</span>}
                   </label>
                   {displayFile(signature)}
-                  {errors.signature !== "" &&  <span className='text-error'>{errors.signature}</span>}
+                  {!isValid && <span className='text-error'>File size is Minimum 30Kb to Maximum 300Kb</span>}
+                  {signature === "" && <span className='text-error'>*No file uploaded</span>}
                 </div>
               </div>
             </form>

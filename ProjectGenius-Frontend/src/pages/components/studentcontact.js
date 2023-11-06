@@ -9,6 +9,16 @@ const AdmissionFormTwo = (props) => {
     const isButtonDisable = (contactNumber !== "" && email !== "" && fatherphonenumber !== "" && permanentaddress !== "" && whatsappNumber !== "" && aadhaarNumber !== "" && motherphonenumber !== "" && temporaryaddress !== "");
     const [data,setData] =useState('')
     const [aadharError, setAadharError] = useState("");
+    const [onFocusMobileNum, setFocusOnMobileNum] = useState(false)
+    const [onFocusWhatsApp, setFocusOnWhatsApp] = useState(false)
+    const [onFocusFatherNum, setFocusOnFatherNum] = useState(false)
+    const [onFocusMotherNum, setFocusOnMotherNum] = useState(false)
+    const [onFocusPerAdd, setFocusOnPerAdd] = useState(false)
+    const [onFocusTempAdd, setFocusOnTempAdd] = useState(false)
+
+    //Email validating states
+    const [onFocusEmail, setFocusOnEmail] = useState(false)
+    const [isEmailValid, setEmailValid] = useState(true)
     const triggerPreviousForm = () => {
         handlePreClick()
     }
@@ -22,7 +32,18 @@ const AdmissionFormTwo = (props) => {
         setFormValue({ ...formValue, [name]: value });
       }
 
-  
+     // validating an Email
+     const validateEmail = (email) => {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return emailRegex.test(email);
+    };
+
+    const handleEmailChange = (e) => {
+      const { name, value } = e.target;
+      setFormValue({ ...formValue, [name]: value });
+      setEmailValid(validateEmail(value))
+    }
+
     const getData =async ()=>{
       let {status,result} = await studentAadhar()
       if(status == true){
@@ -57,7 +78,7 @@ useEffect(()=>{
     return (
         // Contact Details form JSX
         <>
-        <div className="person-details" style={{ minHeight: 420 }}>
+       <div className="person-details" style={{ minHeight: 420 }}>
         <div className="person-header">
           <span><FontAwesomeIcon icon={faPhone} className="personicon" />Contact Details</span>
         </div>
@@ -70,24 +91,25 @@ useEffect(()=>{
               <label htmlFor="">
                 Mobile Number<sup>*</sup>
               </label>
-              <input type="text" name="contactNumber" value={contactNumber} onChange={handleChange} />
-              { errors.contactNumber !== "" &&  <span className='text-error'>{errors.contactNumber}</span> }
+              <input type="text" name="contactNumber" value={contactNumber} onChange={handleChange} maxLength={10} onBlur={() => (contactNumber.length < 10  ? setFocusOnMobileNum(true) : setFocusOnMobileNum(false))} />
+              {contactNumber.length < 10 && onFocusMobileNum &&  <span className='text-error'>Please enter valid mobile number</span> }
             </div>
             <div className="field-box">
 
               <label htmlFor="">
                 Email Address<sup>*</sup>
               </label>
-              <input type="email" name="email" value={email} onChange={handleChange} placeholder="abcd123@example.com" />
+              <input type="email" name="email" value={email} onChange={handleEmailChange} placeholder="abcd123@example.com" onFocus={() => setFocusOnEmail(true)} onBlur={() => setFocusOnEmail(false)} />
                { errors.email !== "" && <span className='text-error'>{errors.email}</span>}
+               {!isEmailValid && onFocusEmail && <span className='text-error'>Please enter a valid email address</span>}
             </div>
             <div className="field-box">
 
               <label htmlFor="">
                 Father's Mobile Number<sup>*</sup>
               </label>
-              <input type="text" name="fatherphonenumber" value={fatherphonenumber} onChange={handleChange} />
-              { errors.fatherphonenumber !== "" && <span className='text-error'>{errors.fatherphonenumber}</span> }
+              <input type="text" name="fatherphonenumber" value={fatherphonenumber} onChange={handleChange} maxLength={10} onBlur={() => (fatherphonenumber.length < 10  ? setFocusOnFatherNum(true) : setFocusOnFatherNum(false))} />
+              {fatherphonenumber.length < 10 && onFocusFatherNum &&  <span className='text-error'>Please enter valid Mobile Number</span> }
             </div>
             <div className="field-box">
 
@@ -96,8 +118,8 @@ useEffect(()=>{
                 <span className="proof">(As per Government Proof)</span>
                 <sup>*</sup>
               </label>
-              <textarea name="permanentaddress" value={permanentaddress} onChange={handleChange} />
-              {errors.permanentaddress !== "" &&  <span className='text-error'>{errors.permanentaddress}</span> }
+              <textarea name="permanentaddress" value={permanentaddress} onChange={handleChange} maxLength={50} onFocus={() => setFocusOnPerAdd(true)} onBlur={() => setFocusOnPerAdd(false)} />
+              { permanentaddress.length >= 50 && onFocusPerAdd &&  <span className='text-error'>Reached max characters limit 50</span> }
             </div>
           </div>
           <div className="form-right">
@@ -106,8 +128,8 @@ useEffect(()=>{
               <label htmlFor="">
                 WhatsApp Number<sup>*</sup>
               </label>
-              <input type="text" name="whatsappNumber" value={whatsappNumber} onChange={handleChange} />
-              {errors.whatsappNumber !== "" &&  <span className='text-error'>{errors.whatsappNumber}</span> }
+              <input type="text" name="whatsappNumber" value={whatsappNumber} onChange={handleChange} maxLength={10} onBlur={() => (whatsappNumber.length < 10  ? setFocusOnWhatsApp(true) : setFocusOnWhatsApp(false))} /> 
+              {whatsappNumber.length < 10 && onFocusWhatsApp && <span className='text-error'>Please enter valid Mobile Number</span> }
             </div>
             <div className="field-box">
 
@@ -119,24 +141,23 @@ useEffect(()=>{
                 name="aadhaarNumber" value={aadhaarNumber} onChange={handleChange}
                 placeholder="xxxx - xxxx - xxxx - xxxx"
               />
-              {/* {errors.aadhaarNumber !== "" &&<span className='text-error'>{errors.aadhaarNumber}</span>} */}
-              {aadharError && <span className='text-error'>{aadharError}</span>}
+                {aadharError && <span className='text-error'>{aadharError}</span>}
             </div>
             <div className="field-box">
 
               <label htmlFor="">
                 Mother's Mobile Number<sup>*</sup>
               </label>
-              <input type="text" name="motherphonenumber" value={motherphonenumber} onChange={handleChange} />
-              {errors.motherphonenumber !== "" &&  <span className='text-error'>{errors.motherphonenumber}</span> }
+              <input type="text" name="motherphonenumber" value={motherphonenumber} onChange={handleChange} maxLength={10} onBlur={() => (motherphonenumber.length < 10  ? setFocusOnMotherNum(true) : setFocusOnMotherNum(false))} />
+              { motherphonenumber.length < 10 && onFocusMotherNum &&  <span className='text-error'>Please enter valid Mobile Number</span> }
             </div>
             <div className="field-box">
 
               <label>
                 Temporary Address<sup>*</sup>
               </label>
-              <textarea name="temporaryaddress" value={temporaryaddress} onChange={handleChange} />
-              {errors.temporaryaddress !== "" &&  <span className='text-error'>{errors.temporaryaddress}</span> }
+              <textarea name="temporaryaddress" value={temporaryaddress} onChange={handleChange} maxLength={50} onFocus={() => setFocusOnTempAdd(true)} onBlur={() => setFocusOnTempAdd(false)} />
+              { temporaryaddress.length >= 50 && onFocusTempAdd &&  <span className='text-error'>Reached max characters limit 50</span> }
             </div>
           </div>
         </form>

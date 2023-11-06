@@ -1,5 +1,5 @@
-import React, { useState,useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import Select from 'react-select';
 import Sidebar from './components/sidebar';
 import Navbar from './components/navbar';
@@ -8,17 +8,15 @@ import Navbar from './components/navbar';
 import toastAlert from '../lib/toast';
 
 //actions
-import { feeCollection, viewFees } from '../actions/userAction';
+import { feeCollection, viewFees, getSinglestudent } from '../actions/userAction';
 
 const initialFormValue = {
   name: '',
   studentId: '',
   dueamount: '',
   paymentterm: [],
-  grade:'',
-  feeSetupData:'',
-  
-
+  admissiongrade: '',
+  feeSetupData: [],
 }
 const options = [
   { label: 'Term 1', value: 'term1' },
@@ -33,18 +31,26 @@ const FeeCollection = () => {
 
   // state
   const [formValue, setFormValue] = useState(initialFormValue);
-  const[errors,setErrors] =useState({});
-  const { name, studentId, dueamount, paymentterm, grade,  feeSetupData } = formValue;
+  const [errors, setErrors] = useState({});
+  const [data, setData] = useState('');
+  //params
+  const { Id } = useParams();
 
- const fetchFeeSetupData = async () => {
+  const { name, studentId, dueamount, paymentterm, admissiongrade, feeSetupData } = formValue;
+
+  const fetchFeeSetupData = async () => {
     try {
-      let {status,result} = await viewFees(); // Call the updated feeSetup API
-      if (status === true) {
-        console.log(result,'---result')
+      let { status, result } = await viewFees(); // Call the updated feeSetup API
+      if (status === true && Array.isArray(result)) { // Check if result is an array
+        console.log(result, '---result')
         setFormValue({ ...formValue, feeSetupData: result });
-      } 
+      } else {
+        // Handle the case where result is not an array
+        console.log('Invalid feeSetupData:', result);
+        toastAlert('error', 'Failed to fetch fee setup data');
+      }
     } catch (error) {
-      console.error(error);
+      console.log(error);
       toastAlert('error', 'Failed to fetch fee setup data');
     }
   }
@@ -59,7 +65,7 @@ const FeeCollection = () => {
     const selectedValues = selectedOptions.map(option => option.value);
   
     // Find the object that matches the selected grade
-    const selectedGradeData = feeSetupData.find(gradeData => gradeData.grade === grade);
+    const selectedGradeData = feeSetupData.find(gradeData => gradeData.admissiongrade === admissiongrade);
   
     if (selectedGradeData) {
       // Calculate the dueamount based on the selected terms and the selected grade's data
@@ -70,17 +76,18 @@ const FeeCollection = () => {
         }
       });
   
-      console.log("Selected Values:", selectedValues);
-      console.log("Total Due Amount:", totalDueAmount);
-  
+      // Update the state with selected terms and calculated due amount
       setFormValue({ ...formValue, paymentterm: selectedValues, dueamount: totalDueAmount });
     }
   };
   
-
-  const CustomOption = ({ children, innerProps, isSelected }) => (
+  const CustomOption = ({ children, innerProps, isSelected, isDisabled }) => (
     <div {...innerProps} className={isSelected ? 'option selected' : 'option'}>
-      <input type="checkbox" readOnly checked={isSelected} />
+      <input
+        type="checkbox"
+        checked={isSelected}
+        onChange={() => { }}
+      />
       <span className="checkmark">{isSelected && '✔'}</span>
       {children}
     </div>
@@ -90,6 +97,27 @@ const FeeCollection = () => {
     const { name, value } = e.target;
     setFormValue({ ...formValue, ...{ [name]: value } })
   }
+
+  const getData = async (id) => {
+    try {
+      let { status, result } = await getSinglestudent(id);
+      if (status === true) {
+        const updatedFormValue = {
+          ...formValue,
+          ...result,
+          paymentterm:[], 
+        };
+        setFormValue(updatedFormValue);
+        setData(result);
+      }
+    } catch (err) {
+      console.log(err, '--err');
+    }
+  }
+  useEffect(() => {
+    getData(Id)
+  }, [])
+  console.log(data, '---data')
   const handleSubmit = async () => {
     try {
 
@@ -98,32 +126,32 @@ const FeeCollection = () => {
         studentId: studentId,
         dueamount: dueamount,
         paymentterm: paymentterm,
-        grade:grade,
+        admissiongrade: admissiongrade,
       }
       let { status, message, errors, result } = await feeCollection(data)
       if (status === true) {
         setFormValue(initialFormValue)
         toastAlert('success', message)
         setErrors({})
-       navigate(`/feepayment/${name}`, { state: { data: result } });          
+        navigate(`/feepayment/${name}`, { state: { data: result } });
       } else if (status === false) {
-        if(errors) {
+        if (errors) {
           setErrors(errors)
         }
         if (message) {
           toastAlert('error', message)
         }
-      
+
       }
 
     } catch (err) {
       console.log(err, '...err')
     }
   }
-  
+
   return (
     <div className="fee-collection">
-      <Sidebar />
+      <Sidebar name={name} Id={Id} />
       <div className="fee-content">
         <Navbar pageTitle={'Fee Collection'} />
         <div className="fee-form">
@@ -137,14 +165,14 @@ const FeeCollection = () => {
                   <label>
                     Name<sup>*</sup>
                   </label>
-                  <input type="text" name="name" value={name} onChange={handleChange} style={{height : "48px"}} />
+                  <input type="text" name="name" value={name} onChange={handleChange} style={{ height: "48px" }} />
                   <span className='text-error'>{errors.name}</span>
                 </div>
                 <div className="fee-box">
                   <label htmlFor="">
                     Grade<sup>*</sup>
                   </label>
-                  <select name="grade" value={grade} onChange={handleChange} style={{height : "48px"}}>
+                  <select name="admissiongrade" value={admissiongrade} onChange={handleChange} style={{ height: "48px" }}>
                     <option >Select Grade</option>
                     <option >Preschool</option>
                     <option >LKG</option>
@@ -166,35 +194,35 @@ const FeeCollection = () => {
                 </div>
                 <div className="fee-box">
                   <label>Due Amount</label>
-                  <input type="text" name="dueamount" value={dueamount} onChange={handleChange} style={{height : "48px"}} />
+                  <input type="text" name="dueamount" value={dueamount} onChange={handleChange} style={{ height: "48px" }} />
                 </div>
               </div>
               <div className="fee-right">
                 <div className="fee-box">
                   <label>Student ID</label>
-                  <input type="text" name="studentId" value={studentId} onChange={handleChange} style={{height : "48px"}} />
+                  <input type="text" name="studentId" value={studentId} onChange={handleChange} style={{ height: "48px" }} />
                   <span className='text-error'>{errors.studentId}</span>
                 </div>
                 <div className="fee-box">
-        <label>Payment Term</label>
-        <div>
-        <Select
-          options={options}
-          value={options.filter(option => paymentterm.includes(option.value))}
-          onChange={handleSelectChange}
-          isMulti
-          closeMenuOnSelect={false}
-          components={{
-            Option: CustomOption,
-          }}
-        />
-        </div>
+                  <label>Payment Term</label>
+                  <div>
+                    <Select
+                      options={options}
+                      value={options.filter(option => paymentterm.includes(option.value))}
+                      onChange={handleSelectChange}
+                      isMulti
+                      closeMenuOnSelect={false}
+                      components={{
+                        Option: CustomOption,
+                      }}
+                    />
+                  </div>
                   <span className='text-error'>{errors.paymentterm}</span>
-      </div>
+                </div>
               </div>
             </div>
             <div className="process-btn">
-              <button type="button"  onClick={handleSubmit}>Process to Pay</button>
+              <button type="button" onClick={handleSubmit}>Process to Pay</button>
             </div>
           </form>
         </div>

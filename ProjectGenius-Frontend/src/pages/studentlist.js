@@ -113,7 +113,10 @@ console.log(data,'---data')
       deletestudent(Id)
          }
   };
-
+ 
+  const feecollection =(id) => {
+    navigate('/feecollection/'+ id)
+  }
   return (
     <div className="student-container">
       <Sidebar />
@@ -194,9 +197,7 @@ console.log(data,'---data')
                   return (
                     <tr className="std-row" >
                       <td className="profile">
-                        {/* <a href={`${IMAGE_URL}/${item.photo}`} target="_blank"> */}
                           <img src={`${IMAGE_URL}/${item.photo}`} alt="" onClick={() => handleStudentInfo(item.studentId)} />
-                        {/* </a> */}
                         <span key={key} onClick={() => handleStudentInfo(item.studentId)}>{item.name}</span>
                       </td>
                       <td>{item.studentId}</td>
@@ -206,7 +207,7 @@ console.log(data,'---data')
                       <td>+91{item.contactNumber}</td>
                       <td>{item.doj}</td>
                       <td>
-                        <span className="due1">$9000</span>
+                        <span className="due1">${item.feesamount}</span>
                       </td>
                       <td className="edit" id="ed">
                         <div className="dropdown">
@@ -219,7 +220,7 @@ console.log(data,'---data')
                               </a>
                             </li>
                             <li className="edit-box">
-                              <a className="dropdown-item" href="#" >
+                              <a className="dropdown-item" href="#" onClick={() => feecollection(item._id)} >
                                 <i className="fa fa-tags" />
                                 More
                               </a>

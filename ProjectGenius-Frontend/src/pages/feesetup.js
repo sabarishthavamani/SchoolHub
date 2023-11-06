@@ -13,7 +13,7 @@ import { feeSetup } from '../actions/userAction';
 
 
 const initialFormValue = {
-  grade: '',
+  admissiongrade: '',
   term1: '',
   term2: '',
   term3: '',
@@ -27,7 +27,7 @@ const FeeSetup = () => {
   // state
   const [formValue, setFormValue] = useState(initialFormValue);
 
-  const { grade, term1, term2, term3 } = formValue;
+  const { admissiongrade, term1, term2, term3 } = formValue;
 
 
   const handleChange = (e) => {
@@ -38,7 +38,7 @@ const FeeSetup = () => {
     try {
 
       let data = {
-        grade: grade,
+        admissiongrade: admissiongrade,
         term1: term1,
         term2: term2,
         term3: term3,
@@ -78,7 +78,7 @@ const FeeSetup = () => {
                   <label htmlFor="">
                     Grade<sup>*</sup>
                   </label>
-                  <select name="grade" value={grade} onChange={handleChange}>
+                  <select name="admissiongrade" value={admissiongrade} onChange={handleChange}>
                     <option >Select Grade</option>
                     <option >Preschool</option>
                     <option >LKG</option>

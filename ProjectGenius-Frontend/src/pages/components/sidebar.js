@@ -4,7 +4,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSignOut } from '@fortawesome/free-solid-svg-icons';
 import { removeAuthToken } from '../../lib/localstorage';
 
-const Sidebar = () => {
+const Sidebar = (props) => {
+
+  const {name,Id} = props
 
   const [showTeacherMenu, toggleTeacherMenu] = useState(false);
 
@@ -42,20 +44,20 @@ const Sidebar = () => {
               <NavLink to='/students' className={`mysidebar ${isLinkActive('/students') ? 'activemysidebar' : null}`}>Students</NavLink>
             </div>
           </li>
-          <li style={isLinkActive('/feecollection') || isLinkActive('/feepayment/:name') || isLinkActive('/feecomplete') ? {
+          <li style={isLinkActive(`/feecollection/${Id}`) || isLinkActive(`/feepayment/${name}`) || isLinkActive('/feecomplete') ? {
               background: 'linear-gradient(to right,#fde4cb,#fcfad3)'
             } : null}>
             <div className="menu-bar" >
-            {isLinkActive('/feecollection') ||  isLinkActive('/feepayment/:name') || isLinkActive('/feecomplete') ? <img src={`${process.env.PUBLIC_URL}/images/blue-fee.png`} alt="" /> :<img src={`${process.env.PUBLIC_URL}/images/fee.png`} alt="" /> }
-              <NavLink to='/feecollection' className={`mysidebar ${isLinkActive('/feecollection') ||  isLinkActive('/feepayment/:name') || isLinkActive('/feecomplete') ? 'activemysidebar' : null}`}>Fee Collection</NavLink>
+            {isLinkActive(`/feecollection/${Id}`) ||  isLinkActive(`/feepayment/${name}`) || isLinkActive('/feecomplete') ? <img src={`${process.env.PUBLIC_URL}/images/blue-fee.png`} alt="" /> :<img src={`${process.env.PUBLIC_URL}/images/fee.png`} alt="" /> }
+              <NavLink to={`/feecollection/${Id}`} className={`mysidebar ${isLinkActive(`/feecollection/${Id}`) ||  isLinkActive(`/feepayment/${name}`) || isLinkActive('/feecomplete') ? 'activemysidebar' : null}`}>Fee Collection</NavLink>
             </div>
           </li>
-          <li style={isLinkActive('/feesetup') ? {
+          <li style={isLinkActive('/feesetup') || isLinkActive('/feeslist')? {
               background: 'linear-gradient(to right,#fde4cb,#fcfad3)'
             } : null}>
             <div className="menu-bar">
-             {isLinkActive('/feesetup') ? <img src={`${process.env.PUBLIC_URL}/images/blue-setup.png`} alt="" /> : <img src={`${process.env.PUBLIC_URL}/images/setup.png`} alt="" /> }
-              <NavLink to='/feesetup' className={`mysidebar ${isLinkActive('/feesetup') ? 'activemysidebar' : null}`}>Fee Setup</NavLink>
+             {isLinkActive('/feesetup') || isLinkActive('/feeslist')? <img src={`${process.env.PUBLIC_URL}/images/blue-setup.png`} alt="" /> : <img src={`${process.env.PUBLIC_URL}/images/setup.png`} alt="" /> }
+              <NavLink to='/feesetup' className={`mysidebar ${isLinkActive('/feesetup') || isLinkActive('/feeslist')? 'activemysidebar' : null}`}>Fee Setup</NavLink>
             </div>
           </li>
           <li

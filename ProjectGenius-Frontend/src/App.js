@@ -46,7 +46,7 @@ function App() {
           <Route path="/student-edit/:Id" element={<ConditionRoute type="private"><StudentEdit /></ConditionRoute>} />
         </Routes>
         <Routes>
-          <Route path="/feecollection" element={<ConditionRoute type="private"><FeeCollection /></ConditionRoute>} />
+          <Route path="/feecollection/:Id" element={<ConditionRoute type="private"><FeeCollection /></ConditionRoute>} />
         </Routes>
         <Routes>
           <Route path="/feepayment/:name" element={<ConditionRoute type="private"><FeePayment /></ConditionRoute>} />

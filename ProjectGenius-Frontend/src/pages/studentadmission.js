@@ -125,6 +125,8 @@ const NewAdmission = () => {
       else if (status === false) {
         if (errors) {
           setErrors(errors);
+        }else{
+          setErrors({});
         }
 
         if (message) {

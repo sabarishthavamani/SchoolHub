@@ -28,7 +28,7 @@ return(
           <br />
           <span style={{ color: "#ccc" }}>Admin</span>
         </div>
-        <img src="images/Profile photo.png" alt="" title="profile" />
+        <img src={`${process.env.PUBLIC_URL}/images/Profile photo.png`} alt="" title="profile" />
       </div>
     </div> 
 )

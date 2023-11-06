@@ -64,7 +64,7 @@ const getData = async () => {
                         <tr className="tchr-row" >
                
                         <td className="profile">
-                        {item.grade}
+                        {item.admissiongrade}
                         </td>
                         <td>{item.term1}</td>
                         <td>

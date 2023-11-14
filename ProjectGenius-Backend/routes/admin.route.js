@@ -46,30 +46,30 @@ const teacherprofileUpload = multer({ storage: storage2 })
 
 
 //routes
-//admin
+//admin-login
 router.route('/register').post( adminCtrl.createadmin);
 router.route('/login').post(adminValid.loginValid, adminCtrl.adminLogin);
 router.route('/verification').post(adminValid.verifyValid, adminCtrl.verifyCode);
 router.route('/re-verification').get( adminCtrl.ReverifyCode);
-//admission
-router.route('/admission').post(profileUpload.fields([{ name: 'signature', maxCount: 1 }, { name: 'photo', maxCount: 1 }]),adminValid.registerValid, adminCtrl.registerStudent);
-router.route('/admission-valid').post(adminValid.registerValid);
-//student
+//student-admission
+router.route('/admission').post(profileUpload.fields([{ name: 'signature', maxCount: 1 }, { name: 'photo', maxCount: 1 }]),adminCtrl.registerStudent);
+//student-details
 router.route('/viewstudent').get(adminCtrl.viewStudent);
-router.route('/deletestudent/:id').get(adminCtrl.deletStudent);
+router.route('/deletestudent/:id').get(adminCtrl.deleteStudent);
 router.route('/getsingle-student/:id').get(adminCtrl.getSingleStudent);
 router.route('/updatestudent').post(profileUpload.fields([{ name: 'signature', maxCount: 1 }, { name: 'photo', maxCount: 1 }]),adminValid.updateValid,adminCtrl.updateStudent);
 router.route('/getstudentaadhaar').get(adminCtrl.studentaadhaarValid);
 //feesetup & feepayment
-router.route('/feessetup').post(adminCtrl.createFeeSetup);
-router.route('/feesupdate').post(adminCtrl.updateFeeSetup);
+router.route('/feessetup').post(adminValid.feesetupValid,adminCtrl.createFeeSetup);
+router.route('/feesupdate').post(adminValid.feesetupEditValid,adminCtrl.updateFeeSetup);
 router.route('/getsingle-fees/:id').get(adminCtrl.getSingleFees);
 router.route('/feescollection').post(adminValid.feecollectionValid,adminCtrl.createFeeCollection);
 router.route('/viewfees').get(adminCtrl.findFeeSetup);
 router.route('/feepayment/:name').post(adminCtrl.feePayment);
 router.route('/feespaid').post(adminCtrl.feesPaid);
+router.route('/feesstatus').post(adminCtrl.feestatus);
 //teacher
-router.route('/teacheradmission').post(teacherprofileUpload.fields([{ name: 'teachersignature', maxCount: 1 }, { name: 'teacherphoto', maxCount: 1 }]),adminValid.teacherregisterValid, adminCtrl.registerTeacher);
+router.route('/teacheradmission').post(teacherprofileUpload.fields([{ name: 'teachersignature', maxCount: 1 }, { name: 'teacherphoto', maxCount: 1 }]),adminCtrl.registerTeacher);
 router.route('/viewteacher').get(adminCtrl.ViewTeacher);
 router.route('/deleteteacher/:id').get(adminCtrl.deleteTeacher);
 router.route('/updateteacher').post(teacherprofileUpload.fields([{ name: 'teachersignature', maxCount: 1 }, { name: 'teacherphoto', maxCount: 1 }]),adminValid.teacherupdateValid,adminCtrl.updateTeacher);

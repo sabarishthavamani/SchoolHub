@@ -3,12 +3,10 @@ import { useNavigate, useParams } from 'react-router-dom';
 import Select from 'react-select';
 import Sidebar from './components/sidebar';
 import Navbar from './components/navbar';
-
-//lib
+//import actions
+import { feeCollection, viewFees, getSinglestudent } from '../actions/adminAction';
+//import lib
 import toastAlert from '../lib/toast';
-
-//actions
-import { feeCollection, viewFees, getSinglestudent } from '../actions/userAction';
 
 const initialFormValue = {
   name: '',
@@ -25,14 +23,12 @@ const options = [
 ];
 
 const FeeCollection = () => {
-
   // hooks
   const navigate = useNavigate();
-
   // state
   const [formValue, setFormValue] = useState(initialFormValue);
   const [errors, setErrors] = useState({});
-  const [data, setData] = useState('');
+  const [inputErrors, setInputErrors] = useState({});
   //params
   const { Id } = useParams();
 
@@ -46,7 +42,6 @@ const FeeCollection = () => {
         setFormValue({ ...formValue, feeSetupData: result });
       } else {
         // Handle the case where result is not an array
-        console.log('Invalid feeSetupData:', result);
         toastAlert('error', 'Failed to fetch fee setup data');
       }
     } catch (error) {
@@ -62,11 +57,9 @@ const FeeCollection = () => {
 
   const handleSelectChange = (selectedOptions) => {
     // Extract the values from selectedOptions
-    const selectedValues = selectedOptions.map(option => option.value);
-  
+    const selectedValues = selectedOptions.map(option => option.value); 
     // Find the object that matches the selected grade
     const selectedGradeData = feeSetupData.find(gradeData => gradeData.admissiongrade === admissiongrade);
-  
     if (selectedGradeData) {
       // Calculate the dueamount based on the selected terms and the selected grade's data
       let totalDueAmount = 0;
@@ -75,9 +68,18 @@ const FeeCollection = () => {
           totalDueAmount += selectedGradeData[term];
         }
       });
-  
       // Update the state with selected terms and calculated due amount
       setFormValue({ ...formValue, paymentterm: selectedValues, dueamount: totalDueAmount });
+      setInputErrors((prevErrors) => ({
+        ...prevErrors,
+        paymentterm: undefined,
+      }));
+    } else {
+      // If no matching grade data is found, set an error for 'paymentterm'
+      setInputErrors((prevErrors) => ({
+        ...prevErrors,
+        paymentterm: 'Invalid admission grade selected',
+      }));
     }
   };
   
@@ -95,6 +97,10 @@ const FeeCollection = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    setInputErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: undefined, // Clear the error for this input
+    }));
     setFormValue({ ...formValue, ...{ [name]: value } })
   }
 
@@ -102,13 +108,7 @@ const FeeCollection = () => {
     try {
       let { status, result } = await getSinglestudent(id);
       if (status === true) {
-        const updatedFormValue = {
-          ...formValue,
-          ...result,
-          paymentterm:[], 
-        };
-        setFormValue(updatedFormValue);
-        setData(result);
+        setFormValue(prevFormValue => ({...prevFormValue, ...result}));
       }
     } catch (err) {
       console.log(err, '--err');
@@ -117,7 +117,7 @@ const FeeCollection = () => {
   useEffect(() => {
     getData(Id)
   }, [])
-  console.log(data, '---data')
+  // console.log(data, '---data')
   const handleSubmit = async () => {
     try {
 
@@ -134,16 +134,23 @@ const FeeCollection = () => {
         toastAlert('success', message)
         setErrors({})
         navigate(`/feepayment/${name}`, { state: { data: result } });
-      } else if (status === false) {
+      } if (status === false) {
         if (errors) {
-          setErrors(errors)
+          setErrors(errors);
+          // Update the inputErrors state for each input with an error
+          setInputErrors((prevErrors) => ({
+            ...prevErrors,
+            name: errors.name, 
+            studentId :errors.studentId,
+            admissiongrade:errors.admissiongrade,
+            paymentterm:errors.paymentterm,
+          }));
         }
         if (message) {
-          toastAlert('error', message)
+          toastAlert('error', message);
         }
-
       }
-
+      
     } catch (err) {
       console.log(err, '...err')
     }
@@ -151,7 +158,7 @@ const FeeCollection = () => {
 
   return (
     <div className="fee-collection">
-      <Sidebar name={name} Id={Id} />
+      <Sidebar Id={Id} />
       <div className="fee-content">
         <Navbar pageTitle={'Fee Collection'} />
         <div className="fee-form">
@@ -166,7 +173,7 @@ const FeeCollection = () => {
                     Name<sup>*</sup>
                   </label>
                   <input type="text" name="name" value={name} onChange={handleChange} style={{ height: "48px" }} />
-                  <span className='text-error'>{errors.name}</span>
+                  <span className='text-error'>{inputErrors.name}</span>
                 </div>
                 <div className="fee-box">
                   <label htmlFor="">
@@ -190,7 +197,7 @@ const FeeCollection = () => {
                     <option >Class 11</option>
                     <option >Class 12</option>
                   </select>
-                  <span className='text-error'>{errors.grade}</span>
+                  <span className='text-error'>{inputErrors.admissiongrade}</span>
                 </div>
                 <div className="fee-box">
                   <label>Due Amount</label>
@@ -201,23 +208,23 @@ const FeeCollection = () => {
                 <div className="fee-box">
                   <label>Student ID</label>
                   <input type="text" name="studentId" value={studentId} onChange={handleChange} style={{ height: "48px" }} />
-                  <span className='text-error'>{errors.studentId}</span>
+                  <span className='text-error'>{inputErrors.studentId}</span>
                 </div>
                 <div className="fee-box">
                   <label>Payment Term</label>
                   <div>
                     <Select
                       options={options}
-                      value={options.filter(option => paymentterm.includes(option.value))}
+                      value={options.filter(option => paymentterm.includes(option.value))}  
                       onChange={handleSelectChange}
-                      isMulti
+                      isMulti={true}
                       closeMenuOnSelect={false}
                       components={{
                         Option: CustomOption,
                       }}
                     />
                   </div>
-                  <span className='text-error'>{errors.paymentterm}</span>
+                  <span className='text-error'>{inputErrors.paymentterm}</span>
                 </div>
               </div>
             </div>

@@ -1,14 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate,useLocation } from 'react-router-dom';
 
-
 // import lib
 import toastAlert from '../lib/toast';
 
 // import actions
-import { verify, Reverify } from '../actions/userAction';
-import { removeAuthToken } from '../lib/localstorage';
-
+import { verify, Reverify } from '../actions/adminAction';
 
 const Verify = () => {
 
@@ -16,7 +13,6 @@ const Verify = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const userEmail = location.state?.email || '';
-
   //states
   const [errors, setErrors] = useState({});
   const [otpValues, setOtpValues] = useState(['', '', '', '', '', '']);
@@ -28,13 +24,22 @@ const Verify = () => {
     useRef(null),
     useRef(null),
   ];
+  const [inputErrors,setInputErrors] = useState({});
 
   const handleChange = (e, index) => {
     const newOtpValues = [...otpValues];
     newOtpValues[index] = e.target.value;
     setOtpValues(newOtpValues);
+    setInputErrors((prevErrors) => ({
+      ...prevErrors,
+      verificationCode: null, // Clear the error for this input
+  }));
     if (e.target.value.length === 1 && index < 5) {
       inputRefs[index + 1].current.focus();
+    } else if (index === 5) {
+      // If the last field, update the value without moving focus
+      newOtpValues[index] = e.target.value.slice(0, 1);
+      setOtpValues(newOtpValues);
     }
   };
 
@@ -89,6 +94,10 @@ const Verify = () => {
       } else if (status === false) {
         if (errors) {
           setErrors(errors);
+          setInputErrors((prevErrors)=>({
+            ...prevErrors,
+            verificationCode:errors.verificationCode
+          }))
         }
 
         if (message) {
@@ -113,18 +122,18 @@ const Verify = () => {
             <p>Enter the OTP sent to {userEmail}</p>
             <div className="otp-input">
               {otpValues.map((value, index) => (
-                <input
-                  key={index}
-                  type="text"
-                  value={value}
-                  onChange={(e) => handleChange(e, index)}
-                  onKeyUp={(e) => handleBackspace(e, index)} // Check for backspace key
-                  ref={inputRefs[index]} // Assign a ref to each input field
-                />
+               <input
+               key={index}
+               type="text"
+               value={value}
+               onChange={(e) => handleChange(e, index)}
+               onKeyUp={(e) => handleBackspace(e, index)}
+               ref={inputRefs[index]}
+             />
               ))}
             </div>
             <div className="validation-message">
-              <span className="error-message">{errors && errors.verificationCode}</span>
+              <span className="error-message">{inputErrors && inputErrors.verificationCode}</span>
             </div>
             <p>
               If you didn't receive a code,{" "}

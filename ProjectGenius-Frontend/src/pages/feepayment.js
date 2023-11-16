@@ -1,23 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import Sidebar from './components/sidebar';
 import { useNavigate, useLocation } from 'react-router-dom';
-import PaymentSummary from './components/paymentsummary';
-import { feesPaid } from '../actions/userAction';
-import CardPay from './components/CardPay';
-import UpiPay from './components/UpiPay';
-import CashPay from './components/CashPay';
-
+//import action
+import { feesPaid } from '../actions/adminAction';
+//import lib
 import toastAlert from '../lib/toast';
-
-
+//import components
+import CardPay from './components/cardpay';
+import UpiPay from './components/upipay';
+import CashPay from './components/cashpay';
 
 const FeePayment = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { data } = location.state || {};
   const [feeConcession, setFeeConcession] = useState(0);
+  //state for subtotal amount 
   const [updatedDueAmount, setUpdatedDueAmount] = useState(data.dueamount);
-  const [amountPayable, setAmountPayable] = useState(0); // State for Amount Payable
+  // State for Amount Payable
+  const [amountPayable, setAmountPayable] = useState(0);
   const [buttonText, setButtonText] = useState('');
   const [activeTab, setActiveTab] = useState('cardTab')
 
@@ -34,90 +35,87 @@ const FeePayment = () => {
     // Subtract the fee concession amount from the dueamount and update the state
     setUpdatedDueAmount(updatedDueAmount - feeConcession);
   };
-
   const handleAmountPayableChange = (e) => {
     // Update the Amount Payable state and button text when the input changes
     const newAmountPayable = parseFloat(e.target.value); // Parse as a float
     setAmountPayable(newAmountPayable);
   };
-
   useEffect(() => {
     // Calculate the button text when amountPayable changes
     setButtonText(`Pay ₹${(amountPayable + 2.24).toFixed(2)}`);
   }, [amountPayable]);
+  //body inputs
   const dueAmount = data.dueamount;
   const Name = data.name;
-  const StudenId=data.studentId;
+  const StudenId = data.studentId;
   const total = updatedDueAmount + 2.24;
   const amountpaid = (amountPayable + 2.24).toFixed(2);
   const isButtonDisable = (feeConcession > 0);
   const handleSubmit = async () => {
     try {
 
-        let data = {
-            name: Name,
-            studentId: StudenId,
-            dueamount:  dueAmount ,
-            total :total,
-            amountpaid:amountpaid,
-        }
-        let { status, message } = await feesPaid(data)
-        if (status === true) {
-            toastAlert('success', message)
-            navigate('/feecomplete')              
-        } else if (status === false) {
+      let data = {
+        name: Name,
+        studentId: StudenId,
+        dueamount: dueAmount,
+        total: total,
+        amountpaid: amountpaid,
+      }
+      let { status, message } = await feesPaid(data)
+      if (status === true) {
+        toastAlert('success', message)
+        navigate('/feecomplete')
+      } else if (status === false) {
         if (message) {
-                toastAlert('error', message)
-            }
+          toastAlert('error', message)
         }
-
+      }
     } catch (err) {
-        console.log(err, '...err')
+      console.log(err, '...err')
+      navigate('/paymentfailure')
     }
-}
-
-const handleTab = (event) => {
-  setActiveTab(event.target.value);
-}
-
-const renderPaymentForm = () => {
-  switch (activeTab) {
-      case 'cardTab':
-          return <CardPay updatedDueAmount={updatedDueAmount} setButtonText={setButtonText} amountPayable={amountPayable} setAmountPayable={setAmountPayable} handleAmountPayableChange={handleAmountPayableChange} buttonText={buttonText} handleSubmit={handleSubmit}  />;
-      case 'upiTab':
-          return <UpiPay />;
-      case 'cashTab':
-          return <CashPay updatedDueAmount={updatedDueAmount}  amountPayable={amountPayable} setButtonText={setButtonText} setAmountPayable={setAmountPayable} handleAmountPayableChange={handleAmountPayableChange} buttonText={buttonText} handleSubmit={handleSubmit}/>;
-      default:
-          return null;
   }
-}
+  const handleTab = (event) => {
+    setActiveTab(event.target.value);
+  }
 
+  const renderPaymentForm = () => {
+    switch (activeTab) {
+      case 'cardTab':
+        return <CardPay updatedDueAmount={updatedDueAmount} setButtonText={setButtonText} amountPayable={amountPayable} setAmountPayable={setAmountPayable} handleAmountPayableChange={handleAmountPayableChange} buttonText={buttonText} handleSubmit={handleSubmit} />;
+      case 'upiTab':
+        return <UpiPay />;
+      case 'cashTab':
+        return <CashPay updatedDueAmount={updatedDueAmount} amountPayable={amountPayable} setButtonText={setButtonText} setAmountPayable={setAmountPayable} handleAmountPayableChange={handleAmountPayableChange} buttonText={buttonText} handleSubmit={handleSubmit} />;
+      default:
+        return null;
+    }
+  }
   return (
     <div className="fee-collection">
-      <Sidebar />
+      <Sidebar name={Name} />
       <div className="payment-content">
-          <div className="payment">
-            <h3>Payment</h3>
-                <label style={{ paddingTop: 25 }}>Pay With:</label>
-                <div className="paywith">
-                <div className="pay">
-                    <input type="radio" id='Credit/Debit' value="cardTab" name="pay" onChange={handleTab} checked={activeTab === 'cardTab'} />
-                    <label htmlFor='Credit/Debit'>
-                    Credit/Debit<span className="card1">Card</span>
-                    </label>
-                </div>
-                <div className="pay">
-                    <input type="radio" id='upi' name="pay" value="upiTab" onChange={handleTab} checked={activeTab === 'upiTab'} />
-                    <label htmlFor='upi'>UPI</label>
-                </div>
-                <div className="pay">
-                    <input type="radio" id='cash' name="pay" value="cashTab" onChange={handleTab} checked={activeTab === 'cashTab'} />
-                    <label htmlFor='cash'>Cash</label>
-                </div>
-                </div>
-            {renderPaymentForm()}
+        <div className="payment">
+          <h3>Payment</h3>
+          <label style={{ paddingTop: 25 }}>Pay With:</label>
+          <div className="paywith">
+            <div className="pay">
+              <input type="radio" id='Credit/Debit' value="cardTab" name="pay" onChange={handleTab} checked={activeTab === 'cardTab'} />
+              <label htmlFor='Credit/Debit'>
+                Credit/Debit<span className="card1">Card</span>
+              </label>
             </div>
+            <div className="pay">
+              <input type="radio" id='upi' name="pay" value="upiTab" onChange={handleTab} checked={activeTab === 'upiTab'} />
+              <label htmlFor='upi'>UPI</label>
+            </div>
+            <div className="pay">
+              <input type="radio" id='cash' name="pay" value="cashTab" onChange={handleTab} checked={activeTab === 'cashTab'} />
+              <label htmlFor='cash'>Cash</label>
+            </div>
+          </div>
+          {renderPaymentForm()}
+        </div>
         <div className="payment-summary">
           <div className="summary-content">
             <h3>Payment Summary</h3>
@@ -145,7 +143,7 @@ const renderPaymentForm = () => {
             <div className="gst">
               <div className="gst-1">
                 <span>Subtotal</span>
-                <span>₹{updatedDueAmount.toFixed(2)} {/* Format to 2 decimal places */}</span>
+                <span>₹{updatedDueAmount.toFixed(2)} </span>
               </div>
               <div className="gst-2">
                 <span>GST</span>
@@ -158,7 +156,7 @@ const renderPaymentForm = () => {
                 <p className="include">Including ₹2.24 in taxes</p>
               </div>
               <span style={{ fontSize: 21 }}>
-                ₹{(updatedDueAmount + 2.24).toFixed(2)} {/* Format to 2 decimal places */}
+                ₹{(updatedDueAmount + 2.24).toFixed(2)}
               </span>
             </div>
           </div>
@@ -167,5 +165,4 @@ const renderPaymentForm = () => {
     </div>
   );
 };
-
 export default FeePayment;

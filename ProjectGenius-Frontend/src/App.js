@@ -22,6 +22,10 @@ import FeePayment from './pages/feepayment';
 import PaymentFailure from './pages/paymentfailure';
 import FeesList from './pages/feeslist';
 import FeesEdit from './pages/feesedit';
+import TeacherLogin from './pages/teacherlogin';
+import StudentAttendance from './pages/studentattendance';
+import StudentMarksheet from './pages/studentmarksheet';
+import TeacherSignup from './pages/teachersignup';
 
 function App() {
   return (
@@ -80,6 +84,18 @@ function App() {
         </Routes>
         <Routes>
           <Route path="/fees-edit/:Id" element={<ConditionRoute type="private"><FeesEdit /></ConditionRoute>} />
+        </Routes>
+        <Routes>
+          <Route path="/teacher-login" element={<ConditionRoute type="public"><TeacherLogin /></ConditionRoute>} />
+        </Routes>
+        <Routes>
+          <Route path="/teacher-signup" element={<ConditionRoute type="public"><TeacherSignup /></ConditionRoute>} />
+        </Routes>
+        <Routes>
+        <Route path="/teacher-attendance" element={<ConditionRoute type="private2"><StudentAttendance /></ConditionRoute>} />
+        </Routes>
+        <Routes>
+          <Route path="/teacher-marksheet" element={<ConditionRoute type="private2"><StudentMarksheet /></ConditionRoute>} />
         </Routes>
       </BrowserRouter>
     </div>

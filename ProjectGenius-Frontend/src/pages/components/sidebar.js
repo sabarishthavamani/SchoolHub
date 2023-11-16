@@ -8,8 +8,6 @@ const Sidebar = (props) => {
 
   const {name,Id} = props
 
-  const [showTeacherMenu, toggleTeacherMenu] = useState(false);
-
   const navigate = useNavigate()
   const { pathname } = useLocation()
   const isLinkActive = (linkPath) => {
@@ -56,7 +54,7 @@ const Sidebar = (props) => {
               background: 'linear-gradient(to right,#fde4cb,#fcfad3)'
             } : null}>
             <div className="menu-bar">
-             {isLinkActive('/feesetup') || isLinkActive('/feeslist')? <img src={`${process.env.PUBLIC_URL}/images/blue-setup.png`} alt="" /> : <img src={`${process.env.PUBLIC_URL}/images/setup.png`} alt="" /> }
+             {isLinkActive('/feesetup') || isLinkActive('/feeslist') ? <img src={`${process.env.PUBLIC_URL}/images/blue-setup.png`} alt="" /> : <img src={`${process.env.PUBLIC_URL}/images/setup.png`} alt="" /> }
               <NavLink to='/feesetup' className={`mysidebar ${isLinkActive('/feesetup') || isLinkActive('/feeslist')? 'activemysidebar' : null}`}>Fee Setup</NavLink>
             </div>
           </li>
@@ -76,16 +74,16 @@ const Sidebar = (props) => {
       </div>
     </li>
             <li  style={
-        isLinkActive('/teacherview')  ? {
+        isLinkActive('/teacherview') || isLinkActive(`/teacherdetails/${Id}`) ? {
               background: 'linear-gradient(to right,#fde4cb,#fcfad3)'
             }: null}>
             <div className="menu-bar">
-            {isLinkActive('/teacherview') ? (
+            {isLinkActive('/teacherview') ||  isLinkActive(`/teacherdetails/${Id}`) ? (
           <img src={`${process.env.PUBLIC_URL}/images/listblue.png`} alt="" />
         ) : (
           <img src={`${process.env.PUBLIC_URL}/images/listgrey.png`} alt="" />
         )}
-              <NavLink to="/teacherview" className={`mysidebar ${isLinkActive('/teacherview')  ? 'activemysidebar' : null}`} >
+              <NavLink to="/teacherview" className={`mysidebar ${isLinkActive('/teacherview') ||  isLinkActive(`/teacherdetails/${Id}`) ? 'activemysidebar' : null}`} >
                 TeacherList
               </NavLink>
               </div>

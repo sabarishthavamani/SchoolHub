@@ -1,11 +1,10 @@
 import React,{useEffect, useState} from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from './components/sidebar';
-import { getSingleteacher } from '../actions/userAction';
+//import Actions
+import { getSingleteacher } from '../actions/adminAction';
+//hooks
 import { useParams } from 'react-router-dom';
-
-
-
 
 const TeacherDetail = ()=>{
 const[data,setData] =useState('')
@@ -29,7 +28,7 @@ useEffect(() => {
 console.log(data,'---data')
 return(
     <div className="teacher">
-<Sidebar />
+<Sidebar Id={Id}/>
   <div className="teacher-content" style={{ background: "#f7f7f8" }}>
     <div className="header">
       <div className="l-header">
@@ -143,5 +142,4 @@ return(
 
 )
 }
-
 export default TeacherDetail;

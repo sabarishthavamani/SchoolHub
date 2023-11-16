@@ -5,14 +5,11 @@ import Sidebar from './components/sidebar';
 import AdmissionFormOne from './components/studentpersonal'
 import AdmissionFormTwo from './components/studentcontact';
 import AdmissionFormFinal from './components/studenthistory';
-
-
 //import actions
-import { registerStudent } from '../actions/userAction';
-
+import { registerStudent } from '../actions/adminAction';
 // import lib
 import toastAlert from '../lib/toast';
-import FormProgressBar from './components/FormProgressBar';
+import FormProgressBar from './components/progressbar';
 
 const initialFormValue = {
   'firstName': '',
@@ -40,11 +37,9 @@ const initialFormValue = {
   'signature': '',
   'photo': ''
 }
-
 const NewAdmission = () => {
   const [currentForm, setCurrentForm] = useState(1);
   const [formValue, setFormValue] = useState(initialFormValue);
-  const [errors, setErrors] = useState({});
 
   const {
     firstName,
@@ -119,35 +114,20 @@ const NewAdmission = () => {
         
         toastAlert('success', message)
         setFormValue(initialFormValue)
-        setErrors({});
         navigate('/students')
       }
-      else if (status === false) {
-        if (errors) {
-          setErrors(errors);
-        }else{
-          setErrors({});
-        }
-
-        if (message) {
-          toastAlert('error', message)
-
-        }
-      }
-
     } catch (err) {
-
+      console.log(err,'--err')
     }
 }
-
   const renderForm = () => {
     switch (currentForm) {
       case 1:
-        return <AdmissionFormOne formValue={formValue} setFormValue={setFormValue}  handleNextClick={handleNextClick} errors={errors} />;
+        return <AdmissionFormOne formValue={formValue} setFormValue={setFormValue}  handleNextClick={handleNextClick}  />;
       case 2:
-        return <AdmissionFormTwo formValue={formValue} setFormValue={setFormValue} handlePreClick={handlePreClick}  handleNextClick={handleNextClick} errors={errors} />;
+        return <AdmissionFormTwo formValue={formValue} setFormValue={setFormValue} handlePreClick={handlePreClick}  handleNextClick={handleNextClick}  />;
       case 3:
-        return <AdmissionFormFinal formValue={formValue} setFormValue={setFormValue} handlePreClick={handlePreClick} handleSubmit={handleSubmit}  errors={errors}/>;
+        return <AdmissionFormFinal formValue={formValue} setFormValue={setFormValue} handlePreClick={handlePreClick} handleSubmit={handleSubmit}  />;
       default:
         return null;
     }
@@ -167,5 +147,4 @@ const NewAdmission = () => {
 
   )
 }
-
 export default NewAdmission;

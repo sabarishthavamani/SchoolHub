@@ -196,9 +196,12 @@ export const feeSetup = async (data) => {
             'result':respData.data.result
         }
     } catch (err) {
-           console.log(err,'--err')
+        return {
+            'status': err.response.data.status,
+            'message': err.response.data.message,
+            'errors': err.response.data.errors
+        }
     }
-
 }
 
 export const viewFees = async () => {
@@ -252,7 +255,11 @@ export const feeUpdate = async (data) => {
             'message': respData.data.message,
         }
     } catch (err) {
-           console.log(err,'--err')
+        return {
+            'status': err.response.data.status,
+            'message': err.response.data.message,
+            'errors': err.response.data.errors
+        }
     }
 
 }
@@ -291,6 +298,23 @@ export const feesPaid = async (data) => {
             'status': respData.data.status,
             'message': respData.data.message,
        
+        }
+    } catch (err) {
+      console.log(err)
+    }
+}
+export const feesStatus = async (Data) => {
+
+    try {
+        let respData = await axios({
+            'url': '/feesstatus',
+            'method': 'post',
+            'data':Data,
+        })
+        return {
+            'status': respData.data.status,
+            'message': respData.data.message,
+            'result':respData.data.result,
         }
     } catch (err) {
       console.log(err)

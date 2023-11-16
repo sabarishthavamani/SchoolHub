@@ -10,6 +10,9 @@ const ConditionRoute = (props) => {
      if (type === 'private' && isLogin()=== false ) {
         return <Navigate to='/login' />
     }
+    if (type === 'private2' && isLogin()=== false ) {
+        return <Navigate to='/teacher-login' />
+    }
     
     return children;
 }

@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Form from 'react-bootstrap/Form';
 
 // import lib
-import { setAuthToken,removeAuthToken } from '../lib/localstorage';
+import { setAuthToken } from '../lib/localstorage';
 import toastAlert from '../lib/toast';
 
 //import Actions
-import { login } from "../actions/userAction"
+import { login } from "../actions/adminAction"
 
 //import config
 import { setAuthorization } from '../config/axios'
@@ -28,12 +28,17 @@ const Login = () => {
     // state
     const [formValue, setFormValue] = useState(initialFormValue);
     const [errors, setErrors] = useState({});
+    const [inputErrors,setInputErrors] = useState({});
 
     const { email, password } = formValue;
 
 
     const handleChange = (e) => {
         const { name, value } = e.target;
+        setInputErrors((prevErrors) => ({
+          ...prevErrors,
+          [name]: null, // Clear the error for this input
+      }));
         setFormValue({ ...formValue, ...{ [name]: value } })
     }
 
@@ -57,6 +62,11 @@ const Login = () => {
             } else if (status === false) {
                 if (errors) {
                     setErrors(errors)
+                    setInputErrors((prevErrors) => ({
+                      ...prevErrors,
+                      email:errors.email,
+                      password:errors.password
+                    }))
                 } else if (message) {
                     toastAlert('error', message)
                 }
@@ -85,7 +95,7 @@ const Login = () => {
                   <h2>Genius</h2>
                 </span>
               </div>
-              <h3>Sign In</h3>
+              <h3>Admin Sign In</h3>
                <Form.Group controlId="formEmail" className="field">
                             <Form.Label>Email</Form.Label>
                             <Form.Control
@@ -94,9 +104,9 @@ const Login = () => {
                                 name="email"
                                 value={email}
                                 onChange={handleChange}
-                                isInvalid={(errors && errors.email) && isValid(errors.email)} 
+                                isInvalid={(inputErrors && inputErrors.email) && isValid(inputErrors.email)} 
                             />
-                            <Form.Control.Feedback type="invalid">{errors && errors.email}
+                            <Form.Control.Feedback type="invalid">{inputErrors && inputErrors.email}
                             </Form.Control.Feedback>
                         </Form.Group>
                <Form.Group controlId="formEmail" className="field">
@@ -107,14 +117,15 @@ const Login = () => {
                                 name="password"
                                 value={password}
                                 onChange={handleChange}
-                                isInvalid={(errors && errors.password) && isValid(errors.password)} 
+                                isInvalid={(inputErrors && inputErrors.password) && isValid(inputErrors.password)} 
                             />
-                            <Form.Control.Feedback type="invalid">{errors && errors.password}
+                            <Form.Control.Feedback type="invalid">{inputErrors && inputErrors.password}
                             </Form.Control.Feedback>
                         </Form.Group>
               <button type="button" className="log" onClick={handleSubmit}>Login</button>
             </form>
           </div>
+        <p>For Teacher Login..! <Link to={'/teacher-login'} >SignIn Here</Link></p>
         </div>
       </div>      
       

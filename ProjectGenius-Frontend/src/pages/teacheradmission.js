@@ -3,9 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import Sidebar from './components/sidebar';
 import Navbar from './components/navbar';
 
-
 //import actions
-import { registerTeacher } from '../actions/userAction';
+import { registerTeacher } from '../actions/adminAction';
 
 // import lib
 import toastAlert from '../lib/toast';
@@ -44,8 +43,6 @@ const initialFormValue = {
 const Teacher = () => {
     const [currentForm, setCurrentForm] = useState(1);
     const [formValue, setFormValue] = useState(initialFormValue);
-    const [errors, setErrors] = useState({});
-    const [data,setData] = useState('')
 
     const {
         firstName,
@@ -120,32 +117,21 @@ const Teacher = () => {
 
                 toastAlert('success', message)
                 setFormValue(initialFormValue)
-                setErrors({});
                 navigate('/teacherview')
-            }
-            else if (status === false) {
-                if (errors) {
-                    setErrors(errors);
-                }
-
-                if (message) {
-                    toastAlert('error', message)
-
-                }
             }
 
         } catch (err) {
-
+           console.log(err)
         }
     }
     const renderForm = () => {
         switch (currentForm) {
             case 1:
-                return <TeacherPersonal formValue={formValue} setFormValue={setFormValue} handleNextClick={handleNextClick} errors={errors} />;
+                return <TeacherPersonal formValue={formValue} setFormValue={setFormValue} handleNextClick={handleNextClick} />;
             case 2:
-                return <TeacherContact  formValue={formValue} setFormValue={setFormValue} handlePreClick={handlePreClick} handleNextClick={handleNextClick} errors={errors} />;
+                return <TeacherContact  formValue={formValue} setFormValue={setFormValue} handlePreClick={handlePreClick} handleNextClick={handleNextClick} />;
             case 3:
-                return <TeacherHistory formValue={formValue} setFormValue={setFormValue} handlePreClick={handlePreClick} handleSubmit={handleSubmit}  errors={errors} />;
+                return <TeacherHistory formValue={formValue} setFormValue={setFormValue} handlePreClick={handlePreClick} handleSubmit={handleSubmit}  />;
             default:
                 return null;
         }

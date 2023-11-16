@@ -6,7 +6,7 @@ import { faEllipsis } from '@fortawesome/free-solid-svg-icons';
 
 //lib
 import toastAlert from '../lib/toast';
-import { deleteTeacher, viewTeacher } from '../actions/userAction';
+import { deleteTeacher, viewTeacher } from '../actions/adminAction';
 
 //Pop up package
 import 'react-alert-confirm/lib/style.css';
@@ -170,7 +170,7 @@ const TeacherList = () => {
                                 data.map((item, key) => {
                                     return (
                                         <tr className="tchr-row" onclick="infos()" key={key}>
-                                            <td className="profile">
+                                            <td className="teacherprofile">
                                                     <img src={`${IMAGE_URL}/${item.teacherphoto}`} alt="" onClick={() => teacherdetails(item._id)}/>
                                                 <span onClick={() => teacherdetails(item._id)}>{item.name}</span>
                                             </td>

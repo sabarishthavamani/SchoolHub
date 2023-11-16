@@ -1,16 +1,13 @@
 import React,{useState,useEffect} from 'react'
 import { useNavigate } from 'react-router-dom';
+//import component
 import Sidebar from './components/sidebar'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEllipsis } from '@fortawesome/free-solid-svg-icons';
-
-//actions
-import { viewFees } from '../actions/userAction';
+//import actions
+import { viewFees } from '../actions/adminAction';
 
 const FeesList = () =>{
 //state
 const [data,setData] = useState();
-
 //navigate
 const navigate = useNavigate()
 
@@ -28,7 +25,6 @@ const getData = async () => {
   useEffect(() => {
     getData();
   },[]);
-
   //navigate to fees edit
   const editFees = (id) => {
     navigate('/fees-edit/' + id)
@@ -40,10 +36,6 @@ const getData = async () => {
       <div className="header">
         <div className="l-header">
           <p>Fees List</p>
-        </div>
-        <div className="middle-header-right" style={{ width: 600 }}>
-          <input type="search" />
-          <img src="images/filter.png" />
         </div>
       </div>
       <div className="tchr-table" >
@@ -61,46 +53,23 @@ const getData = async () => {
           <tbody>
           {data && data.length > 0 && data.map((item,key)=>{
                     return(
-                        <tr className="tchr-row" >
-               
+                        <tr className="tchr-row" key={key} >
                         <td className="profile">
                         {item.admissiongrade}
                         </td>
-                        <td>{item.term1}</td>
+                        <td>₹{item.term1}</td>
                         <td>
-                         {item.term2}
+                        ₹{item.term2}
                         </td>
                         <td>
-                         {item.term3}
+                        ₹{item.term3}
                         </td>
                         <td>{item.updateddate}</td>
                         <td className="edit" id="ed">
-                                  <div className="dropdown">
-                                    <FontAwesomeIcon icon={faEllipsis} className="dropdown-toggle" data-bs-toggle="dropdown" />
-                                    <ul className="dropdown-menu" style={{ background: "#fafafa" }}>
-                                      <li className="edit-box">
-                                        <a className="dropdown-item" href="#" style={{ color: "blue" }}  onClick={() => editFees(item._id)} >
+                        <a className="dropdown-item" href="#" style={{ color: "blue" }}  onClick={() => editFees(item._id)} >
                                           <i className="fa fa-pencil" style={{ color: "blue" }} />
                                           Edit
                                         </a>
-                                      </li>
-                                      <li className="edit-box">
-                                        <a className="dropdown-item" href="#" >
-                                          <i className="fa fa-tags" />
-                                          More
-                                        </a>
-                                      </li>
-                                      <li>
-                                        <a className="dropdown-item" href="#" style={{ color: "red" }} >
-                                            <i
-                                              className="fa fa-trash-o"
-                                              style={{ color: "red", marginRight: 10 }}
-                                            />
-                                            Clear
-                                          </a>
-                                      </li  >
-                                    </ul>
-                                  </div>
                                 </td>
                       </tr>
                     )

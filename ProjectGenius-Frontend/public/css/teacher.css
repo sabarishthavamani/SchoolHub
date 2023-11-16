@@ -162,6 +162,8 @@
 }
 .teacher-form {
     display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
 }
 .form-left {
     width: 50%;
@@ -392,20 +394,19 @@
     padding: 3px 20px;
     border-radius: 25px;
 }
-.profile {
+.teacherprofile {
     width: 150px;
     text-align: left;
 }
-.profile span {
+.teacherprofile span {
     position: relative;
-    bottom: 7px;
-    left: 4px;
+    margin-right:10px;
 }
-.profile img {
+.teacherprofile img {
     width: 30px;
     height: 30px;
-    margin-left: 10px;
     border-radius: 15px;
+    margin-right: 10px;
 }
 .rupee {
     color: #fd0f56;

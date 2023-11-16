@@ -9,9 +9,9 @@ const TimeTable = () =>{
   <div className="teacher-content" style={{ background: "#f7f7f8" }}>
     <div className="header" style={{ width: "100%" }}>
       <div className="l-header">
-        <p>New Teacher</p>
+        <p>Teacher Time Table</p>
       </div>
-      <div className="r-header" style={{ width: 600 }}>
+      {/* <div className="r-header" style={{ width: 600 }}>
         <input type="search" placeholder="search" />
         <img src="images/filter.png" />
         <a href="#" className="notify">
@@ -36,7 +36,7 @@ const TimeTable = () =>{
           <span style={{ color: "#ccc" }}>Admin</span>
         </div>
         <img src="images/Profile photo.png" alt="" title="profile" />
-      </div>
+      </div> */}
     </div>
     <div className="time-table-content">
       <div className="time-header">

@@ -9,7 +9,7 @@ import { faGreaterThan } from '@fortawesome/free-solid-svg-icons';
 import toastAlert from '../lib/toast';
 
 //actions
-import { feeSetup } from '../actions/userAction';
+import { feeSetup } from '../actions/adminAction';
 
 
 const initialFormValue = {
@@ -26,15 +26,21 @@ const FeeSetup = () => {
 
   // state
   const [formValue, setFormValue] = useState(initialFormValue);
+  const [errors,setErrors] = useState({});
+  const [inputErrors,setInputErrors]=useState({});
 
   const { admissiongrade, term1, term2, term3 } = formValue;
 
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    setInputErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: undefined, // Clear the error for this input
+    }));
     setFormValue({ ...formValue, ...{ [name]: value } })
   }
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
     try {
 
       let data = {
@@ -43,16 +49,26 @@ const FeeSetup = () => {
         term2: term2,
         term3: term3,
       }
-      let { status, message } = await feeSetup(data)
+      let { status, message,errors } = await feeSetup(data)
       if (status === true) {
         setFormValue(initialFormValue)
         toastAlert('success', message)
-      } else if (status === false) {
+      } if (status === false) {
+        if (errors) {
+          setErrors(errors);
+          // Update the inputErrors state for each input with an error
+          setInputErrors((prevErrors) => ({
+            ...prevErrors,
+            admissiongrade: errors.admissiongrade, 
+            term1 :errors.term1,
+            term2:errors.term2,
+            term3:errors.term3,
+          }));
+        }
         if (message) {
-          toastAlert('error', message)
+          toastAlert('error', message);
         }
       }
-
     } catch (err) {
       console.log(err, '...err')
     }
@@ -71,7 +87,7 @@ const FeeSetup = () => {
           <div className="fee-setup-header">
             <span>Student Fee Setup</span>
           </div>
-          <form action="" className="setup-form">
+          <form className="setup-form">
             <div className="setup-content">
               <div className="setup-left">
                 <div className="setup-box">
@@ -96,20 +112,24 @@ const FeeSetup = () => {
                     <option >Class 11</option>
                     <option >Class 12</option>
                   </select>
+                  <span className='text-error'>{inputErrors.admissiongrade}</span>
                 </div>
               </div>
               <div className="setup-right">
                 <div className="setup-box">
                   <label>Fee Amount - Term 1</label>
                   <input type="text" value={term1} name='term1' onChange={handleChange} />
+                  <span className='text-error'>{inputErrors.term1}</span>
                 </div>
                 <div className="setup-box">
                   <label>Fee Amount - Term 2</label>
                   <input type="text" value={term2} name='term2' onChange={handleChange} />
+                  <span className='text-error'>{inputErrors.term2}</span>
                 </div>
                 <div className="setup-box">
                   <label>Fee Amount - Term 3</label>
                   <input type="text" value={term3} name='term3' onChange={handleChange} />
+                  <span className='text-error'>{inputErrors.term3}</span>
                 </div>
               </div>
             </div>
@@ -126,5 +146,4 @@ const FeeSetup = () => {
 
   )
 }
-
 export default FeeSetup;

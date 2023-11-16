@@ -1,6 +1,5 @@
 import React,{useEffect} from 'react'
 
-
 const CardPay = (props) => {
     const {amountPayable,setAmountPayable,buttonText,handleSubmit,setButtonText,updatedDueAmount}=props
 

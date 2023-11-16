@@ -214,12 +214,14 @@
     color: red;
     padding: 3px 20px;
     border-radius: 25px;
+    font-weight: 600;
 }
 .due2 {
     color: #0fc478;
     background-color: #e1f5ee;
     padding: 3px 20px;
     border-radius: 25px;
+    font-weight: 600;
 }
 .profile {
     width: 150px;
@@ -431,4 +433,33 @@
     border: none !important;
     border-radius: 4px !important;
     box-shadow: none !important;
+}
+.feeslide {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px;
+}
+.fees-history {
+    width: 100%;
+    font-size: 14px;
+    min-height: 120px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 4px 4px 5px #cacbcd;
+    padding: 10px;
+    margin-top: 15px;
+}
+.fees-history h4 {
+    text-align: center;
+    color: red;
+    font-weight: 700;
+}
+/* / Loader view / */
+.loader-view-container {
+    height: 80vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

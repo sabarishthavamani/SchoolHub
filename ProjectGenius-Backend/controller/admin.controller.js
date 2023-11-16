@@ -440,39 +440,6 @@ const feestatus = async(req,res) =>{
     }
 }
 const registerTeacher = async (req, res) => {
-    // let checkprimaryPhone = await TeacherAdmission.findOne({ 'phoneNumber': req.body.phoneNumber }, { 'phoneNumber': 1 }).lean();
-    // if (!isEmpty(checkprimaryPhone)) {
-    //     return res.status(400).json({ 'status': false, 'errors': { 'phoneNumber': 'Phone Nunmber already exist' },'message': 'Same Mobile Number  already registered,please go and check in previous page' })
-    // }
-    // let checkemergencyPhone = await TeacherAdmission.findOne({ 'emergencycontactNumber': req.body.emergencycontactNumber }, { 'emergencycontactNumber': 1 }).lean();
-    // if (!isEmpty(checkemergencyPhone)) {
-    //     return res.status(400).json({ 'status': false, 'errors': { 'emergencycontactNumber': 'Phone Number already exist' },'message': 'Same Mobile Number  already registered,please go and check in previous page' })
-    // }
-    // let checkwhatsappNo = await TeacherAdmission.findOne({ 'whatsappNumber': req.body.whatsappNumber }, { 'whatsappNumber': 1 }).lean();
-    // if (!isEmpty(checkwhatsappNo)) {
-    //     return res.status(400).json({ 'status': false, 'errors': { 'whatsappNumber': 'whatsapp Number already exist' },'message': 'Same Whatsapp Number  already registered,please go and check in previous page' })
-    // }
-    // let checkfatherphonenumber = await TeacherAdmission.findOne({ 'fatherphonenumber': req.body.fatherphonenumber }, { 'fatherphonenumber': 1 }).lean();
-    // if (!isEmpty(checkfatherphonenumber)) {
-    //     return res.status(400).json({ 'status': false, 'errors': { 'fatherphonenumber': 'Same Phone Number already exist' },'message': 'Same Mobile Number  already registered,please go and check in previous page' })
-    // }
-    // let checkmotherphonenumber = await TeacherAdmission.findOne({ 'motherphonenumber': req.body.motherphonenumber }, { 'motherphonenumber': 1 }).lean();
-    // if (!isEmpty(checkmotherphonenumber)) {
-    //     return res.status(400).json({ 'status': false, 'errors': { 'motherphonenumber': 'Same Phone Number already exist' },'message': 'Same Mobile Number  already registered,please go and check in previous page' })
-    // }
-    // let checkEmail = await TeacherAdmission.findOne({ 'email': req.body.email }, { 'email': 1 }).lean();
-    // if (!isEmpty(checkEmail)) {
-    //     return res.status(400).json({ 'status': false, 'errors': { 'email': 'Email Id already exist' }, 'message': 'Same EmailId  already registered,please go and check in previous page' })
-    // }
-    // let checkAddress = await TeacherAdmission.findOne({ 'permanentaddress': req.body.permanentaddress }, { 'permanentaddress': 1 }).lean();
-    // if (!isEmpty(checkAddress)) {
-    //     return res.status(400).json({ 'status': false, 'errors': { 'permanentaddress': 'permanentaddress  already exist' },'message': 'Same Address already registered,please go and check in previous page' })
-    // }
-    // let checkAddress2 = await TeacherAdmission.findOne({ 'temporaryaddress': req.body.temporaryaddress }, { 'temporaryaddress': 1 }).lean();
-    // console.log(checkAddress2, '----add')
-    // if (!isEmpty(checkAddress2)) {
-    //     return res.status(400).json({ 'status': false, 'errors': { 'temporaryaddress': 'temporaryaddress  already exist' },'message': 'Same Address  already registered,please go and check in previous page' })
-    // }
     const maxTeacher = await TeacherAdmission.findOne({}, { teacherId: 1 }).sort({ teacherId: -1 });
     let nextTeacherId = 'T0001';
 
@@ -483,14 +450,7 @@ const registerTeacher = async (req, res) => {
     }
     const firstName = req.body.firstName;
     const lastName = req.body.lastName;
-    // const surName = req.body.surName;
-
     let FullName = `${firstName} ${lastName}`;
-
-    // if (surName !== undefined && surName !== "") {
-    //     FullName += ` ${surName}`;
-    // }
-
     let newDoc = new TeacherAdmission({
         'teacherId': nextTeacherId,
         'name': FullName,

@@ -3,8 +3,6 @@ const isEmpty = require('is-empty');
 const loginValid = (req, res, next) => {
     let errors = {};
     let emailRegax = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-
-
     if (isEmpty(req.body.email)) {
         errors.email = 'Please enter your Registered Email Id'
     } else if (!(emailRegax).test(req.body.email)) {
@@ -296,4 +294,13 @@ const teacherupdateValid = (req, res, next) => {
 
     return next()
 }
-module.exports = { loginValid, verifyValid, updateValid, feecollectionValid, feesetupValid, feesetupEditValid, teacherupdateValid  }
+
+module.exports = { 
+    loginValid, 
+    verifyValid, 
+    updateValid, 
+    feecollectionValid, 
+    feesetupValid, 
+    feesetupEditValid, 
+    teacherupdateValid,
+}

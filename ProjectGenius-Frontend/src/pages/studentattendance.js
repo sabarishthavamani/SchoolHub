@@ -4,31 +4,17 @@ import TeacherSidebar from './components/teachersidebar'
 import { viewStudent } from '../actions/adminAction'
 
 const StudentAttendance = () => {
-    const [attendanceRecord, setAttendanceRecord] = useState([])
+    const [attendanceRecord, setAttendanceRecord] = useState({})
     const [data,setData] = useState({})
 
-    const handlePresent = (Id) => {
-        
-        setAttendanceRecord((prevState) => {
-            if (!attendanceRecord.includes(Id)) {
-                return [...prevState, Id]
-            } else {
-                const updatedAttendance = prevState.filter(each => each.studentId === Id)
-                return updatedAttendance
-            }
-        });
+    const handlePresent = (id, status) => {
+        setAttendanceRecord((prevState) => ({...prevState, [id]:status}))
+    }
+
+    const handleAbsent = (id, status) => {
+        setAttendanceRecord((prevState) => ({...prevState, [id]:status}))
     }
     console.log(attendanceRecord)
-    const handleAbsent = (Id) => {
-        setAttendanceRecord((prevState) => {
-            if (attendanceRecord.includes(Id)) {
-                const updatedAttendance = prevState.filter(each => each.studentId === Id)
-                return updatedAttendance
-            } else {
-                return [...prevState, Id]
-            }
-        });
-    }
     const getData = async () => {
         try {
           let { status, result } = await viewStudent();
@@ -105,82 +91,22 @@ const StudentAttendance = () => {
                             {data && data.length > 0 && data.map((item,key)=>{
                                 return(
                                     <tr className="sheet-body" key={key}>
-                                    <td>
+                                <td>
                                     <label className="lab" style={{marginRight: '8px'}}>
-                                            <input type="checkbox"  onChange={() => handlePresent(item.studentId)} checked={attendanceRecord.includes(item.studentId)} />
-                                            <span className="checking"></span>
-                                        </label>
-                                        <label className="lab">
-                                            <input type="checkbox" onChange={() => handleAbsent(item.studentId)} checked={attendanceRecord.includes(item.studentId)}/>
-                                            <span className="cross"></span>
-                                        </label>
-                                    </td>
-                                    <td>{item.name}</td>
-                                    <td>{item.studentId}</td>
-                                    <td>{attendanceRecord.includes(item.studentId) !== null && <span className={attendanceRecord.includes(item.studentId) ? "present" : "absent"}>{attendanceRecord.includes(item.studentId) ? "Present" : "Absent"}</span>}</td>
-                                </tr>
+                                        <input type="checkbox"  onChange={() => handlePresent(item.studentId, 'present')} checked={attendanceRecord[item.studentId] === 'present'} />
+                                        <span className="checking"></span>
+                                    </label>
+                                    <label className="lab">
+                                        <input type="checkbox" onChange={() => handleAbsent(item.studentId, 'absent')} checked={attendanceRecord[item.studentId] === 'absent'}/>
+                                        <span className="cross"></span>
+                                    </label>
+                                </td>
+                                <td>{item.name}</td>
+                                <td>{item.studentId}</td>
+                                <td><span className={attendanceRecord[item.studentId] ? attendanceRecord[item.studentId] === 'present' ? "present" : "absent" : null}>{attendanceRecord[item.studentId] ? attendanceRecord[item.studentId] === 'present' ? "Present" : "Absent" : null}</span></td>
+                            </tr>
                                 )
                             })}
-                            {/* <tr className="sheet-body">
-                                <td>
-                                <label className="lab" style={{marginRight: '8px'}}>
-                                        <input type="checkbox"  onChange={handlePresent} checked={attendanceStatus===true} />
-                                        <span className="checking"></span>
-                                    </label>
-                                    <label className="lab">
-                                        <input type="checkbox" onChange={handleAbsent} checked={attendanceStatus===false}/>
-                                        <span className="cross"></span>
-                                    </label>
-                                </td>
-                                <td>Maria DB</td>
-                                <td>2023473</td>
-                                <td>{attendanceStatus !== null && <span className={attendanceStatus ? "present" : "absent"}>{attendanceStatus ? "Present" : "Absent"}</span>}</td>
-                            </tr>
-                            <tr className="sheet-body">
-                                <td>
-                                <label className="lab" style={{marginRight: '8px'}}>
-                                        <input type="checkbox"  onChange={handlePresent} checked={attendanceStatus===true} />
-                                        <span className="checking"></span>
-                                    </label>
-                                    <label className="lab">
-                                        <input type="checkbox" onChange={handleAbsent} checked={attendanceStatus===false}/>
-                                        <span className="cross"></span>
-                                    </label>
-                                </td>
-                                <td>Maria DB</td>
-                                <td>2023473</td>
-                                <td>{attendanceStatus !== null && <span className={attendanceStatus ? "present" : "absent"}>{attendanceStatus ? "Present" : "Absent"}</span>}</td>
-                            </tr>
-                            <tr className="sheet-body">
-                                <td>
-                                <label className="lab" style={{marginRight: '8px'}}>
-                                        <input type="checkbox"  onChange={handlePresent} checked={attendanceStatus===true} />
-                                        <span className="checking"></span>
-                                    </label>
-                                    <label className="lab">
-                                        <input type="checkbox" onChange={handleAbsent} checked={attendanceStatus===false}/>
-                                        <span className="cross"></span>
-                                    </label>
-                                </td>
-                                <td>Maria DB</td>
-                                <td>2023473</td>
-                                <td>{attendanceStatus !== null && <span className={attendanceStatus ? "present" : "absent"}>{attendanceStatus ? "Present" : "Absent"}</span>}</td>
-                            </tr>
-                            <tr className="sheet-body">
-                                <td>
-                                <label className="lab" style={{marginRight: '8px'}}>
-                                        <input type="checkbox"  onChange={handlePresent} checked={attendanceStatus===true} />
-                                        <span className="checking"></span>
-                                    </label>
-                                    <label className="lab">
-                                        <input type="checkbox" onChange={handleAbsent} checked={attendanceStatus===false}/>
-                                        <span className="cross"></span>
-                                    </label>
-                                </td>
-                                <td>Maria DB</td>
-                                <td>2023473</td>
-                                <td>{attendanceStatus !== null && <span className={attendanceStatus ? "present" : "absent"}>{attendanceStatus ? "Present" : "Absent"}</span>}</td>
-                            </tr> */}
                         </tbody>
                     </table>
                 </div>

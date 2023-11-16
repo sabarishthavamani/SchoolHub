@@ -26,13 +26,17 @@ import TeacherLogin from './pages/teacherlogin';
 import StudentAttendance from './pages/studentattendance';
 import StudentMarksheet from './pages/studentmarksheet';
 import TeacherSignup from './pages/teachersignup';
+import Home from './pages/home';
 
 function App() {
   return (
     <div className="App">
        <BrowserRouter basename='/'>
         <Routes>
-          <Route path="/" element={<ConditionRoute type="public"><Login /></ConditionRoute>} />
+          <Route path="/" element={<ConditionRoute type="public"><Home /></ConditionRoute>} />
+        </Routes>
+        <Routes>
+          <Route path="/home" element={<ConditionRoute type="public"><Home /></ConditionRoute>} />
         </Routes>
         <Routes>
           <Route path="/login" element={<ConditionRoute type="public"><Login /></ConditionRoute>} />

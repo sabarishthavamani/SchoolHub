@@ -125,7 +125,6 @@ const Login = () => {
               <button type="button" className="log" onClick={handleSubmit}>Login</button>
             </form>
           </div>
-        <p>For Teacher Login..! <Link to={'/teacher-login'} >SignIn Here</Link></p>
         </div>
       </div>      
       

@@ -84,7 +84,7 @@ const Login = () => {
         <div className="leftcontent">
           <img className="ellipse" src="images/Ellipse 17.svg" />
           <img className="ell" src="images/Ellipse 17.png" />
-          <img className="kids" src="images/Kids Studying from Home-pana 1.svg" />
+          <img className="tech" src="images/Work time.png" />
         </div>
         <div className="rightcontent">
           <div className="sign-in">

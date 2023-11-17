@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const sendMail = require('../lib/emailGateway');
 //Models
 const Teacher = require('../models/teachersignup');
+const Section = require('../models/section');
 //config
 const config = require('../config/index');
 //control functions
@@ -68,9 +69,27 @@ const jwtVerify = (token) => {
         }
     }
 }
+const findSection = async (req, res) => {
+    try {
+      
+        const { section, admissiongrade } = req.body;
+        let checksection = await Section.findOne({ 'section': req.body.section }).lean()
+        if (isEmpty(checksection)) {
+            return res.status(400).json({ 'status': false, 'errors': { 'section': 'Selected Section Not Exist' } })
+        }
+        const result = await Section.find({ section, admissiongrade }).lean();
+        console.log(result,'---result')
+        return res.status(200).json({ 'status': true, 'result': result });
+    } catch (err) {
+        console.log(err,'--err')
+        return res.status(500).json({ 'status': false, 'message': 'Error on the Server' });
+    }
+}
+
 module.exports ={
     createteacher,
     teacherLogin,
     jwtSign,
-  
+    jwtVerify,
+    findSection
 }

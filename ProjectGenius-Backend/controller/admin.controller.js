@@ -7,8 +7,9 @@ const Admin = require('../models/admin');
 const Admission = require('../models/admission');
 const FeeSetup = require('../models/feesetup');
 const FeeCollection = require('../models/feescollection');
-const FeesPaid = require('../models/feespaid')
-const TeacherAdmission = require('../models/teacheradmission')
+const FeesPaid = require('../models/feespaid');
+const TeacherAdmission = require('../models/teacheradmission');
+const Section = require('../models/section');
 
 // config
 const config = require('../config');
@@ -418,7 +419,21 @@ const feesPaid = async (req, res) => {
         return res.status(500).json({ 'status': false, 'message': 'Error on the server' });
     }
 }
-
+const sectionallocate = async (req, res) => {
+    try {
+        const newDocument = new Section({
+            name: req.body.name,
+            studentId: req.body.studentId,
+            admissiongrade: req.body.admissiongrade,
+            section: req.body.section,
+        });
+        await newDocument.save();
+        return res.status(200).json({ 'status': true, 'message': 'Section Allocated Successfully' });
+    } catch (err) {
+        console.log(err);
+        return res.status(500).json({ 'status': false, 'message': 'Error on the server' });
+    }
+}
 const feePayment = async (req, res) => {
     try {
         const result = await FeeCollection.findOne({ 'name': req.params.name }).lean();
@@ -601,6 +616,7 @@ module.exports = {
     findFeeSetup,
     feePayment,
     feesPaid,
+    sectionallocate,
     registerTeacher,
     ViewTeacher,
     deleteTeacher,

@@ -43,8 +43,24 @@ const teacherregisterValid = (req, res, next) => {
 
     return next();
 }
+const findsectionValid = (req,res,next) =>{
+    let errors = {};
+
+    if (isEmpty(req.body.section)) {
+      errors.section ='Please select the section'
+    }
+    if (isEmpty(req.body.admissiongrade)) {
+        errors.admissiongrade ='Please select the grade'
+    }
+    if (isEmpty(errors) == false) {
+        return res.status(400).json({ 'status': false, 'errors': errors })
+    }
+
+    return next();
+}
 
 module.exports = {
     teacherloginValid,
-    teacherregisterValid
+    teacherregisterValid,
+    findsectionValid
 }

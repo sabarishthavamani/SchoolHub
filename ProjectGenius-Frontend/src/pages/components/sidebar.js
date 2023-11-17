@@ -34,12 +34,12 @@ const Sidebar = (props) => {
             </div>
 
           </li>
-          <li style={isLinkActive('/students') ? {
+          <li style={isLinkActive('/students') || isLinkActive(`/sectionallocate/${Id}`)? {
               background: 'linear-gradient(to right,#fde4cb,#fcfad3)'
             } : null}> 
             <div className="menu-bar" >
-            {isLinkActive('/students') ?  <img src= {`${process.env.PUBLIC_URL}/images/blue-student.png`} alt="" />  :  <img src= {`${process.env.PUBLIC_URL}/images/edu.png`} alt="" />}
-              <NavLink to='/students' className={`mysidebar ${isLinkActive('/students') ? 'activemysidebar' : null}`}>Students</NavLink>
+            {isLinkActive('/students') || isLinkActive(`/sectionallocate/${Id}`) ?  <img src= {`${process.env.PUBLIC_URL}/images/blue-student.png`} alt="" />  :  <img src= {`${process.env.PUBLIC_URL}/images/edu.png`} alt="" />}
+              <NavLink to='/students' className={`mysidebar ${isLinkActive('/students') || isLinkActive(`/sectionallocate/${Id}`) ? 'activemysidebar' : null}`}>Students</NavLink>
             </div>
           </li>
           <li style={isLinkActive(`/feecollection/${Id}`) || isLinkActive(`/feepayment/${name}`) || isLinkActive('/feecomplete') ? {

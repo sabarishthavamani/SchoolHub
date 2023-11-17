@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Sidebar from './components/sidebar';
 //fontawesome pacakage
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEllipsis,faMoneyCheck, faSort } from '@fortawesome/free-solid-svg-icons';
+import { faEllipsis,faMoneyCheck, faSchool, faSection, faSort } from '@fortawesome/free-solid-svg-icons';
 //react confirm pop-up package
 import 'react-alert-confirm/lib/style.css';
 import AlertConfirm, { Button } from 'react-alert-confirm';
@@ -79,7 +79,7 @@ const Students = () => {
                       <td className="edit" id="ed">
                         <div className="dropdown">
                           <FontAwesomeIcon icon={faEllipsis} className="dropdown-toggle" data-bs-toggle="dropdown" />
-                          <ul className="dropdown-menu" style={{ background: "#fafafa" }}>
+                          <ul className="dropdown-menu" style={{ background: "#fafafa",padding:"0" }}>
                             <li className="edit-box">
                               <a className="dropdown-item" href="#" style={{ color: "blue" }} onClick={() => editstudent(item._id)}>
                                 <i className="fa fa-pencil" style={{ color: "blue" }} />
@@ -92,7 +92,7 @@ const Students = () => {
                                 Pay-Fee
                               </a>
                             </li>
-                            <li>
+                            <li className="edit-box">
                             <Button className='pop-up-button' onClick={() => openBasic(item._id)}>
                               <a className="dropdown-item" href="#" style={{ color: "red" }} >
                                   <i
@@ -102,7 +102,13 @@ const Students = () => {
                                   Clear
                                 </a>
                             </Button>
-                            </li  >
+                            </li>
+                            <li className="edit-box">
+                              <a className="dropdown-item" href="#" onClick={() => sectionallocate(item._id)} style={{ color: "revert-layer" }} >
+                                <FontAwesomeIcon icon={faSchool} style={{ color: "revert-layer", marginRight: '5px' }} />
+                                Section-allocate
+                              </a>
+                            </li>
                           </ul>
                         </div>
                       </td>
@@ -194,6 +200,9 @@ const Students = () => {
   }
   const feecollection = (id) => {
     navigate('/feecollection/' + id)
+  }
+  const sectionallocate = (id) => {
+    navigate('/sectionallocate/' + id)
   }
   return (
     <div className="student-container">

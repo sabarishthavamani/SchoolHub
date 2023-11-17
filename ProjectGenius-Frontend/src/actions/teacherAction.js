@@ -41,3 +41,24 @@ export const teacherlogin = async (data) => {
         }
     }
 }
+export const findsection = async (Data) => {
+
+    try {
+        let respData = await axios({
+            'url': '/findsection',
+            'method': 'post',
+            'data':Data
+        })
+        return {
+            'status': respData.data.status,
+            'message': respData.data.message,
+            'result':respData.data.result
+        }
+    } catch (err) {
+        return {
+            'status': err.response.data.status,
+            'message': err.response.data.message,
+            'errors': err.response.data.errors
+        }
+    }
+}

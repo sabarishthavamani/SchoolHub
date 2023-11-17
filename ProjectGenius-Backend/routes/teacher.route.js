@@ -10,5 +10,6 @@ const teacherCtrl = require('../controller/teacher.controller')
 //teacher-login
 router.route('/teacher-register').post(teacherValid.teacherregisterValid,teacherCtrl.createteacher);
 router.route('/teacher-login').post(teacherValid.teacherloginValid,teacherCtrl.teacherLogin);
+router.route('/findsection').post(teacherValid.findsectionValid,teacherCtrl.findSection);
 
 module.exports = router;

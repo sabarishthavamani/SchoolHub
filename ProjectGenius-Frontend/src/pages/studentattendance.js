@@ -1,11 +1,23 @@
 import React,{useState,useEffect} from 'react'
 import TeacherHeader from './components/teachernavbar'
 import TeacherSidebar from './components/teachersidebar'
-import { viewStudent } from '../actions/adminAction'
 
+import { findsection } from '../actions/teacherAction'
+import toastAlert from '../lib/toast'
+
+const initialFormValue ={
+    "admissiongrade":"",
+    "section":""
+}
 const StudentAttendance = () => {
-    const [attendanceRecord, setAttendanceRecord] = useState({})
-    const [data,setData] = useState({})
+    const [attendanceRecord, setAttendanceRecord] = useState({});
+    const [data,setData] = useState({});
+    const [formValue,setFormValue] = useState(initialFormValue);
+    const [errors, setErrors] = useState({});
+    const [inputErrors,setInputErrors] = useState({});
+
+
+    const {admissiongrade,section} = formValue;
 
     const handlePresent = (id, status) => {
         setAttendanceRecord((prevState) => ({...prevState, [id]:status}))
@@ -15,19 +27,43 @@ const StudentAttendance = () => {
         setAttendanceRecord((prevState) => ({...prevState, [id]:status}))
     }
     console.log(attendanceRecord)
+    
+    const handleChange = (e) =>{
+        const {name,value} = e.target;
+        setInputErrors((prevErrors) => ({
+            ...prevErrors,
+            [name]: null, // Clear the error for this input
+        }));
+        setFormValue({...formValue,...{[name]:value}})        
+    }
     const getData = async () => {
         try {
-          let { status, result } = await viewStudent();
+            let Data ={
+                admissiongrade:admissiongrade,
+                section:section,
+            }
+          let { status, result,errors,message } = await findsection(Data);
           if (status === true) {
             setData(result)
+          }
+          if(status === false){
+            if(errors){
+                setErrors(errors)
+                setInputErrors((prevErrors) => ({
+                    ...prevErrors,
+                    admissiongrade:errors.admissiongrade,
+                    section:errors.section
+                  }))
+            }
+            else if(message){
+               toastAlert('error',message)
+            }
           }
         } catch (err) {
           console.error(err);
         }
       };
-      useEffect(() => {
-        getData();
-      }, []);
+    console.log(data,'---data')
   return (
     <div className="attendance">
         <TeacherHeader />
@@ -37,9 +73,9 @@ const StudentAttendance = () => {
                 <div className="class-details">
                     <div className="std-class">
                         <label>className</label>
-                        <select>
+                        <select name='admissiongrade' value={admissiongrade} onChange={handleChange}>
                             <option></option>
-                            <option>Pre School</option>
+                            <option>Preschool</option>
                             <option>LKG</option>
                             <option>UKG</option>
                             <option>I</option>
@@ -55,10 +91,12 @@ const StudentAttendance = () => {
                             <option>XI</option>
                             <option>XII</option>
                         </select>
+                        <span className='attendance-error'>{inputErrors.admissiongrade}</span>
                     </div>
                     <div className="std-class">
                         <label>Section</label>
-                        <select>
+                        <select name='section' value={section} onChange={handleChange}>
+                            <option />
                             <option>A</option>
                             <option>B</option>
                             <option>C</option>
@@ -66,12 +104,13 @@ const StudentAttendance = () => {
                             <option>E</option>
                             <option>F</option>
                         </select>
+                        <span className='attendance-error'>{inputErrors.section}</span>
                     </div>
                     <div className="std-class">
                         <label>Date</label>
                         <input type="date" />
                     </div>
-                    <button className="sheet-button">Generate Sheet</button>
+                    <button className="sheet-button" type='button' onClick={getData}>Generate Sheet</button>
                 </div>
                 <div className="att-record">
                     <p>Attendance Sheet</p>

@@ -27,6 +27,7 @@ import StudentAttendance from './pages/studentattendance';
 import StudentMarksheet from './pages/studentmarksheet';
 import TeacherSignup from './pages/teachersignup';
 import Home from './pages/home';
+import SectionAllocation from './pages/sectionallocate';
 
 function App() {
   return (
@@ -88,6 +89,9 @@ function App() {
         </Routes>
         <Routes>
           <Route path="/fees-edit/:Id" element={<ConditionRoute type="private"><FeesEdit /></ConditionRoute>} />
+        </Routes>
+        <Routes>
+          <Route path="/sectionallocate/:Id" element={<ConditionRoute type="private"><SectionAllocation /></ConditionRoute>} />
         </Routes>
         <Routes>
           <Route path="/teacher-login" element={<ConditionRoute type="public"><TeacherLogin /></ConditionRoute>} />

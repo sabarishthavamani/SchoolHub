@@ -2,12 +2,14 @@ import React,{useState,useEffect} from 'react'
 import TeacherHeader from './components/teachernavbar'
 import TeacherSidebar from './components/teachersidebar'
 
-import { findsection } from '../actions/teacherAction'
+import { Dailyattendance, findsection } from '../actions/teacherAction'
 import toastAlert from '../lib/toast'
 
 const initialFormValue ={
     "admissiongrade":"",
-    "section":""
+    "section":"",
+    "date":"",
+   "attendance":"",
 }
 const StudentAttendance = () => {
     const [attendanceRecord, setAttendanceRecord] = useState({});
@@ -17,7 +19,7 @@ const StudentAttendance = () => {
     const [inputErrors,setInputErrors] = useState({});
 
 
-    const {admissiongrade,section} = formValue;
+    const {admissiongrade,section,date,attendance,checkbox1,checkbox2 } = formValue;
 
     const handlePresent = (id, status) => {
         setAttendanceRecord((prevState) => ({...prevState, [id]:status}))
@@ -52,7 +54,7 @@ const StudentAttendance = () => {
                 setInputErrors((prevErrors) => ({
                     ...prevErrors,
                     admissiongrade:errors.admissiongrade,
-                    section:errors.section
+                    section:errors.section,
                   }))
             }
             else if(message){
@@ -63,7 +65,45 @@ const StudentAttendance = () => {
           console.error(err);
         }
       };
-    console.log(data,'---data')
+      
+      const handleSubmit = async () => {
+        // Check if data is available
+        if (data && data.length > 0) {
+          // Create an array to hold attendance data
+          const attendanceData = data.map((item) => ({
+            studentName: item.name,
+            studentId: item.studentId,
+            status: attendanceRecord[item.studentId] || 'absent', // Default to absent if status is not selected
+          }));
+      
+          // Prepare the data to be sent to the server
+          const Data = {
+            admissiongrade: admissiongrade,
+            section: section,
+            date: date,
+            attendance: attendanceData,
+          };
+      
+          try {
+            const { status, message } = await Dailyattendance(Data);
+      
+            if (status === true) {
+              setFormValue(initialFormValue);
+              setAttendanceRecord({});
+              setData({});
+              toastAlert('success', message);
+            } else if (status === false) {
+              toastAlert('error', message);
+            }
+          } catch (error) {
+            console.error(error);
+          }
+        } else {
+          toastAlert('error', 'No student data available');
+        }
+      };
+      const isButtonDisable = (data.length === Object.values(attendanceRecord).length)
+      
   return (
     <div className="attendance">
         <TeacherHeader />
@@ -108,7 +148,7 @@ const StudentAttendance = () => {
                     </div>
                     <div className="std-class">
                         <label>Date</label>
-                        <input type="date" />
+                        <input type="date" name='date' value={date} onChange={handleChange} />
                     </div>
                     <button className="sheet-button" type='button' onClick={getData}>Generate Sheet</button>
                 </div>
@@ -136,7 +176,7 @@ const StudentAttendance = () => {
                                         <span className="checking"></span>
                                     </label>
                                     <label className="lab">
-                                        <input type="checkbox" onChange={() => handleAbsent(item.studentId, 'absent')} checked={attendanceRecord[item.studentId] === 'absent'}/>
+                                        <input type="checkbox"  onChange={() => handleAbsent(item.studentId, 'absent')} checked={attendanceRecord[item.studentId] === 'absent'}/>
                                         <span className="cross"></span>
                                     </label>
                                 </td>
@@ -149,7 +189,7 @@ const StudentAttendance = () => {
                         </tbody>
                     </table>
                 </div>
-                <button className="sheet-submit">Submit</button>
+                <button className="sheet-submit"  disabled={!isButtonDisable} style={{ backgroundColor: isButtonDisable ? '#ff3672' : 'gray' }} type='button' onClick={handleSubmit}>Submit</button>
           </div>
         </div>
     </div>

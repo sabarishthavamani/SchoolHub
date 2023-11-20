@@ -105,7 +105,7 @@ export const viewStudent = async () => {
     try {
         let respData = await axios({
             'url': '/viewstudent',
-            'method': 'get',
+            'method': 'post',
         })
         return {
             'status': respData.data.status,

@@ -54,7 +54,7 @@ router.route('/re-verification').get( adminCtrl.ReverifyCode);
 //student-admission
 router.route('/admission').post(profileUpload.fields([{ name: 'signature', maxCount: 1 }, { name: 'photo', maxCount: 1 }]),adminCtrl.registerStudent);
 //student-details
-router.route('/viewstudent').get(adminCtrl.viewStudent);
+router.route('/viewstudent').post(adminCtrl.viewStudent);
 router.route('/deletestudent/:id').get(adminCtrl.deleteStudent);
 router.route('/getsingle-student/:id').get(adminCtrl.getSingleStudent);
 router.route('/updatestudent').post(profileUpload.fields([{ name: 'signature', maxCount: 1 }, { name: 'photo', maxCount: 1 }]),adminValid.updateValid,adminCtrl.updateStudent);

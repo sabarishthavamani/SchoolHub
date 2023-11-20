@@ -62,3 +62,22 @@ export const findsection = async (Data) => {
         }
     }
 }
+export const Dailyattendance = async (Data) => {
+
+    try {
+        let respData = await axios({
+            'url': '/daily-attendance',
+            'method': 'post',
+            'data':Data
+        })
+        return {
+            'status': respData.data.status,
+            'message': respData.data.message,
+        }
+    } catch (err) {
+        return {
+            'status': err.response.data.status,
+            'message': err.response.data.message,
+    }
+}
+}

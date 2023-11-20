@@ -47,10 +47,10 @@ const findsectionValid = (req,res,next) =>{
     let errors = {};
 
     if (isEmpty(req.body.section)) {
-      errors.section ='Please select the section'
+      errors.section ='Please Select the Section'
     }
     if (isEmpty(req.body.admissiongrade)) {
-        errors.admissiongrade ='Please select the grade'
+        errors.admissiongrade ='Please Select the Classname'
     }
     if (isEmpty(errors) == false) {
         return res.status(400).json({ 'status': false, 'errors': errors })
@@ -62,5 +62,5 @@ const findsectionValid = (req,res,next) =>{
 module.exports = {
     teacherloginValid,
     teacherregisterValid,
-    findsectionValid
+    findsectionValid,
 }

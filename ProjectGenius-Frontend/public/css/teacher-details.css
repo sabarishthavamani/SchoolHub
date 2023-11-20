@@ -241,7 +241,7 @@
     background: #ffeef3;
     color: #ff3672;
 }
-.attendance {
+.attendan {
     width: 100%;
     height: 120px;
     background: white;
@@ -251,16 +251,17 @@
     align-items: center;
     font-size: 14px;
 }
-.attendance p:first-child{
+.attendan p:first-child{
     width: 80%;
 }
-.attendance ul li:first-child {
+.attendan ul li:first-child {
     color: #40997e;
 }
-.attendance ul li:nth-child(2){
+.attendan ul li:nth-child(2){
    color: #e2a925; 
 }
-.attendance ul li:nth-child(3){
+.attendan
+ ul li:nth-child(3){
     color: #f93333;
 }
 .schedule {
@@ -380,7 +381,7 @@
     .assign-task button {
         width: 70%;
     }
-    .attendance {
+    .attendan {
         font-size: 12px;
     }
     .schedule {

@@ -5,7 +5,7 @@ import { Navigate } from 'react-router-dom'
 import isLogin from '../lib/isLogin';
 
 const ConditionRoute = (props) => {
-    const { type, children } = props;
+    const {type, children } = props;
        console.log(children, 'children')
      if (type === 'private' && isLogin()=== false ) {
         return <Navigate to='/login' />
@@ -13,7 +13,6 @@ const ConditionRoute = (props) => {
     if (type === 'private2' && isLogin()=== false ) {
         return <Navigate to='/teacher-login' />
     }
-    
     return children;
 }
 

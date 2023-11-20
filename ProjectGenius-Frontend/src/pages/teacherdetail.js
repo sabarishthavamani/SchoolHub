@@ -92,7 +92,7 @@ return(
         <div className="assign-task">
           <button>+ Assign Task</button>
         </div>
-        <div className="attendance att">
+        <div className="attendan att">
           <p style={{ color: "#ff3672" }}>Attendance</p>
           <p>30 Working Days</p>
           <ul>
@@ -101,7 +101,7 @@ return(
             <li>06 Absent Day</li>
           </ul>
         </div>
-        <div className="attendance sch">
+        <div className="attendan sch">
           <p style={{ color: "#4a86f9" }}>Schedule</p>
           <p>History-Class VI &amp; VII</p>
           <p>Social Science - Class V</p>
@@ -110,7 +110,7 @@ return(
             View Schedule
           </button>
         </div>
-        <div className="attendance perform">
+        <div className="attendan perform">
           <p style={{ color: "#10c87b" }}>Performance Metrics</p>
           <div className="perform-content">
             <div className="pro-bar">

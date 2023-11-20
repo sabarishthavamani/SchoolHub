@@ -70,7 +70,7 @@ const TeacherSignup = () => {
         <div className="leftcontent">
           <img className="ellipse" src="images/Ellipse 17.svg" />
           <img className="ell" src="images/Ellipse 17.png" />
-          <img className="teacher-signup" src="images/teacher-signup.png" />
+          <img className="tech" src="images/teacher-signup.png" />
         </div>
         <div className="rightcontent">
           <div className="sign-in">

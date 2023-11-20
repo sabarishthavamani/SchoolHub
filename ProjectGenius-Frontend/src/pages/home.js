@@ -23,10 +23,10 @@ const Home = () => {
               <Link to={'/teacher-login'}>Teacher</Link>
             </li>
             <li>
-              <Link to={'/login'}>Student</Link>
+              <Link to={'/student-login'}>Student</Link>
             </li>
             <li>
-              <Link to={'/login'}>Parent</Link>
+              <Link to={'/parent-login'}>Parent</Link>
             </li>
           </ul>
         </div>

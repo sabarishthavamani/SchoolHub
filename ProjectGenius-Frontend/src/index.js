@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 
 import App from './App';
-import { ToastContainer, toast } from 'react-toastify';
+import { Flip, Slide, ToastContainer, Zoom, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'react-date-picker/dist/DatePicker.css';
@@ -15,7 +15,9 @@ root.render(
   <React.StrictMode>
     <App />
     <ToastContainer 
-    autoClose = {1000}/>
+    autoClose = {0.1}
+    progressStyle={0.1}
+    transition={Slide}/>
   </React.StrictMode>
 );
 

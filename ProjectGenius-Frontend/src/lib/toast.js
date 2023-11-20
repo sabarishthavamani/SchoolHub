@@ -6,7 +6,7 @@ const toastAlert = (type, message) => {
     switch (type) {
         case 'success':
             toast.success(message, {
-                position: toast.POSITION.TOP_CENTER
+                position: toast.POSITION.TOP_CENTER,
             });
             break;
         case 'error':

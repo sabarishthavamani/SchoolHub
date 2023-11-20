@@ -6,6 +6,7 @@ const sendMail = require('../lib/emailGateway');
 //Models
 const Teacher = require('../models/teachersignup');
 const Section = require('../models/section');
+const Attendance = require('../models/attendance');
 //config
 const config = require('../config/index');
 //control functions
@@ -71,7 +72,6 @@ const jwtVerify = (token) => {
 }
 const findSection = async (req, res) => {
     try {
-      
         const { section, admissiongrade } = req.body;
         let checksection = await Section.findOne({ 'section': req.body.section }).lean()
         if (isEmpty(checksection)) {
@@ -85,11 +85,27 @@ const findSection = async (req, res) => {
         return res.status(500).json({ 'status': false, 'message': 'Error on the Server' });
     }
 }
-
+const dailyattendance = async (req,res) =>{
+    try{
+        const attendanceData  = new Attendance ({
+            'admissiongrade':req.body.admissiongrade,
+            'section':req.body.section,
+            'date':req.body.date,
+             'attendance':req.body.attendance
+        })
+        await attendanceData.save()
+        console.log(attendanceData,'---data')
+        return res.status(200).json({'status':true,'message':`Attendence for ${req.body.date} submitted successfully`})
+    }catch(err) {
+        console.log(err,'---err')
+        return res.status(500).json({'status':false,'message':'Error on the Server'});
+    }
+} 
 module.exports ={
     createteacher,
     teacherLogin,
     jwtSign,
     jwtVerify,
-    findSection
+    findSection,
+    dailyattendance
 }

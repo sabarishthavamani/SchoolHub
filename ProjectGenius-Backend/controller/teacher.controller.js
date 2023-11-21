@@ -73,7 +73,8 @@ const jwtVerify = (token) => {
 const findSection = async (req, res) => {
     try {
         const { section, admissiongrade } = req.body;
-        let checksection = await Section.findOne({ 'section': req.body.section }).lean()
+        let checksection = await Section.findOne({ section,admissiongrade }).lean()
+        console.log(checksection,'----sec')
         if (isEmpty(checksection)) {
             return res.status(400).json({ 'status': false, 'errors': { 'section': 'Selected Section Not Exist' } })
         }

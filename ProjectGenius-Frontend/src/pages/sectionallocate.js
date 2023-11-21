@@ -4,7 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import Sidebar from './components/sidebar';
 import Navbar from './components/navbar';
 //import actions
-import { Sectionallocation, getSinglestudent } from '../actions/adminAction';
+import { Sectionallocation, Verifysection, getSinglestudent } from '../actions/adminAction';
 //import lib
 import toastAlert from '../lib/toast';
 
@@ -22,11 +22,12 @@ const SectionAllocation = () => {
   const [formValue, setFormValue] = useState(initialFormValue);
   const [errors, setErrors] = useState({});
   const [inputErrors, setInputErrors] = useState({});
+  const [data,setData] = useState(null)
+  
   //params
   const { Id } = useParams();
 
   const { name, studentId, admissiongrade, section } = formValue;
-
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -50,6 +51,26 @@ const SectionAllocation = () => {
   useEffect(() => {
     getData(Id)
   }, [])
+
+  const getSection = async () =>{
+    try{
+      let data = {
+        studentId:studentId
+      }
+     let {status,result} = await Verifysection(data)
+     console.log(result,'--res')
+     if (status === true && result !== null) {
+      setFormValue((prevFormValue) => ({ ...prevFormValue, ...result }));
+      setData(result)
+    }
+  } catch (err) {
+    console.log(err, '--err');
+  }
+  }
+  useEffect(() => {
+    getSection()
+  }, [studentId])
+
   // console.log(data, '---data')
   const handleSubmit = async () => {
     try {
@@ -87,7 +108,7 @@ const SectionAllocation = () => {
       console.log(err, '...err')
     }
   }
-
+  
   return (
     <div className="fee-collection">
       <Sidebar Id={Id} />
@@ -122,19 +143,36 @@ const SectionAllocation = () => {
                   <span className='text-error'>{inputErrors.studentId}</span>
                 </div>
                 <div className="fee-box">
-                  <label>Section</label>
-                  <select name="section" value={section} onChange={handleChange} >
-                    <option >Select section</option>
-                    <option >A</option>
-                    <option >B</option>
-                    <option >C</option>
-                    <option >D</option>
-                    <option >E</option>
-                    <option >F</option>
-                    <option >G</option>
-                  </select>
-                  <span className='text-error'>{inputErrors.section}</span>
-                </div>
+  <label>Section</label>
+  <select name="section" value={section} onChange={handleChange}>
+    {/* Render options based on whether getSection has data */}
+    {data ? (
+      <>
+        <option>A</option>
+        <option>B</option>
+        <option>C</option>
+        <option>D</option>
+        <option>E</option>
+        <option>F</option>
+        <option>G</option>
+      </>
+    ) : (
+      <>
+        <option>Select section</option>
+        <option>A</option>
+        <option>B</option>
+        <option>C</option>
+        <option>D</option>
+        <option>E</option>
+        <option>F</option>
+        <option>G</option>
+      </>
+    )}
+  </select>
+  {/* Render an error message if getSection has data */}
+  {data && data ? ( (data.section == section) ? (<span className='text-error'>❌Section already allocated</span>):(<span style={{color:"green",fontSize:"11px", fontWeight:"500"}}>
+✅Section Changed</span>)):(<span className='text-error'>{inputErrors.section}</span>)}
+</div>
               </div>
             </div>
             <div className="process-btn">

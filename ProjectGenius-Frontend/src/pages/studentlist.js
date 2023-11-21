@@ -14,6 +14,9 @@ import StudentInfo from './components/StudentInfo';
 //lib
 import toastAlert from '../lib/toast';
 
+import Badge from '@mui/material/Badge';
+import SwitchAccountRounded from '@mui/icons-material/SwitchAccountRounded';
+
 const Students = () => {
   const [data, setData] = useState();
   const [IMAGE_URL, setIMAGE_URL] = useState('');
@@ -22,10 +25,16 @@ const Students = () => {
   const [clickedStudentDetails, setStudentDetails] = useState({});
   //states for search box and sorting
   const [userSearchInput, setUserSearchInput] = useState("");
+  const [sortGrade, setGradeSort] = useState('')
   const [isAsc, setSortedData] = useState(true);
   const [sortKey, setSortKey] = useState('');
   //pre-loader view
   const [loaderView, setLoaderView] = useState(true)
+  
+  const [selectedStudents, setSelectedStudents] = useState([])
+  const [selectingStudents ,setSelectingStudents] = useState(false)
+  const [selectAll, setSelectAll] = useState(false)
+  console.log(selectedStudents, "list")
 
   //preloader
  const renderUserView = () => {
@@ -39,12 +48,33 @@ const Students = () => {
       </div>
       )
     } 
+      const getSortedData = () => {
+        if (sortGrade !== '') {
+          const filteredData = data.filter(eachItem => eachItem.admissiongrade === sortGrade)
+          return filteredData
+        }
+        return data
+      }
+      const sortedData = getSortedData()
+      const studentData = sortedData.filter(each => each.active === 1 && each.name.toLowerCase().includes(userSearchInput.toLowerCase()))
       return (
         <div className="std-table">
           <table className="std-info">
             <thead>
               <tr>
-                <th>Name 
+                <th>
+                  {selectingStudents ? (
+                    <div className='students-select-controll'>
+                      <input id='selectAll' type='checkbox' onChange={() => handleSelectAll(studentData)} checked={selectAll} />
+                    <label htmlFor='selectAll'>Select All</label>
+                    <Badge badgeContent={selectedStudents.length} color="primary">
+                    <SwitchAccountRounded color="action" />
+                  </Badge>
+                  </div>
+                  ) : "S.No"}
+                </th>
+                <th>
+                Name 
                 <button type="button" className='name-sort-btn' onClick={() => handleSorting('name')}><FontAwesomeIcon icon={faSort} /></button>
                 </th>
                 <th>Student ID</th>
@@ -60,9 +90,17 @@ const Students = () => {
             <tbody>
               {data &&
                 data.length > 0 &&
-                data.map((item, key) => {
+                studentData.map((item, key) => {
                   return (
-                    <tr className="std-row" >
+                    <tr className="std-row" key={key} >
+                      <td>
+                        {selectingStudents ? (
+                          <label className="select-checkbox" style={{marginRight: '8px'}}>
+                            <input type="checkbox"  onChange={() => handleStudentSelection(item._id)} checked={selectedStudents.includes(item._id)} />
+                            <span></span>
+                          </label>
+                        ) : key+1}
+                      </td>
                       <td className="profile">
                           <img src={`${IMAGE_URL}/${item.photo}`} alt="" onClick={() => handleStudentInfo(item.studentId)} />
                         <span key={key} onClick={() => handleStudentInfo(item.studentId)}>{item.name}</span>
@@ -121,6 +159,18 @@ const Students = () => {
       )
   }
 
+  const handleSelectAll = (sortedData) => {
+    if (!selectAll) {
+      console.log(sortedData, "--")
+      const studentList = sortedData.map(each => each._id)
+      setSelectAll(true)
+      setSelectedStudents([...studentList])
+    } else{
+      setSelectAll(false)
+      setSelectedStudents([])
+    }
+  }
+
   //navigate
   const navigate = useNavigate();
   const deletestudent = async (id) => {
@@ -159,7 +209,32 @@ const Students = () => {
   };
   useEffect(() => {
     getData();
-  }, [userSearchInput]);
+  }, []);
+
+  //updating grade sorting state
+  const handleGradeSort = (event) => {
+    if (event.target.value === 'Select Grade') {
+      setGradeSort('')
+      setSelectingStudents(false)
+      setSelectedStudents([])
+    } else {
+      setGradeSort(event.target.value)
+      setSelectingStudents(true)
+      setSelectedStudents([])
+      setSelectAll(false)
+    }
+  }
+
+  const handleStudentSelection = (id) => {
+    if (selectedStudents.includes(id)) {
+      const updatedStudents = selectedStudents.filter(each => each !== id)
+      setSelectedStudents(updatedStudents)
+    } else {
+      setSelectedStudents(prevList => ([...prevList,id]))
+    }
+    
+  }
+
   //navigate to student-edit page
   const editstudent = (id) => {
     navigate('/student-edit/' + id)
@@ -214,51 +289,63 @@ const Students = () => {
           </div>
           <div className="middle-header-right">
             <input type="search" placeholder="search" onChange={handleSearchInput} value={userSearchInput} />
-            {/* filter for future implementation */}
-            {/* <div className="dropdown filter">
-              <img className="dropdown-toggle" data-bs-toggle="dropdown"
-                src="images/filter.png"
-                alt=""
-                title="filter"
-              />
-              <ul id="filter-option" className="filt-opt dropdown-menu">
-                <li>
-                  <button
-                    className="std-btn"
-                  >
-                    Student Name
-                  </button>
-                </li>
-                <li>
-                  <button
-                    className="std-btn dropdown-item"
-                  >
-                    Admission Date
-                  </button>
-                </li>
-                <li>
-                  <button
-                    className="std-btn dropdown-item"
-                  >
-                    Grade
-                  </button>
-                </li>
-                <li>
-                  <button
-                    className="std-btn dropdown-item"
-                  >
-                    Contact Number
-                  </button>
-                </li>
-                <li>
-                  <button
-                    className="std-btn dropdown-item"
-                  > Fee Payment Due
-                  </button>
-                </li>
-              </ul>
-            </div> */}
-            {/* filter for future implementation */}
+            <div className="dropdown filter">
+                            <img className="dropdown-toggle" data-bs-toggle="dropdown"
+                                src="images/filter.png"
+                                alt=""
+                                title="filter"
+
+                            />
+                            <ul id="filter-option" className="filt-opt dropdown-menu">
+                                <li>
+                                    <button
+                                        className="std-btn"
+                                    >
+                                        Student Name
+                                    </button>
+                                </li>
+                                <li>
+                                    <button
+                                        className="std-btn dropdown-item"
+                                    >
+                                        Admission Date
+                                    </button>
+                                </li>
+                                <li style={{ borderBottom: '1px solid #efeef1'}}>
+                                        <select name="admissiongrade" value={sortGrade} onChange={handleGradeSort} style={{paddingLeft: '7px', border: 'none'}}>
+                                          <option >Select Grade</option>
+                                          <option >Preschool</option>
+                                          <option >LKG</option>
+                                          <option >UKG</option>
+                                          <option >Class 1</option>
+                                          <option >Class 2</option>
+                                          <option >Class 3</option>
+                                          <option >Class 4</option>
+                                          <option >Class 5</option>
+                                          <option >Class 6</option>
+                                          <option >Class 7</option>
+                                          <option >Class 8</option>
+                                          <option >Class 9</option>
+                                          <option >Class 10</option>
+                                          <option >Class 11</option>
+                                          <option >Class 12</option>
+                                        </select>
+                                </li>
+                                <li>
+                                    <button
+                                        className="std-btn dropdown-item"
+                                    >
+                                        Contact Number
+                                    </button>
+                                </li>
+                                <li>
+                                    <button
+                                        className="std-btn dropdown-item"
+                                    > Fee Payment Due
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
           </div>
         </div>
         {renderUserView()}

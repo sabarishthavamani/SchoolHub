@@ -341,6 +341,23 @@ export const Sectionallocation = async (data) => {
         }
     }
 }
+export const Verifysection = async (data) => {
+
+    try {
+        let respData = await axios({
+            'url': '/sectionverify',
+            'method': 'post',
+            'data':data
+        })
+        return {
+            'status': respData.data.status,
+            'message': respData.data.message,
+            'result':respData.data.result,
+        }
+    } catch (err) {
+       console.log(err,'--err')
+    }
+}
 export const registerTeacher = async (formData) => {
 
     try {

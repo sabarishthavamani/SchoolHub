@@ -10,12 +10,14 @@ const FeeCollection = require('../models/feescollection');
 const FeesPaid = require('../models/feespaid');
 const TeacherAdmission = require('../models/teacheradmission');
 const Section = require('../models/section');
+const Schedule =require('../models/schedule');
 
 // config
 const config = require('../config');
 
 // lib
 const sendMail = require('../lib/emailGateway');
+const { findOne } = require('../models/teachersignup');
 
 //controll fuctions
 const createadmin = async (req, res) => {
@@ -421,6 +423,13 @@ const feesPaid = async (req, res) => {
 }
 const sectionallocate = async (req, res) => {
     try {
+        // const updateSection = await Section.findOne({studentId:req.body.studentId}).lean();
+        // console.log(updateSection,'---upsec')
+        // if(!isEmpty(updateSection)){
+         const ans = await Section.findOneAndUpdate({studentId:req.body.studentId},{section:req.body.section},{new:true});
+         if(ans){
+            return res.status(200).json({ 'status': true, 'message': 'Section Changed Successfully' });
+         }
         const newDocument = new Section({
             name: req.body.name,
             studentId: req.body.studentId,
@@ -434,6 +443,36 @@ const sectionallocate = async (req, res) => {
         return res.status(500).json({ 'status': false, 'message': 'Error on the server' });
     }
 }
+const verifySection = async (req,res) => {
+    try{
+        console.log(req.body,'---body')
+        const result = await Section.findOne({studentId :req.body.studentId}).lean()
+        console.log(result,'---result')
+        return res.status(200).json({ 'status': true, 'result': result });
+    }catch(err){
+        console.log(err,'---err')
+        return res.status(500).json({ 'status': false, 'message': 'Error on the server' });
+    }
+}
+// const createteacherSchedule = async(req,res) =>{
+    
+//     try{
+//        const newSchedule = new Schedule({
+//         "teachername":req.body.teachername,
+//         "teacherId":req.body.teacherId,
+//         "classname":req.body.classname,
+//         "section":req.body.section,
+//         "day":req.body.day,
+//         "subject":req.body.subject,
+//         "timeslot":req.body.timeslot,
+//        })
+//        await newSchedule.save();
+//        return res.status(200).json({'status':true,"message":"Schedule Fixed successfully"})
+//     }catch(err){
+//         console.log(err,'--err')
+//         return res.status(500).json({'status':false,'message':"Errorn on the Server"});
+//     }
+// }
 const feePayment = async (req, res) => {
     try {
         const result = await FeeCollection.findOne({ 'name': req.params.name }).lean();
@@ -617,6 +656,7 @@ module.exports = {
     feePayment,
     feesPaid,
     sectionallocate,
+    verifySection,
     registerTeacher,
     ViewTeacher,
     deleteTeacher,

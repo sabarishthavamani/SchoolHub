@@ -74,16 +74,16 @@ const Sidebar = (props) => {
       </div>
     </li>
             <li  style={
-        isLinkActive('/teacherview') || isLinkActive(`/teacherdetails/${Id}`) ? {
+        isLinkActive('/teacherview') || isLinkActive(`/teacherdetails/${Id}`) || isLinkActive('/teachertimetable') ? {
               background: 'linear-gradient(to right,#fde4cb,#fcfad3)'
             }: null}>
             <div className="menu-bar">
-            {isLinkActive('/teacherview') ||  isLinkActive(`/teacherdetails/${Id}`) ? (
+            {isLinkActive('/teacherview') ||  isLinkActive(`/teacherdetails/${Id}`) || isLinkActive('/teachertimetable') ? (
           <img src={`${process.env.PUBLIC_URL}/images/listblue.png`} alt="" />
         ) : (
           <img src={`${process.env.PUBLIC_URL}/images/listgrey.png`} alt="" />
         )}
-              <NavLink to="/teacherview" className={`mysidebar ${isLinkActive('/teacherview') ||  isLinkActive(`/teacherdetails/${Id}`) ? 'activemysidebar' : null}`} >
+              <NavLink to="/teacherview" className={`mysidebar ${isLinkActive('/teacherview') ||  isLinkActive(`/teacherdetails/${Id}`) || isLinkActive('/teachertimetable') ? 'activemysidebar' : null}`} >
                 TeacherList
               </NavLink>
               </div>

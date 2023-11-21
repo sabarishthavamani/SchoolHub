@@ -28,6 +28,10 @@ import TeacherSignup from './pages/teachersignup';
 import Home from './pages/home';
 import SectionAllocation from './pages/sectionallocate';
 import Page404 from './pages/404';
+import StudentLogin from './pages/studentlogin';
+import StudentSignup from './pages/studentsignup';
+import ParentLogin from './pages/parentlogin';
+import ParentSignup from './pages/parentsignup';
 
 function App() {
   return (
@@ -59,6 +63,10 @@ function App() {
           <Route path="/teacher-signup" element={<ConditionRoute type="public"><TeacherSignup /></ConditionRoute>} />
           <Route path="/teacher-attendance" element={<ConditionRoute type="private2"><StudentAttendance /></ConditionRoute>} />
           <Route path="/teacher-marksheet" element={<ConditionRoute type="private2"><StudentMarksheet /></ConditionRoute>} />
+          <Route path="/student-login" element={<ConditionRoute type="private2"><StudentLogin /></ConditionRoute>} />
+          <Route path="/student-signup" element={<ConditionRoute type="private2"><StudentSignup /></ConditionRoute>} />
+          <Route path="/parent-login" element={<ConditionRoute type="private2"><ParentLogin /></ConditionRoute>} />
+          <Route path="/parent-signup" element={<ConditionRoute type="private2"><ParentSignup /></ConditionRoute>} />
           {/* Redirecting to 404 page*/}
           <Route path="*" element={<ConditionRoute type="public"><Page404 /></ConditionRoute>} />
         </Routes>

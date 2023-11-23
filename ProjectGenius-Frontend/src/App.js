@@ -32,6 +32,7 @@ import StudentLogin from './pages/studentlogin';
 import StudentSignup from './pages/studentsignup';
 import ParentLogin from './pages/parentlogin';
 import ParentSignup from './pages/parentsignup';
+import TeacherSchedule from './pages/teacherschedule';
 
 function App() {
   return (
@@ -54,7 +55,8 @@ function App() {
           <Route path="/teacherview" element={<ConditionRoute type="private"><TeacherList /></ConditionRoute>} />
           <Route path="/teacher-edit/:Id" element={<ConditionRoute type="private"><TeacherEdit /></ConditionRoute>} />
           <Route path="/teacherdetails/:Id" element={<ConditionRoute type="private"><TeacherDetail /></ConditionRoute>} />
-          <Route path="/teachertimetable" element={<ConditionRoute type="private"><TimeTable /></ConditionRoute>} />
+          <Route path="/teacherschedule/:Id" element={<ConditionRoute type="private"><TeacherSchedule /></ConditionRoute>} />
+          <Route path="/teachertimetable/:teacherId" element={<ConditionRoute type="private"><TimeTable /></ConditionRoute>} />
           <Route path="/paymentfailure" element={<ConditionRoute type="private"><PaymentFailure /></ConditionRoute>} />
           <Route path="/feeslist" element={<ConditionRoute type="private"><FeesList /></ConditionRoute>} />
           <Route path="/fees-edit/:Id" element={<ConditionRoute type="private"><FeesEdit /></ConditionRoute>} />

@@ -100,6 +100,21 @@ export const registerStudentValid = async () => {
         }
     }
 }
+export const studentAadhar = async () => {
+
+    try {
+        let respData = await axios({
+            'url': '/getstudentaadhaar',
+            'method': 'get',
+        })
+        return {
+            'status': respData.data.status,
+            'result': respData.data.result,
+        }
+    } catch (err) {
+           console.log(err,'---err')
+    }
+}
 export const viewStudent = async () => {
 
     try {
@@ -413,21 +428,7 @@ export const teacherAadhar = async () => {
            console.log(err,'---err')
     }
 }
-export const studentAadhar = async () => {
 
-    try {
-        let respData = await axios({
-            'url': '/getstudentaadhaar',
-            'method': 'get',
-        })
-        return {
-            'status': respData.data.status,
-            'result': respData.data.result,
-        }
-    } catch (err) {
-           console.log(err,'---err')
-    }
-}
 export const updateTeacher = async (formData) => {
     try {
         let respData = await axios({
@@ -488,4 +489,36 @@ export const deleteTeacher = async (id) => {
         }
     }
 
+}
+export const createteacherschedule = async (formData) => {
+
+    try {
+        let respData = await axios({
+            'url': '/teacherschedule',
+            'method': 'post',
+            'data': formData
+        })
+        return {
+            'status': respData.data.status,
+            'message': respData.data.message,
+        }
+    } catch (err) {
+       console.log(err,'--err')
+    }
+}
+export const getTeacherSchedule = async (teacherId) => {
+    try {
+        let respData = await axios({
+
+            'url': '/getteacherschedule/' + teacherId,
+            'method': 'get',
+        })
+        return {
+            'status': respData.data.status,
+            'result': respData.data.result
+        }
+
+    } catch (err) {
+        console.log(err, 'errrr')
+    }
 }

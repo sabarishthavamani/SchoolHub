@@ -1,5 +1,5 @@
 import React,{useEffect, useState} from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Sidebar from './components/sidebar';
 //import Actions
 import { getSingleteacher } from '../actions/adminAction';
@@ -26,6 +26,9 @@ useEffect(() => {
   getData(Id)
 }, [])
 console.log(data,'---data')
+
+
+
 return(
     <div className="teacher">
 <Sidebar Id={Id}/>
@@ -90,7 +93,7 @@ return(
       })} */}
       <div className="right-docs">
         <div className="assign-task">
-          <button>+ Assign Task</button>
+          <button type="button"><Link to={'/teacherschedule/'+(data._id)}>+ Assign Task</Link></button>
         </div>
         <div className="attendan att">
           <p style={{ color: "#ff3672" }}>Attendance</p>
@@ -105,7 +108,7 @@ return(
           <p style={{ color: "#4a86f9" }}>Schedule</p>
           <p>History-Class VI &amp; VII</p>
           <p>Social Science - Class V</p>
-          <button className="schedule" onClick={()=>{navigate('/teachertimetable')}}>
+          <button className="schedule" onClick={()=>{navigate('/teachertimetable/'+(data.teacherId))}}>
             <i className="fa fa-eye" style={{ marginRight: 8 }} />
             View Schedule
           </button>

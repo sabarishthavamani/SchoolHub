@@ -77,5 +77,7 @@ router.route('/deleteteacher/:id').get(adminCtrl.deleteTeacher);
 router.route('/updateteacher').post(teacherprofileUpload.fields([{ name: 'teachersignature', maxCount: 1 }, { name: 'teacherphoto', maxCount: 1 }]),adminValid.teacherupdateValid,adminCtrl.updateTeacher);
 router.route('/getsingle-teacher/:id').get(adminCtrl.getSingleTeacher);
 router.route('/getteacheraadhaar').get(adminCtrl.teacheraadhaarValid);
+router.route('/teacherschedule').post(adminCtrl.createteacherSchedule);
+router.route('/getteacherschedule/:teacherId').get(adminCtrl.findteacherSchedule);
 
 module.exports = router;

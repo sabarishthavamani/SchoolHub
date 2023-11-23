@@ -423,9 +423,6 @@ const feesPaid = async (req, res) => {
 }
 const sectionallocate = async (req, res) => {
     try {
-        // const updateSection = await Section.findOne({studentId:req.body.studentId}).lean();
-        // console.log(updateSection,'---upsec')
-        // if(!isEmpty(updateSection)){
          const ans = await Section.findOneAndUpdate({studentId:req.body.studentId},{section:req.body.section},{new:true});
          if(ans){
             return res.status(200).json({ 'status': true, 'message': 'Section Changed Successfully' });
@@ -454,25 +451,33 @@ const verifySection = async (req,res) => {
         return res.status(500).json({ 'status': false, 'message': 'Error on the server' });
     }
 }
-// const createteacherSchedule = async(req,res) =>{
+const createteacherSchedule = async(req,res) =>{
     
-//     try{
-//        const newSchedule = new Schedule({
-//         "teachername":req.body.teachername,
-//         "teacherId":req.body.teacherId,
-//         "classname":req.body.classname,
-//         "section":req.body.section,
-//         "day":req.body.day,
-//         "subject":req.body.subject,
-//         "timeslot":req.body.timeslot,
-//        })
-//        await newSchedule.save();
-//        return res.status(200).json({'status':true,"message":"Schedule Fixed successfully"})
-//     }catch(err){
-//         console.log(err,'--err')
-//         return res.status(500).json({'status':false,'message':"Errorn on the Server"});
-//     }
-// }
+    try{
+       const newSchedule = new Schedule({
+        "teacherName":req.body.teacherName,
+        "teacherId":req.body.teacherId,
+       "schedule":req.body.schedule,
+       })
+       await newSchedule.save();
+       return res.status(200).json({'status':true,"message":"Schedule Fixed successfully"})
+    }catch(err){
+        console.log(err,'--err')
+        return res.status(500).json({'status':false,'message':"Errorn on the Server"});
+    }
+}
+const findteacherSchedule = async(req,res) =>{
+    try{
+        console.log(req.params,'---params')
+       const findresult = await Schedule.findOne({'teacherId':req.params.teacherId}).lean()
+       const ans = findresult.schedule
+       console.log(ans,'---ans')
+       return res.status(200).json({'status':true,"result":findresult})
+    }catch(err){
+        console.log(err,'--err')
+        return res.status(500).json({'status':false,'message':"Errorn on the Server"});
+    }
+}
 const feePayment = async (req, res) => {
     try {
         const result = await FeeCollection.findOne({ 'name': req.params.name }).lean();
@@ -667,5 +672,7 @@ module.exports = {
     deleteStudent,
     updateFeeSetup,
     getSingleFees,
-    feestatus
+    feestatus,
+    createteacherSchedule,
+    findteacherSchedule
 };

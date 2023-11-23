@@ -1,8 +1,100 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Sidebar from './components/sidebar';
+import { getTeacherSchedule } from '../actions/adminAction';
+import { Navigate, useNavigate, useParams } from 'react-router-dom';
+import toastAlert from '../lib/toast';
 
 
 const TimeTable = () =>{
+  const [data,setData] = useState();
+  const {teacherId} = useParams()
+
+  const getData = async (teacherId) => {
+    try {
+      const { status, result } = await getTeacherSchedule(teacherId);
+      console.log(status, result, "--status, result");
+      if (status === true) {
+        console.log(result, "--result");
+        setData(result);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+  
+  useEffect(() => {
+    getData(teacherId);
+  }, []);
+  
+
+console.log(data,'---data')
+
+const navigate = useNavigate()
+
+const renderBody = () => {
+  return(
+   (data && data.schedule=== undefined ? (
+    <tbody>
+      <tr>Schedule not assigned Yet</tr>
+      </tbody>
+   ):(
+    data.schedule.map((item, index) => (
+      <tr className="time-row" key={index}>
+      <td>{item.day}</td>
+      <td>
+        <div className="subject">
+          <p>{item.periods.period1.class} {item.periods.period1.section}</p>
+          <p>{item.periods.period1.subject}</p>
+        </div>
+      </td>
+      <td>
+        <div className="subject2">
+          <p>{item.periods.period2.class} {item.periods.period2.section}</p>
+          <p>{item.periods.period2.subject}</p>
+        </div>
+      </td>
+      <td>
+        <div className="subject3">
+          <p>{item.periods.period3.class} {item.periods.period3.section}</p>
+          <p>{item.periods.period3.subject}</p>
+        </div>
+      </td>
+      <td>
+        <div className="subject">
+          <p>{item.periods.period4.class} {item.periods.period4.section}</p>
+          <p>{item.periods.period4.subject}</p>
+        </div>
+      </td>
+      <td>
+        <div className="subject2">
+          <p>{item.periods.period5.class} {item.periods.period5.section}</p>
+          <p>{item.periods.period5.subject}</p>
+        </div>
+      </td>
+      <td>
+        <div className="subject3">
+          <p>{item.periods.period6.class} {item.periods.period6.section}</p>
+          <p>{item.periods.period6.subject}</p>
+        </div>
+      </td>
+      <td>
+        <div className="subject">
+          <p>{item.periods.period7.class} {item.periods.period7.section}</p>
+          <p>{item.periods.period7.subject}</p>
+        </div>
+      </td>
+      <td>
+        <div className="subject2">
+          <p>{item.periods.period8.class} {item.periods.period8.section}</p>
+          <p>{item.periods.period8.subject}</p>
+        </div>
+      </td>
+    </tr>
+    ))
+   ))
+  )
+    }
+ 
     return(
         <div className="teacher">
  <Sidebar />
@@ -45,6 +137,10 @@ const TimeTable = () =>{
           <button style={{ color: "#605bff" }}>
             <i className="fa fa-pencil" style={{ marginRight: 10 }} />
             Edit
+          </button>
+          <button style={{ color: "#605bff" }} onClick={() =>{navigate('/teacherview')}} >
+            <i className="fa fa-pencil" style={{ marginRight: 10 }} onClick={() =>{navigate('/teacherview')}} />
+            Assign Schedule
           </button>
           <button style={{ color: "#ff80a6" }}>
             Weekly
@@ -99,107 +195,7 @@ const TimeTable = () =>{
           </tr>
         </thead>
         <tbody>
-          <tr className="time-row">
-            <td>Mon</td>
-            <td>
-              <div className="subject">
-                <p>Class VII-B</p>
-                <p>World History</p>
-              </div>
-            </td>
-            <td />
-            <td />
-            <td />
-            <td />
-            <td />
-            <td>
-              <div className="subject2">
-                <p>Class VII-B</p>
-                <p>Modern History</p>
-              </div>
-            </td>
-            <td />
-          </tr>
-          <tr className="time-row">
-            <td>Tue</td>
-            <td />
-            <td />
-            <td>
-              <div className="subject3">
-                <p>Class X-A</p>
-                <p>Ancient History</p>
-              </div>
-            </td>
-            <td />
-            <td />
-            <td />
-            <td />
-            <td />
-          </tr>
-          <tr className="time-row">
-            <td>Wed</td>
-            <td />
-            <td />
-            <td />
-            <td />
-            <td />
-            <td>
-              <div className="subject">
-                <p>Class X-B</p>
-                <p>World History</p>
-              </div>
-            </td>
-            <td />
-            <td />
-          </tr>
-          <tr className="time-row">
-            <td>Thu</td>
-            <td />
-            <td>
-              <div className="subject2">
-                <p>Class VII-B</p>
-                <p>Modern History</p>
-              </div>
-            </td>
-            <td />
-            <td />
-            <td />
-            <td />
-            <td />
-            <td />
-          </tr>
-          <tr className="time-row">
-            <td>Fri</td>
-            <td />
-            <td />
-            <td />
-            <td>
-              <div className="subject3">
-                <p>Class VI-C</p>
-                <p>Ancient History</p>
-              </div>
-            </td>
-            <td />
-            <td />
-            <td />
-            <td />
-          </tr>
-          <tr className="time-row">
-            <td style={{ borderBottomLeftRadius: 10 }}>Sat</td>
-            <td />
-            <td />
-            <td />
-            <td />
-            <td>
-              <div className="subject">
-                <p>Class V-A</p>
-                <p>Social Studies</p>
-              </div>
-            </td>
-            <td />
-            <td />
-            <td style={{ borderBottomRightRadius: 10 }} />
-          </tr>
+            {data && renderBody()}
         </tbody>
       </table>
     </div>

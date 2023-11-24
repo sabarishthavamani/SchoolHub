@@ -1,10 +1,26 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { getTeacherSchedule, getfixedschedule } from "../../actions/adminAction";
 
 const TimeTablePreview = (props) => {
-  const { timeTable } = props;
+  const { setTimeTable, timeTable ,teacherId} = props;
   console.log(timeTable, "Table")
 
-  
+  const getIndividualData = async (req,res) => {
+    try {
+      const data = {
+        teacherId:teacherId
+      }
+      const { status, result } = await getfixedschedule(data);
+      if (status === true) {
+        setTimeTable(result.schedule);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+  useEffect(() => {
+    getIndividualData();
+  }, [])
 
   return (
     <div className="time-table-preview">
@@ -56,7 +72,7 @@ const TimeTablePreview = (props) => {
         </thead>
         <tbody>
           {timeTable.map((item, index) => (
-            <tr className="time-row">
+            <tr className="time-row" key={index}>
             <td>{item.day}</td>
             <td>
               <div className="subject">

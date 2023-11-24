@@ -6,14 +6,13 @@ import { removeAuthToken } from '../../lib/localstorage';
 
 const Sidebar = (props) => {
 
-  const {name,Id} = props
+  const {name,Id,teacherId} = props
 
   const navigate = useNavigate()
   const { pathname } = useLocation()
   const isLinkActive = (linkPath) => {
     return pathname === linkPath;
   };  
-
   return (
     <div className="side-bar">
       <div className="part-one">
@@ -74,16 +73,16 @@ const Sidebar = (props) => {
       </div>
     </li>
             <li  style={
-        isLinkActive('/teacherview') || isLinkActive(`/teacherdetails/${Id}`) || isLinkActive('/teachertimetable') ? {
+        isLinkActive('/teacherview') || isLinkActive(`/teacherdetails/${Id}`) || isLinkActive(`/teacherschedule/${Id}`) ||isLinkActive(`/teachertimetable${teacherId}`) ? {
               background: 'linear-gradient(to right,#fde4cb,#fcfad3)'
             }: null}>
             <div className="menu-bar">
-            {isLinkActive('/teacherview') ||  isLinkActive(`/teacherdetails/${Id}`) || isLinkActive('/teachertimetable') ? (
+            {isLinkActive('/teacherview') ||  isLinkActive(`/teacherdetails/${Id}`) || isLinkActive(`/teacherschedule/${Id}`) ||isLinkActive(`/teachertimetable${teacherId}`) ? (
           <img src={`${process.env.PUBLIC_URL}/images/listblue.png`} alt="" />
         ) : (
           <img src={`${process.env.PUBLIC_URL}/images/listgrey.png`} alt="" />
         )}
-              <NavLink to="/teacherview" className={`mysidebar ${isLinkActive('/teacherview') ||  isLinkActive(`/teacherdetails/${Id}`) || isLinkActive('/teachertimetable') ? 'activemysidebar' : null}`} >
+              <NavLink to="/teacherview" className={`mysidebar ${isLinkActive('/teacherview') ||  isLinkActive(`/teacherdetails/${Id}`)|| isLinkActive(`/teacherschedule/${Id}`) || isLinkActive(`/teachertimetable${teacherId}`) ? 'activemysidebar' : null}`} >
                 TeacherList
               </NavLink>
               </div>

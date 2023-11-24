@@ -93,7 +93,7 @@ return(
       })} */}
       <div className="right-docs">
         <div className="assign-task">
-          <button type="button"><Link to={'/teacherschedule/'+(data._id)}>+ Assign Task</Link></button>
+          <button type="button"><Link to={'/teacherschedule/'+(data._id)} style={{textDecoration:"none",color:"deeppink"}}>+ Assign Task</Link></button>
         </div>
         <div className="attendan att">
           <p style={{ color: "#ff3672" }}>Attendance</p>

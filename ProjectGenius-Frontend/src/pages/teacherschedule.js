@@ -5,7 +5,7 @@ import Sidebar from "./components/sidebar";
 import Navbar from "./components/navbar";
 import TimeTablePreview from "./components/timetablepreview";
 //import Action
-import { getSingleteacher,createteacherschedule } from "../actions/adminAction";
+import { getSingleteacher,createteacherschedule, getTeacherSchedule, getfixedschedule } from "../actions/adminAction";
 import toastAlert from "../lib/toast";
 
 
@@ -291,10 +291,10 @@ function TeacherSchedule() {
   const [selectedClass, setSelectedClass] = useState("");
   const [selectedSection, setSelectedSection] = useState("");
   const [teachingSubject, setTeachingSubject] = useState("");
+  const [ID,setID] = useState();
+  const [timeTable, setTimeTable] = useState((initialTimeTable));
 
-  const [timeTable, setTimeTable] = useState(initialTimeTable);
-
-  console.log(initialTimeTable, "initial")
+  // console.log(initialTimeTable, "initial")
 
   
   const {Id} =useParams()
@@ -307,6 +307,7 @@ const getData =async (id) =>{
    if(status == true){
     setTeacherName(result.name)
     setTeacherId(result.teacherId)
+    setID(result._id)
    }
   }catch(err){
     console.log(err,'---err')
@@ -315,6 +316,24 @@ const getData =async (id) =>{
 useEffect(() => {
   getData(Id)
 }, [])
+
+const getIndividualData = async (req,res) => {
+  try {
+    const data = {
+      teacherId:teacherId
+    }
+    const { status, result } = await getfixedschedule(data);
+    if (status === true) {
+      setTimeTable(result.schedule);
+    }
+  } catch (error) {
+    console.error("Error fetching data:", error);
+  }
+};
+
+useEffect(() => {
+    getIndividualData();
+}, [teacherId])
 
 
   const addTimeSlot = (event) => {
@@ -398,22 +417,19 @@ useEffect(() => {
     selectedSection === "" &&
     teachingSubject === "";
 
-   
+ console.log(ID,'--id')
   const handleSubmit = async () => {
     const data = {
-      teacherName,
-      teacherId,
+      teacherName:teacherName,
+      teacherId:teacherId,
       schedule: timeTable,
     };
-
     try {
-   
-      const { status, message } = await createteacherschedule(data);
-
+      const { status, message,result} = await createteacherschedule(data);
       if (status === true) {
             setTimeTable(initialTimeTable)
             toastAlert('success',message)
-          // navigate('/teachertimetable/'+teacherId)
+            navigate(`/teachertimetable/${teacherId}`, { state: { Data: ID } });
       } else if(status === false){
         toastAlert('error',message)
       } 
@@ -424,7 +440,7 @@ useEffect(() => {
   };
   return (
     <div className="fee-collection">
-      <Sidebar />
+      <Sidebar Id={ID}/>
       <div className="fee-content">
         <Navbar pageTitle={"Teacher Schedule Setup"} />
         <div className="fee-setup">
@@ -570,7 +586,7 @@ useEffect(() => {
                 </button>
               </div>
             </form>
-            <TimeTablePreview timeTable={timeTable} />
+            <TimeTablePreview timeTable={timeTable} teacherId={teacherId} setTimeTable={setTimeTable}/>
           </div>
         </div>
         <button className="schedulesubmit" type="button" onClick={handleSubmit}>Submit</button>

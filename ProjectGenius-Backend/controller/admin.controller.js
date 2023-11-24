@@ -451,33 +451,76 @@ const verifySection = async (req,res) => {
         return res.status(500).json({ 'status': false, 'message': 'Error on the server' });
     }
 }
-const createteacherSchedule = async(req,res) =>{
-    
-    try{
-       const newSchedule = new Schedule({
-        "teacherName":req.body.teacherName,
-        "teacherId":req.body.teacherId,
-       "schedule":req.body.schedule,
-       })
-       await newSchedule.save();
-       return res.status(200).json({'status':true,"message":"Schedule Fixed successfully"})
-    }catch(err){
-        console.log(err,'--err')
-        return res.status(500).json({'status':false,'message':"Errorn on the Server"});
+const createteacherSchedule = async (req, res) => {
+    try {
+        const existingSchedule = await Schedule.findOne({ teacherId: req.body.teacherId });
+         console.log(existingSchedule,'----schedule')
+        if (existingSchedule) {
+            // If a schedule with the teacherId already exists, update the schedule field
+            existingSchedule.schedule = req.body.schedule;
+            await existingSchedule.save();
+            return res.status(200).json({ 'status': true, "message": "Schedule updated successfully" });
+        } else {
+            // If no schedule with the teacherId exists, create a new schedule
+            const newSchedule = new Schedule({
+                "teacherName": req.body.teacherName,
+                "teacherId": req.body.teacherId,
+                "schedule": req.body.schedule,
+            });
+
+            await newSchedule.save();
+            return res.status(200).json({ 'status': true, "message": "Schedule fixed successfully" });
+        }
+    } catch (err) {
+        console.log(err, '--err');
+        return res.status(500).json({ 'status': false, 'message': "Error on the Server" });
     }
-}
-const findteacherSchedule = async(req,res) =>{
-    try{
-        console.log(req.params,'---params')
-       const findresult = await Schedule.findOne({'teacherId':req.params.teacherId}).lean()
-       const ans = findresult.schedule
-       console.log(ans,'---ans')
-       return res.status(200).json({'status':true,"result":findresult})
-    }catch(err){
-        console.log(err,'--err')
-        return res.status(500).json({'status':false,'message':"Errorn on the Server"});
+};
+
+// const findteacherSchedule = async(req,res) =>{
+//     try{
+//        const findTeacher = await TeacherAdmission.findOne({'teacherId':req.params.teacherId},{_id:1}).lean();
+//        console.log(findTeacher,'---teacher')
+//        const findresult = await Schedule.findOne({'teacherId':req.params.teacherId}).lean();
+//        return res.status(200).json({'status':true,"result":findresult,'result2':findTeacher})
+//     }catch(err){
+//         console.log(err,'--err')
+//         return res.status(500).json({'status':false,'message':"Errorn on the Server"});
+//     }
+// }
+const findteacherSchedule = async (req, res) => {
+    try {
+        const findTeacher = await TeacherAdmission.findOne({ 'teacherId': req.params.teacherId }, { _id: 1 }).lean();
+        console.log(findTeacher, '---teacher');
+
+        const findresult = await Schedule.findOne({ 'teacherId': req.params.teacherId }).lean();
+
+        if (findresult) {
+            return res.status(200).json({ 'status': true, "result": findresult, 'result2': findTeacher });
+        } else {
+            // If findresult is null, return response with only findTeacher
+            return res.status(200).json({ 'status': true, 'result2': findTeacher });
+        }
+    } catch (err) {
+        console.log(err, '--err');
+        return res.status(500).json({ 'status': false, 'message': "Error on the Server" });
     }
-}
+};
+
+const findFixedSchedule = async (req, res) => {
+    try {
+      const { teacherId } = req.query; // Access query parameters
+      console.log(req.query,'---query')
+      // Now you can use teacherId to find the fixed schedule
+      const findresult = await Schedule.findOne({ 'teacherId': teacherId }).lean();
+  
+      return res.status(200).json({ 'status': true, "result": findresult });
+    } catch (err) {
+      console.log(err, '--err');
+      return res.status(500).json({ 'status': false, 'message': "Error on the Server" });
+    }
+  };
+  
 const feePayment = async (req, res) => {
     try {
         const result = await FeeCollection.findOne({ 'name': req.params.name }).lean();
@@ -674,5 +717,6 @@ module.exports = {
     getSingleFees,
     feestatus,
     createteacherSchedule,
-    findteacherSchedule
+    findteacherSchedule,
+    findFixedSchedule
 };

@@ -1,44 +1,51 @@
 import React, { useEffect, useState } from 'react'
 import Sidebar from './components/sidebar';
 import { getTeacherSchedule } from '../actions/adminAction';
-import { Navigate, useNavigate, useParams } from 'react-router-dom';
-import toastAlert from '../lib/toast';
+import {useNavigate, useParams } from 'react-router-dom';
 
 
 const TimeTable = () =>{
   const [data,setData] = useState();
-  const {teacherId} = useParams()
-
-  const getData = async (teacherId) => {
-    try {
-      const { status, result } = await getTeacherSchedule(teacherId);
-      console.log(status, result, "--status, result");
-      if (status === true) {
-        console.log(result, "--result");
-        setData(result);
+  const {teacherId} = useParams();
+  // const location = useLocation();
+  // const { Data } = location.state || "";
+// console.log(Data,'---Data')
+const [Result,setResult] = useState()
+ 
+const getData = async (teacherId) => {
+  try {
+    const { status, result,result2 } = await getTeacherSchedule(teacherId);
+    if (status === true) {
+      console.log(result, "--result");
+      if (result.schedule) {
+        setData(result.schedule);
+        setResult(result2._id);
+      } else {
+        setResult(result2._id);
       }
-    } catch (error) {
-      console.error("Error fetching data:", error);
     }
-  };
-  
+  } catch (error) {
+    console.error("Error fetching data:", error);
+  }
+};
   useEffect(() => {
     getData(teacherId);
-  }, []);
+  }, [teacherId,Result]);
   
-
-console.log(data,'---data')
-
+  console.log(Result,'---result2')
 const navigate = useNavigate()
+
+const EditSchedule = () => {
+  navigate('/teacherschedule/'+Result)
+}
+
+// const AssignSchedule = () => {
+//   navigate('/teacherschedule/'+Result)
+// }
 
 const renderBody = () => {
   return(
-   (data && data.schedule=== undefined ? (
-    <tbody>
-      <tr>Schedule not assigned Yet</tr>
-      </tbody>
-   ):(
-    data.schedule.map((item, index) => (
+    data.map((item, index) => (
       <tr className="time-row" key={index}>
       <td>{item.day}</td>
       <td>
@@ -91,13 +98,12 @@ const renderBody = () => {
       </td>
     </tr>
     ))
-   ))
-  )
+   )
     }
  
     return(
         <div className="teacher">
- <Sidebar />
+ <Sidebar teacherId={teacherId}/>
   <div className="teacher-content" style={{ background: "#f7f7f8" }}>
     <div className="header" style={{ width: "100%" }}>
       <div className="l-header">
@@ -134,18 +140,14 @@ const renderBody = () => {
       <div className="time-header">
         <p style={{ fontSize: 15, fontWeight: 600 }}>Time Table</p>
         <div className="time-buttons">
-          <button style={{ color: "#605bff" }}>
-            <i className="fa fa-pencil" style={{ marginRight: 10 }} />
+          <button style={{ color: "#605bff" }} onClick={EditSchedule}>
+            <i className="fa fa-pencil" style={{ marginRight: 10 }} onClick={EditSchedule}/>
             Edit
           </button>
-          <button style={{ color: "#605bff" }} onClick={() =>{navigate('/teacherview')}} >
-            <i className="fa fa-pencil" style={{ marginRight: 10 }} onClick={() =>{navigate('/teacherview')}} />
+          {/* <button style={{ color: "hotpink" }} onClick={AssignSchedule}>
+            <FontAwesomeIcon icon={faCalendarDays} style={{ marginRight: 10 }} onClick={AssignSchedule}/>
             Assign Schedule
-          </button>
-          <button style={{ color: "#ff80a6" }}>
-            Weekly
-            <i className="fa fa-caret-down caret" style={{ marginLeft: 10 }} />
-          </button>
+          </button> */}
         </div>
       </div>
       <table className="time-table" border={1}>
@@ -195,14 +197,67 @@ const renderBody = () => {
           </tr>
         </thead>
         <tbody>
-            {data && renderBody()}
-        </tbody>
-      </table>
+              {data ? (
+                renderBody()
+              ) : (
+                <tr className="time-row">
+                <td>Monday</td>
+                <td>
+                  <div className="subject">
+                    <p>Class=?</p>
+                    <p>Subject=?</p>
+                  </div>
+                </td>
+                <td>
+                  <div className="subject2">
+                  <p>Class=?</p>
+                    <p>Subject=?</p>
+                  </div>
+                </td>
+                <td>
+                  <div className="subject3">
+                  <p>Class=?</p>
+                    <p>Subject=?</p>
+                  </div>
+                </td>
+                <td>
+                  <div className="subject">
+                  <p>Class=?</p>
+                    <p>Subject=?</p>
+                  </div>
+                </td>
+                <td>
+                  <div className="subject2">
+                  <p>Class=?</p>
+                    <p>Subject=?</p>
+                  </div>
+                </td>
+                <td>
+                  <div className="subject3">
+                  <p>Class=?</p>
+                    <p>Subject=?</p>
+                  </div>
+                </td>
+                <td>
+                  <div className="subject">
+                  <p>Class=?</p>
+                    <p>Subject=?</p>
+                  </div>
+                </td>
+                <td>
+                  <div className="subject2">
+                  <p>Class=?</p>
+                    <p>Subject=?</p>
+                  </div>
+                </td>
+              </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
-
-    )
-}
+  );
+};
 
 export default TimeTable;

@@ -490,17 +490,18 @@ export const deleteTeacher = async (id) => {
     }
 
 }
-export const createteacherschedule = async (formData) => {
+export const createteacherschedule = async (data) => {
 
     try {
         let respData = await axios({
             'url': '/teacherschedule',
             'method': 'post',
-            'data': formData
+            'data': data
         })
         return {
             'status': respData.data.status,
             'message': respData.data.message,
+            'result':respData.data.result,
         }
     } catch (err) {
        console.log(err,'--err')
@@ -515,10 +516,30 @@ export const getTeacherSchedule = async (teacherId) => {
         })
         return {
             'status': respData.data.status,
-            'result': respData.data.result
+            'result': respData.data.result,
+            'result2': respData.data.result2
         }
 
     } catch (err) {
         console.log(err, 'errrr')
     }
 }
+export const getfixedschedule = async (data) => {
+    try {
+      let respData = await axios({
+        url: '/getfixedschedule',
+        method: 'get',
+        params: data // Use params for GET requests
+      });
+  
+      return {
+        status: respData.data.status,
+        result: respData.data.result
+      };
+  
+    } catch (err) {
+      console.log(err, 'errrr');
+      // Handle the error or throw it to be caught by the calling code
+      throw err;
+    }
+  }

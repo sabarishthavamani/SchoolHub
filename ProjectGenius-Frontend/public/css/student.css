@@ -113,6 +113,7 @@
     position: relative;
     margin-right: 25px;
     display: flex;
+    align-items: center;
 }
 .middle-header-right input {
     width: 300px;
@@ -122,6 +123,7 @@
     height: 30px;
     outline: none;
     margin-right: 20px;
+    margin-left: 13px;
 }
 .middle-header-right img {
     position: relative;
@@ -224,7 +226,7 @@
     font-weight: 600;
 }
 .profile {
-    width: 150px;
+    width: 165px;
     text-align: left;
 }
 .profile span {
@@ -380,6 +382,119 @@
 .edit-box a i {
     margin-right: 10px;
 }
+
+/* checkbox style */
+
+.select-checkbox {
+    height: 1rem;
+    width: 1rem;
+    margin: 0px 0px 0px 6px;
+    cursor: pointer;
+}
+
+.select-checkbox input {
+    appearance: none;
+    display: none;
+}
+.select-checkbox span {
+    position: relative;
+    display: inline-block;
+    height: 20px;
+    width: 20px;
+    background:transparent;
+}
+.select-checkbox span::before {
+    position: absolute;
+    content: '';
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: #ccc;
+    transition: .5s;
+    box-shadow: 0 -19px 0 #ccc;
+}
+.select-checkbox span::after {
+    position: absolute;
+    content: '';
+    bottom: 0;
+    left: 0;
+    width: 2px;
+    height: 100%;
+    background: #ccc;
+    transition: .5s;
+    box-shadow: 18px 0 0 #ccc;
+}
+.select-checkbox input:checked ~ span::before {
+    background: #2d00f7;
+    box-shadow: 0 0 0 transparent;
+}
+.select-checkbox input:checked ~ span::after {
+    background: #2d00f7;
+    box-shadow: 0 0 0 transparent;
+    height: 50%;
+}
+.select-checkbox input:checked ~ span {
+    transform: rotate(-45deg) translate(5px,-4px);
+}
+
+.students-select-control {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+}
+
+.students-select-control div {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.students-select-control div button {
+    background-color: transparent;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    margin: 0 4px;
+}
+
+.students-select-control button {
+    background-color: transparent;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    color: #979798;
+    font-size: 11px;
+    text-align: center;
+}
+
+.allocate-btn {
+    display: flex;
+    justify-content: flex-end;
+    margin: 12px;
+}
+
+.allocate-btn button {
+    border-radius: 10px;
+    background: #ff80a6;
+    color: white;
+    padding: 6px 16px;
+    border: none;
+    font-size: 12px;
+    margin-right: 12px;
+}
+
+.allocate-btn-sm {
+    border-radius: 10px;
+    background: #ff80a6;
+    color: white;
+    padding: 3px 10px;
+    border: none;
+    font-size: 12px;
+}
+
 @media(max-width:1050px){
     .middle-header-left h3 {
         font-size: 14px;
@@ -462,64 +577,4 @@
     display: flex;
     justify-content: center;
     align-items: center;
-}
-/* select box */
-.select-checkbox {
-    height: 1rem;
-    width: 1rem;
-    margin: 0px 0px 0px 6px;
-    cursor: pointer;
-}
-
-.select-checkbox input {
-    appearance: none;
-    display: none;
-}
-.select-checkbox span {
-    position: relative;
-    display: inline-block;
-    height: 20px;
-    width: 20px;
-    background:transparent;
-}
-.select-checkbox span::before {
-    position: absolute;
-    content: '';
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 2px;
-    background: #ccc;
-    transition: .5s;
-    box-shadow: 0 -19px 0 #ccc;
-}
-.select-checkbox span::after {
-    position: absolute;
-    content: '';
-    bottom: 0;
-    left: 0;
-    width: 2px;
-    height: 100%;
-    background: #ccc;
-    transition: .5s;
-    box-shadow: 18px 0 0 #ccc;
-}
-.select-checkbox input:checked ~ span::before {
-    background: #2d00f7;
-    box-shadow: 0 0 0 transparent;
-}
-.select-checkbox input:checked ~ span::after {
-    background: #2d00f7;
-    box-shadow: 0 0 0 transparent;
-    height: 50%;
-}
-.select-checkbox input:checked ~ span {
-    transform: rotate(-45deg) translate(5px,-4px);
-}
-
-.students-select-controll {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
 }

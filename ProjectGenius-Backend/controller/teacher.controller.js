@@ -7,6 +7,7 @@ const sendMail = require('../lib/emailGateway');
 const Teacher = require('../models/teachersignup');
 const Section = require('../models/section');
 const Attendance = require('../models/attendance');
+const GroupSection = require('../models/groupsection');
 //config
 const config = require('../config/index');
 //control functions
@@ -73,12 +74,13 @@ const jwtVerify = (token) => {
 const findSection = async (req, res) => {
     try {
         const { section, admissiongrade } = req.body;
-        let checksection = await Section.findOne({ section,admissiongrade }).lean()
+        console.log(req.body,'---body')
+        let checksection = await GroupSection.findOne({ section,admissiongrade }).lean()
         console.log(checksection,'----sec')
         if (isEmpty(checksection)) {
             return res.status(400).json({ 'status': false, 'errors': { 'section': 'Selected Section Not Exist' } })
         }
-        const result = await Section.find({ section, admissiongrade }).lean();
+        const result = await GroupSection.find({ section, admissiongrade },{students:1}).lean();
         console.log(result,'---result')
         return res.status(200).json({ 'status': true, 'result': result });
     } catch (err) {

@@ -34,6 +34,7 @@ import ParentLogin from './pages/parentlogin';
 import ParentSignup from './pages/parentsignup';
 import TeacherSchedule from './pages/teacherschedule';
 import TeacherDashboard from './pages/teacherdashboard';
+import MultiSectionAllocation from './pages/multisectionallocation';
 
 function App() {
   return (
@@ -66,11 +67,12 @@ function App() {
           <Route path="/teacher-signup" element={<ConditionRoute type="public"><TeacherSignup /></ConditionRoute>} />
           <Route path="/teacher-attendance" element={<ConditionRoute type="private2"><StudentAttendance /></ConditionRoute>} />
           <Route path="/teacher-marksheet" element={<ConditionRoute type="private2"><StudentMarksheet /></ConditionRoute>} />
-          <Route path="/teacher-dashboard" element={<ConditionRoute type="private2"><TeacherDashboard /></ConditionRoute>} />
+          <Route path="/teacher-dashboard/:teacherId" element={<ConditionRoute type="private2"><TeacherDashboard /></ConditionRoute>} />
           <Route path="/student-login" element={<ConditionRoute type="private2"><StudentLogin /></ConditionRoute>} />
           <Route path="/student-signup" element={<ConditionRoute type="private2"><StudentSignup /></ConditionRoute>} />
           <Route path="/parent-login" element={<ConditionRoute type="private2"><ParentLogin /></ConditionRoute>} />
           <Route path="/parent-signup" element={<ConditionRoute type="private2"><ParentSignup /></ConditionRoute>} />
+          <Route path="/multi-sectionallocate" element={<ConditionRoute type="public"><MultiSectionAllocation /></ConditionRoute>} />
           {/* Redirecting to 404 page*/}
           <Route path="*" element={<ConditionRoute type="public"><Page404 /></ConditionRoute>} />
         </Routes>

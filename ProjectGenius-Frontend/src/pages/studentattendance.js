@@ -13,7 +13,7 @@ const initialFormValue = {
 }
 const StudentAttendance = () => {
   const [attendanceRecord, setAttendanceRecord] = useState({});
-  const [data, setData] = useState({});
+  const [data, setData] = useState([]);
   const [formValue, setFormValue] = useState(initialFormValue);
   const [errors, setErrors] = useState({});
   const [inputErrors, setInputErrors] = useState({});
@@ -66,11 +66,13 @@ const StudentAttendance = () => {
     }
   };
 
+  
+
   const handleSubmit = async () => {
     // Check if data is available
     if (data && data.length > 0) {
       // Create an array to hold attendance data
-      const attendanceData = data.map((item) => ({
+      const attendanceData = data[0].students.map((item) => ({
         studentName: item.name,
         studentId: item.studentId,
         status: attendanceRecord[item.studentId] || 'absent', // Default to absent if status is not selected
@@ -81,16 +83,15 @@ const StudentAttendance = () => {
         admissiongrade: admissiongrade,
         section: section,
         date: date,
-        attendance: attendanceData,
+        attendance: [...attendanceData],
       };
-
       try {
         const { status, message } = await Dailyattendance(Data);
 
         if (status === true) {
           setFormValue(initialFormValue);
           setAttendanceRecord({});
-          setData({});
+          setData([]);
           toastAlert('success', message);
         } else if (status === false) {
           toastAlert('error', message);
@@ -102,7 +103,7 @@ const StudentAttendance = () => {
       toastAlert('error', 'No student data available');
     }
   };
-  const isButtonDisable = (data.length === Object.values(attendanceRecord).length)
+  const isButtonDisable = data.length > 0 ? (data[0].students.length === Object.values(attendanceRecord).length) : null
 
   return (
     <div className="attendance">
@@ -167,7 +168,8 @@ const StudentAttendance = () => {
                 </tr>
               </thead>
               <tbody>
-                {data && data.length > 0 && data.map((item, key) => {
+                {data && data.length > 0 && data[0].students.map((item, key) => {
+                  console.log(item,'---item')
                   return (
                     <tr className="sheet-body" key={key}>
                       <td>

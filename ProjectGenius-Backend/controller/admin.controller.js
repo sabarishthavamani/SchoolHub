@@ -11,6 +11,7 @@ const FeesPaid = require('../models/feespaid');
 const TeacherAdmission = require('../models/teacheradmission');
 const Section = require('../models/section');
 const Schedule =require('../models/schedule');
+const GroupSection = require('../models/groupsection');
 
 // config
 const config = require('../config');
@@ -440,6 +441,22 @@ const sectionallocate = async (req, res) => {
         return res.status(500).json({ 'status': false, 'message': 'Error on the server' });
     }
 }
+const groupsectionallocate = async (req, res) => {
+    try {
+        const newDocument = new GroupSection({
+            
+            section: req.body.section,
+            admissiongrade: req.body.admissiongrade,
+            students: req.body.students,
+        });
+        await newDocument.save();
+        console.log(newDocument,'-----new')
+        return res.status(200).json({ 'status': true, 'message': 'Section Allocated Successfully' });
+    } catch (err) {
+        console.log(err);
+        return res.status(500).json({ 'status': false, 'message': 'Error on the server' });
+    }
+}
 const verifySection = async (req,res) => {
     try{
         console.log(req.body,'---body')
@@ -477,17 +494,6 @@ const createteacherSchedule = async (req, res) => {
     }
 };
 
-// const findteacherSchedule = async(req,res) =>{
-//     try{
-//        const findTeacher = await TeacherAdmission.findOne({'teacherId':req.params.teacherId},{_id:1}).lean();
-//        console.log(findTeacher,'---teacher')
-//        const findresult = await Schedule.findOne({'teacherId':req.params.teacherId}).lean();
-//        return res.status(200).json({'status':true,"result":findresult,'result2':findTeacher})
-//     }catch(err){
-//         console.log(err,'--err')
-//         return res.status(500).json({'status':false,'message':"Errorn on the Server"});
-//     }
-// }
 const findteacherSchedule = async (req, res) => {
     try {
         const findTeacher = await TeacherAdmission.findOne({ 'teacherId': req.params.teacherId }, { _id: 1 }).lean();
@@ -718,5 +724,6 @@ module.exports = {
     feestatus,
     createteacherSchedule,
     findteacherSchedule,
-    findFixedSchedule
+    findFixedSchedule,
+    groupsectionallocate
 };

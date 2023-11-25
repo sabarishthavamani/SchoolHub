@@ -5,22 +5,7 @@ const TimeTablePreview = (props) => {
   const { setTimeTable, timeTable ,teacherId} = props;
   console.log(timeTable, "Table")
 
-  const getIndividualData = async (req,res) => {
-    try {
-      const data = {
-        teacherId:teacherId
-      }
-      const { status, result } = await getfixedschedule(data);
-      if (status === true) {
-        setTimeTable(result.schedule);
-      }
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
-  useEffect(() => {
-    getIndividualData();
-  }, [])
+ 
 
   return (
     <div className="time-table-preview">

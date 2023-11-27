@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate  } from "react-router-dom";
+//import Components
 import Sidebar from "./components/sidebar";
 import Navbar from "./components/navbar";
 import SelectedStudentsTable from "./components/selectedstudentstable";
-import { Groupsectionallocation } from "../actions/adminAction";
+//import Action
+import { GroupVerifysection, Groupsectionallocation } from "../actions/adminAction";
+//import Lib
 import toastAlert from "../lib/toast";
 
 const MultiSectionAllocation = () => {
@@ -14,8 +17,9 @@ const MultiSectionAllocation = () => {
   const grade = studentData.sortGrade
 
   const [data, setData] = useState([]);
+  const [Result,setResult] = useState({});
   const [section, setSection] = useState('')
-  const [errorMsg, setErrorMsg] = useState(false)
+
  
   const navigate = useNavigate()
   const getData = () => {
@@ -25,14 +29,14 @@ const MultiSectionAllocation = () => {
   useEffect(() => {
     getData();
   }, []);
-
+ 
   const handleSection = (e) => {
     setSection(e.target.value)
   }
 
   const handleSave = async (req,res) => {
-    if(section === ""){
-      return setErrorMsg(true)
+    if(section === "" || section === "Select section"){
+      return null
     }
     try{
       const finalData = 
@@ -46,7 +50,7 @@ const MultiSectionAllocation = () => {
       setData([]);
       toastAlert('success',message)
       navigate('/students')
-      setErrorMsg(false)
+      
     }
     if(status === false){
       toastAlert('error',message)
@@ -58,6 +62,25 @@ const MultiSectionAllocation = () => {
     
   }
 
+  const getSection = async () =>{
+    try{
+      let Sectiondata = {
+        students : [...data]
+      }
+     let {status,result} = await GroupVerifysection(Sectiondata)
+     console.log(result,'--res')
+     if (status === true && result !== null) {
+      setSection(result.section);
+      setResult(result)
+    }
+  } catch (err) {
+    console.log(err, '--err');
+  }
+  }
+  useEffect(() => {
+    getSection()
+  }, [data])
+console.log(Result,'---Result')
   return (
     <div className="fee-collection">
       <Sidebar />
@@ -79,7 +102,7 @@ const MultiSectionAllocation = () => {
                 </div>
                 <div className="fee-box">
                   <label>Section</label>
-                  <select name="section" onChange={handleSection} value={section}>
+                  {/* <select name="section" onChange={handleSection} value={section}>
                     <option value="">Select section</option>
                     <option>A</option>
                     <option>B</option>
@@ -89,7 +112,36 @@ const MultiSectionAllocation = () => {
                     <option>F</option>
                     <option>G</option>
                   </select>
-                  {errorMsg &&  <span className='text-error'>*select section</span> }
+                  {errorMsg &&  <span className='text-error'>*select section</span> } */}
+      <select name="section" onChange={handleSection} value={section}>
+                   {Result && Result.section ? (
+      <>
+        <option>A</option>
+        <option>B</option>
+        <option>C</option>
+        <option>D</option>
+        <option>E</option>
+        <option>F</option>
+        <option>G</option>
+      </>
+    ) : (
+      <>
+        <option value=''>Select section</option>
+        <option>A</option>
+        <option>B</option>
+        <option>C</option>
+        <option>D</option>
+        <option>E</option>
+        <option>F</option>
+        <option>G</option>
+      </>
+    )}
+  </select>
+  {/* Render an error message if getSection has Result */}
+  {Result && Result.section ? ( (Result.section === section) ? 
+  (<span className='text-error'>❌Section already allocated</span>):
+  (<span style={{color:"green",fontSize:"11px", fontWeight:"500"}}>
+✅Section Changed</span>)):(section === '' && <span className='text-error'>*select section</span>)}
                 </div>
               </div>
             </div>

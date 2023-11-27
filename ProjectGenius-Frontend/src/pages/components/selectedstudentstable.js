@@ -8,6 +8,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
 const SelectedStudentsTable = ({selectedStudents}) => {
+  console.log(selectedStudents, 'mohan')
   return (
     <TableContainer component={Paper} sx={{mt: 2}} >
       <Table stickyHeader sx={{ maxWidth: '100%', maxHeight: '300px' }}>

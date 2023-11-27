@@ -62,6 +62,7 @@ router.route('/getstudentaadhaar').get(adminCtrl.studentaadhaarValid);
 router.route('/sectionallocate').post(adminValid.sectionValid,adminCtrl.sectionallocate);
 router.route('/sectionverify').post(adminCtrl.verifySection);
 router.route('/groupsectionallocate').post(adminCtrl.groupsectionallocate);
+router.route('/groupsectionverify').post(adminCtrl.verifyGroupSection);
 //feesetup & feepayment
 router.route('/feessetup').post(adminValid.feesetupValid,adminCtrl.createFeeSetup);
 router.route('/feesupdate').post(adminValid.feesetupEditValid,adminCtrl.updateFeeSetup);

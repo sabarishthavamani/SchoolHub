@@ -390,6 +390,23 @@ export const Groupsectionallocation = async (finalData) => {
        console.log(err)
     }
 }
+export const GroupVerifysection = async (Sectiondata) => {
+
+    try {
+        let respData = await axios({
+            'url': '/groupsectionverify',
+            'method': 'post',
+            'data':Sectiondata
+        })
+        return {
+            'status': respData.data.status,
+            'message': respData.data.message,
+            'result':respData.data.result,
+        }
+    } catch (err) {
+       console.log(err,'--err')
+    }
+}
 export const registerTeacher = async (formData) => {
 
     try {

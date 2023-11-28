@@ -59,10 +59,10 @@ router.route('/deletestudent/:id').get(adminCtrl.deleteStudent);
 router.route('/getsingle-student/:id').get(adminCtrl.getSingleStudent);
 router.route('/updatestudent').post(profileUpload.fields([{ name: 'signature', maxCount: 1 }, { name: 'photo', maxCount: 1 }]),adminValid.updateValid,adminCtrl.updateStudent);
 router.route('/getstudentaadhaar').get(adminCtrl.studentaadhaarValid);
-router.route('/sectionallocate').post(adminValid.sectionValid,adminCtrl.sectionallocate);
-router.route('/sectionverify').post(adminCtrl.verifySection);
 router.route('/groupsectionallocate').post(adminCtrl.groupsectionallocate);
 router.route('/groupsectionverify').post(adminCtrl.verifyGroupSection);
+router.route('/singlesectionallocate').post(adminValid.sectionValid,adminCtrl.singlesectionAllocation);
+router.route('/singlesectionverify').post(adminCtrl.verifysingleSection);
 //feesetup & feepayment
 router.route('/feessetup').post(adminValid.feesetupValid,adminCtrl.createFeeSetup);
 router.route('/feesupdate').post(adminValid.feesetupEditValid,adminCtrl.updateFeeSetup);

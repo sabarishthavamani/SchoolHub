@@ -4,7 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import Sidebar from './components/sidebar';
 import Navbar from './components/navbar';
 //import actions
-import { Sectionallocation, Verifysection, getSinglestudent } from '../actions/adminAction';
+import { GroupVerifysection, Sectionallocation, Verifysection, Verifysinglesection, getSinglestudent } from '../actions/adminAction';
 //import lib
 import toastAlert from '../lib/toast';
 
@@ -37,7 +37,10 @@ const SectionAllocation = () => {
     }));
     setFormValue({ ...formValue, ...{ [name]: value } })
   }
-
+  const students = {
+    name:name,
+    studentId:studentId
+  }
   const getData = async (id) => {
     try {
       let { status, result } = await getSinglestudent(id);
@@ -51,33 +54,33 @@ const SectionAllocation = () => {
   useEffect(() => {
     getData(Id)
   }, [])
-
   const getSection = async () =>{
     try{
-      let data = {
-        studentId:studentId
+      let Sectiondata = {
+         students :{...students}
       }
-     let {status,result} = await Verifysection(data)
+     let {status,result} = await Verifysinglesection(Sectiondata)
      console.log(result,'--res')
      if (status === true && result !== null) {
-      setFormValue((prevFormValue) => ({ ...prevFormValue, ...result }));
+      setFormValue(result);
       setData(result)
     }
   } catch (err) {
     console.log(err, '--err');
   }
   }
+  
   useEffect(() => {
     getSection()
-  }, [studentId])
+  }, [students])
 
-  // console.log(data, '---data')
+  console.log(data, '---data')
+ 
   const handleSubmit = async () => {
     try {
 
       let data = {
-        name: name,
-        studentId: studentId,
+        students:students,
         section: section,
         admissiongrade: admissiongrade,
       }
@@ -87,15 +90,13 @@ const SectionAllocation = () => {
         toastAlert('success', message)
         setErrors({})
         navigate(`/students`);
-      } if (status === false) {
+      } 
+      if (status === false) {
         if (errors) {
           setErrors(errors);
           // Update the inputErrors state for each input with an error
           setInputErrors((prevErrors) => ({
             ...prevErrors,
-            name: errors.name, 
-            studentId :errors.studentId,
-            admissiongrade:errors.admissiongrade,
             section:errors.section,
           }));
         }
@@ -145,8 +146,7 @@ const SectionAllocation = () => {
                 <div className="fee-box">
   <label>Section</label>
   <select name="section" value={section} onChange={handleChange}>
-    {/* Render options based on whether getSection has data */}
-    {data ? (
+  {data && data.section ? (
       <>
         <option>A</option>
         <option>B</option>
@@ -158,7 +158,7 @@ const SectionAllocation = () => {
       </>
     ) : (
       <>
-        <option>Select section</option>
+        <option value=''>Select section</option>
         <option>A</option>
         <option>B</option>
         <option>C</option>
@@ -170,7 +170,9 @@ const SectionAllocation = () => {
     )}
   </select>
   {/* Render an error message if getSection has data */}
-  {data && data ? ( (data.section == section) ? (<span className='text-error'>❌Section already allocated</span>):(<span style={{color:"green",fontSize:"11px", fontWeight:"500"}}>
+  {data && data.section ? ( (data.section === section) ? 
+  (<span className='text-error'>❌Section already allocated</span>):
+  (<span style={{color:"green",fontSize:"11px", fontWeight:"500"}}>
 ✅Section Changed</span>)):(<span className='text-error'>{inputErrors.section}</span>)}
 </div>
               </div>

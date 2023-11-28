@@ -152,17 +152,8 @@ const feecollectionValid = (req, res, next) => {
 const sectionValid = (req, res, next) => {
     let errors = {};
 
-    if (isEmpty(req.body.name)) {
-        errors.name = 'Please Enter Student Name';
-    }
-    if (isEmpty(req.body.studentId)) {
-        errors.studentId = 'Please Enter Student Id';
-    }
     if (isEmpty(req.body.section)) {
         errors.section = 'Please Select Section';
-    }
-    if (isEmpty(req.body.admissiongrade)) {
-        errors.admissiongrade = 'Please Select Student Grade';
     }
     if (isEmpty(errors) == false) {
         return res.status(400).json({ 'status': false, 'errors': errors })

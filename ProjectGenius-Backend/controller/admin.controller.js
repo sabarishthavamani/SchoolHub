@@ -247,7 +247,7 @@ const getSingleStudent = async (req, res) => {
         // Add the image URLs
         studentData.photo = `${config.IMAGE.USER_FILE_URL_PATH}/${studentData.photo}`;
         studentData.signature = `${config.IMAGE.USER_FILE_URL_PATH}/${studentData.signature}`;
-        console.log(studentData,'---studentdata')
+        // console.log(studentData,'---studentdata')
         return res.status(200).json({ 'status': true, 'result': studentData });
     } catch (err) {
         return res.status(500).json({ 'status': false });
@@ -422,31 +422,31 @@ const feesPaid = async (req, res) => {
         return res.status(500).json({ 'status': false, 'message': 'Error on the server' });
     }
 }
-const sectionallocate = async (req, res) => {
+const verifysingleSection = async (req,res) => {
     try {
-         const ans = await Section.findOneAndUpdate({studentId:req.body.studentId},{section:req.body.section},{new:true});
-         if(ans){
-            return res.status(200).json({ 'status': true, 'message': 'Section Changed Successfully' });
-         }
-        const newDocument = new Section({
-            name: req.body.name,
-            studentId: req.body.studentId,
-            admissiongrade: req.body.admissiongrade,
-            section: req.body.section,
-        });
-        await newDocument.save();
-        return res.status(200).json({ 'status': true, 'message': 'Section Allocated Successfully' });
+        console.log(req.body, '---body');
+        const result = await GroupSection.findOne({ 'students.studentId': req.body.students.studentId }, { section: 1 }).lean();
+        console.log(result, '---result');
+        return res.status(200).json({ 'status': true, 'result': result });
     } catch (err) {
-        console.log(err);
+        console.log(err, '---err');
         return res.status(500).json({ 'status': false, 'message': 'Error on the server' });
     }
 }
-const verifySection = async (req,res) => {
+const singlesectionAllocation = async(req,res) => {
     try{
-        console.log(req.body,'---body')
-        const result = await Section.findOne({studentId :req.body.studentId}).lean()
-        console.log(result,'---result')
-        return res.status(200).json({ 'status': true, 'result': result });
+        const existingDocument = await GroupSection.findOne({ 'section': req.body.section,'admissiongrade':req.body.admissiongrade});
+        console.log(existingDocument,'---exist')
+        if (existingDocument) {
+           
+            existingDocument.students.push({
+                'name': req.body.students.name,
+                'studentId': req.body.students.studentId,
+            });
+            const updatedDocument = await existingDocument.save();
+            console.log(updatedDocument, '-----updated')
+            return res.status(200).json({ 'status': true, 'message': 'Section Allocated Successfully' });
+        }
     }catch(err){
         console.log(err,'---err')
         return res.status(500).json({ 'status': false, 'message': 'Error on the server' });
@@ -732,8 +732,7 @@ module.exports = {
     findFeeSetup,
     feePayment,
     feesPaid,
-    sectionallocate,
-    verifySection,
+    verifysingleSection,
     registerTeacher,
     ViewTeacher,
     deleteTeacher,
@@ -749,5 +748,6 @@ module.exports = {
     findteacherSchedule,
     findFixedSchedule,
     groupsectionallocate,
-    verifyGroupSection 
+    verifyGroupSection,
+    singlesectionAllocation
 };

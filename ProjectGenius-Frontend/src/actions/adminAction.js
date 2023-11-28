@@ -339,7 +339,7 @@ export const Sectionallocation = async (data) => {
 
     try {
         let respData = await axios({
-            'url': '/sectionallocate',
+            'url': '/singlesectionallocate',
             'method': 'post',
             'data':data
         })
@@ -356,13 +356,13 @@ export const Sectionallocation = async (data) => {
         }
     }
 }
-export const Verifysection = async (data) => {
+export const Verifysinglesection = async (Sectiondata) => {
 
     try {
         let respData = await axios({
-            'url': '/sectionverify',
+            'url': '/singlesectionverify',
             'method': 'post',
-            'data':data
+            'data':Sectiondata
         })
         return {
             'status': respData.data.status,

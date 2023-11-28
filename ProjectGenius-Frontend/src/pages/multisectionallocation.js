@@ -77,6 +77,7 @@ const MultiSectionAllocation = () => {
     console.log(err, '--err');
   }
   }
+  
   useEffect(() => {
     getSection()
   }, [data])

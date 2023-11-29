@@ -63,6 +63,7 @@ router.route('/groupsectionallocate').post(adminCtrl.groupsectionallocate);
 router.route('/groupsectionverify').post(adminCtrl.verifyGroupSection);
 router.route('/singlesectionallocate').post(adminValid.sectionValid,adminCtrl.singlesectionAllocation);
 router.route('/singlesectionverify').post(adminCtrl.verifysingleSection);
+router.route('/updatesinglesection').post(adminCtrl.updatesingleSection);
 //feesetup & feepayment
 router.route('/feessetup').post(adminValid.feesetupValid,adminCtrl.createFeeSetup);
 router.route('/feesupdate').post(adminValid.feesetupEditValid,adminCtrl.updateFeeSetup);

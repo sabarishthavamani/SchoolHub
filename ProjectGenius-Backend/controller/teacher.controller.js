@@ -5,7 +5,6 @@ const jwt = require('jsonwebtoken');
 const sendMail = require('../lib/emailGateway');
 //Models
 const Teacher = require('../models/teachersignup');
-const Section = require('../models/section');
 const Attendance = require('../models/attendance');
 const GroupSection = require('../models/groupsection');
 //config

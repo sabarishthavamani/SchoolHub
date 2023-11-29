@@ -694,3 +694,13 @@ input::-webkit-inner-spin-button {
 .fee-view button i:first-child {
     margin-left: 10px;
 }
+.removebutton {
+    width: 100px;
+    padding: 8px;
+    background: royalblue;
+    color: white;
+    border-radius: 8px;
+    border: none;
+    font-size: 10px;
+    font-weight: 500;
+}

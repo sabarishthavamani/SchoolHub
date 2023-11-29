@@ -9,7 +9,6 @@ const FeeSetup = require('../models/feesetup');
 const FeeCollection = require('../models/feescollection');
 const FeesPaid = require('../models/feespaid');
 const TeacherAdmission = require('../models/teacheradmission');
-const Section = require('../models/section');
 const Schedule =require('../models/schedule');
 const GroupSection = require('../models/groupsection');
 
@@ -435,10 +434,10 @@ const verifysingleSection = async (req,res) => {
 }
 const singlesectionAllocation = async(req,res) => {
     try{
+        console.log(req.body,'---body')
         const existingDocument = await GroupSection.findOne({ 'section': req.body.section,'admissiongrade':req.body.admissiongrade});
         console.log(existingDocument,'---exist')
         if (existingDocument) {
-           
             existingDocument.students.push({
                 'name': req.body.students.name,
                 'studentId': req.body.students.studentId,
@@ -446,12 +445,40 @@ const singlesectionAllocation = async(req,res) => {
             const updatedDocument = await existingDocument.save();
             console.log(updatedDocument, '-----updated')
             return res.status(200).json({ 'status': true, 'message': 'Section Allocated Successfully' });
+        }else {
+            const newDocument = new GroupSection({
+                section: req.body.section,
+                admissiongrade: req.body.admissiongrade,
+                students: req.body.students,
+            });
+            await newDocument.save();
+            console.log(newDocument, '-----new');
+            return res.status(200).json({ 'status': true, 'message': 'Section Allocated Successfully' }); 
         }
     }catch(err){
         console.log(err,'---err')
         return res.status(500).json({ 'status': false, 'message': 'Error on the server' });
     }
 }
+const updatesingleSection = async (req, res) => {
+    try {
+        // console.log(req.body,'---body')
+        const { admissiongrade, section, students } = req.body;
+        const newSection = await GroupSection.findOne({admissiongrade,section});
+        // console.log(newSection,'---newsec')
+        if(newSection){
+            const updatedList = newSection.students.filter(item => item.studentId !== students.studentId)
+            newSection.students = updatedList;
+            const newUpdate = await newSection.save(); // Use save method on the model instance
+            console.log(newUpdate, '----updatenew');         
+        }
+        return res.status(200).json({ 'status': true, 'message': 'Student Removed Successfully', 'result':newSection}); 
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ status: false, message: 'Error on the server' });
+    }
+};
+
 const groupsectionallocate = async (req, res) => {
     try {
         console.log(req.body,'---body')
@@ -466,7 +493,6 @@ const groupsectionallocate = async (req, res) => {
             console.log(updatedDocument, '-----updated');
             return res.status(200).json({ 'status': true, 'message': 'Section Changed Successfully' });
         }
-        // If the student doesn't exist, create a new document
         const newDocument = new GroupSection({
             section: req.body.section,
             admissiongrade: req.body.admissiongrade,
@@ -749,5 +775,6 @@ module.exports = {
     findFixedSchedule,
     groupsectionallocate,
     verifyGroupSection,
-    singlesectionAllocation
+    singlesectionAllocation,
+    updatesingleSection
 };

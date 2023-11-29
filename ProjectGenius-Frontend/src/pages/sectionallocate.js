@@ -4,7 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import Sidebar from './components/sidebar';
 import Navbar from './components/navbar';
 //import actions
-import { GroupVerifysection, Sectionallocation, Verifysection, Verifysinglesection, getSinglestudent } from '../actions/adminAction';
+import { GroupVerifysection, Sectionallocation, Verifysection, Verifysinglesection, getSinglestudent, updatesinglesection } from '../actions/adminAction';
 //import lib
 import toastAlert from '../lib/toast';
 
@@ -75,6 +75,27 @@ const SectionAllocation = () => {
   }, [students])
 
   console.log(data, '---data')
+
+  const handleRemove = async () => {
+    try{
+      console.log(name, studentId,admissiongrade,'-----Updatedata');
+      let Updatedata = {
+        students:students,
+        section: section,
+        admissiongrade: admissiongrade,
+      }
+      let { status, message } = await updatesinglesection(Updatedata)
+      if (status === true) {
+        setFormValue({})
+        setData(null)
+        toastAlert('success',message)
+      } 
+    }catch(err){
+      console.log(err,'---err')
+    }
+  }
+
+  console.log(formValue,'---value')
  
   const handleSubmit = async () => {
     try {
@@ -175,6 +196,7 @@ const SectionAllocation = () => {
   (<span style={{color:"green",fontSize:"11px", fontWeight:"500"}}>
 ✅Section Changed</span>)):(<span className='text-error'>{inputErrors.section}</span>)}
 </div>
+             {data && data.section ? ((data.section === section) ?(<button type="button" className='removebutton' onClick={handleRemove}>Remove Section</button>):(null)):(null)} 
               </div>
             </div>
             <div className="process-btn">

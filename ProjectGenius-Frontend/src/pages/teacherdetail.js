@@ -41,10 +41,13 @@ return(
     <div className="teacher-docs">
           <div className="left-docs" >
           <div className="doc-profile">
+            <div>
             <img src={data.teacherphoto}/>
+            </div>
             <div className="tchr-name">
-              <p>{data.name}</p>
-              <p>History Teacher</p>
+            <p>{data.name}</p>
+                <p>Subjects Handling</p>
+                <p>{data.subjects}</p>
             </div>
             <div className="tchr-adrs">
               <div className="ad">

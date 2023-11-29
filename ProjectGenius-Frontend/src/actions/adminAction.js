@@ -373,6 +373,22 @@ export const Verifysinglesection = async (Sectiondata) => {
        console.log(err,'--err')
     }
 }
+export const updatesinglesection = async (Updatedata) => {
+
+    try {
+        let respData = await axios({
+            'url': '/updatesinglesection',
+            'method': 'post',
+            'data':Updatedata
+        })
+        return {
+            'status': respData.data.status,
+            'message': respData.data.message,
+        }
+    } catch (err) {
+       console.log(err,'--err')
+    }
+}
 export const Groupsectionallocation = async (finalData) => {
 
     try {

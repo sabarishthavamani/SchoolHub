@@ -290,11 +290,12 @@ function TeacherSchedule() {
   const [selectedTimeSlot, setSelectedTimeSlot] = useState("");
   const [selectedClass, setSelectedClass] = useState("");
   const [selectedSection, setSelectedSection] = useState("");
-  const [teachingSubject, setTeachingSubject] = useState("");
+  const [teachingSubject, setTeachingSubject] = useState([]);
+  const [selectedSubject, setSelectedSubject] = useState('')
   const [ID,setID] = useState();
   const [timeTable, setTimeTable] = useState((initialTimeTable));
 
-  // console.log(initialTimeTable, "initial")
+  // console.log(selectedSubject, "initial")
 
   
   const {Id} =useParams()
@@ -305,9 +306,12 @@ const getData =async (id) =>{
   try{
    let {status,result} = await getSingleteacher(id)
    if(status == true){
+    const teachingSubList = result.subjects.split(",")
+
     setTeacherName(result.name)
     setTeacherId(result.teacherId)
     setID(result._id)
+    setTeachingSubject([...teachingSubList])
    }
   }catch(err){
     console.log(err,'---err')
@@ -351,7 +355,7 @@ useEffect(() => {
         selectedPeriods[selectedTimeSlot] = {
           class: selectedClass,
           section: selectedSection,
-          subject: teachingSubject,
+          subject: selectedSubject,
         };
 
         setTimeTable(updatedTimeTable);
@@ -359,7 +363,7 @@ useEffect(() => {
         setSelectedTimeSlot("");
         setSelectedClass("");
         setSelectedSection("");
-        setTeachingSubject("");
+        setSelectedSubject("");
       } else {
         return alert("Error: Provide valid Time Period!");
       }
@@ -415,7 +419,7 @@ useEffect(() => {
     selectedTimeSlot !== "" &&
     selectedClass === "" &&
     selectedSection === "" &&
-    teachingSubject === "";
+    selectedSubject === "";
 
  console.log(ID,'--id')
   const handleSubmit = async () => {
@@ -560,12 +564,14 @@ useEffect(() => {
                 </div>
                 <div className="teacher-schedule-input">
                   <label htmlFor="subject">Subject</label>
-                  <input
-                    type="text"
+                  <select
                     id="subject"
-                    value={teachingSubject}
-                    onChange={(e) => setTeachingSubject(e.target.value)}
-                  />
+                    value={selectedSubject}
+                    onChange={(e) => setSelectedSubject(e.target.value)}
+                  >
+                    <option value="">Select</option>
+                    {teachingSubject.map(sub => (<option value={sub}>{sub}</option>))}
+                  </select>
                 </div>
               </div>
               <div className="teacher-schedule-btn">

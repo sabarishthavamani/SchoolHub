@@ -135,6 +135,7 @@ const Students = () => {
                 </th>
                 <th>Student ID</th>
                 <th>Grade</th>
+                <th>Section</th>
                 <th>Contact Number</th>
                 <th>
                   Admission Date
@@ -189,6 +190,9 @@ const Students = () => {
                       <td>{item.studentId}</td>
                       <td>
                         <span className="grade">{item.admissiongrade}</span>
+                      </td>
+                      <td>
+                        <span className="grade">A</span>
                       </td>
                       <td>+91{item.contactNumber}</td>
                       <td>{item.doj}</td>
@@ -349,6 +353,7 @@ const Students = () => {
     getData();
   }, []);
 
+  console.log(data,'---data')
   //updating grade sorting state
   const handleGradeSort = (event) => {
     if (event.target.value === "") {

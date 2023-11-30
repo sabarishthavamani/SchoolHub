@@ -20,6 +20,7 @@ const SectionAllocation = () => {
   const navigate = useNavigate();
   // state
   const [formValue, setFormValue] = useState(initialFormValue);
+  const [NameId,setNameId] = useState({});
   const [errors, setErrors] = useState({});
   const [inputErrors, setInputErrors] = useState({});
   const [data,setData] = useState(null)
@@ -33,7 +34,7 @@ const SectionAllocation = () => {
     const { name, value } = e.target;
     setInputErrors((prevErrors) => ({
       ...prevErrors,
-      [name]: undefined, // Clear the error for this input
+      [name]: undefined, 
     }));
     setFormValue({ ...formValue, ...{ [name]: value } })
   }
@@ -46,6 +47,7 @@ const SectionAllocation = () => {
       let { status, result } = await getSinglestudent(id);
       if (status === true) {
         setFormValue(prevFormValue => ({...prevFormValue, ...result}));
+        setNameId(result)
       }
     } catch (err) {
       console.log(err, '--err');
@@ -54,13 +56,13 @@ const SectionAllocation = () => {
   useEffect(() => {
     getData(Id)
   }, [])
+
   const getSection = async () =>{
     try{
       let Sectiondata = {
          students :{...students}
       }
      let {status,result} = await Verifysinglesection(Sectiondata)
-     console.log(result,'--res')
      if (status === true && result !== null) {
       setFormValue(result);
       setData(result)
@@ -69,21 +71,23 @@ const SectionAllocation = () => {
     console.log(err, '--err');
   }
   }
-  
   useEffect(() => {
     getSection()
   }, [students])
 
-  console.log(data, '---data')
-
+console.log(data,'---data')
   const handleRemove = async () => {
     try{
-      console.log(name, studentId,admissiongrade,'-----Updatedata');
+      console.log(formValue,'---value')
       let Updatedata = {
-        students:students,
+        students : {
+          name:NameId.name,
+          studentId:NameId.studentId
+        },
         section: section,
-        admissiongrade: admissiongrade,
+        admissiongrade:NameId.admissiongrade,
       }
+      console.log(Updatedata,'---update')
       let { status, message } = await updatesinglesection(Updatedata)
       if (status === true) {
         setFormValue({})
@@ -94,17 +98,19 @@ const SectionAllocation = () => {
       console.log(err,'---err')
     }
   }
-
-  console.log(formValue,'---value')
  
   const handleSubmit = async () => {
     try {
 
       let data = {
-        students:students,
+        students: {
+          name:NameId.name,
+          studentId:NameId.studentId
+        },
         section: section,
-        admissiongrade: admissiongrade,
+        admissiongrade: NameId.admissiongrade,
       }
+      console.log(data,'---data')
       let { status, message, errors } = await Sectionallocation(data)
       if (status === true) {
         setFormValue(initialFormValue)

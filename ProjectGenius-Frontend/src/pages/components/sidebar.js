@@ -33,12 +33,12 @@ const Sidebar = (props) => {
             </div>
 
           </li>
-          <li style={isLinkActive('/students') || isLinkActive(`/sectionallocate/${Id}`)? {
+          <li style={isLinkActive('/students') || isLinkActive(`/sectionallocate/${Id}`) || isLinkActive('/multi-sectionallocate') ? {
               background: 'linear-gradient(to right,#fde4cb,#fcfad3)'
             } : null}> 
             <div className="menu-bar" >
-            {isLinkActive('/students') || isLinkActive(`/sectionallocate/${Id}`) ?  <img src= {`${process.env.PUBLIC_URL}/images/blue-student.png`} alt="" />  :  <img src= {`${process.env.PUBLIC_URL}/images/edu.png`} alt="" />}
-              <NavLink to='/students' className={`mysidebar ${isLinkActive('/students') || isLinkActive(`/sectionallocate/${Id}`) ? 'activemysidebar' : null}`}>Students</NavLink>
+            {isLinkActive('/students') || isLinkActive(`/sectionallocate/${Id}`) || isLinkActive('/multi-sectionallocate') ?  <img src= {`${process.env.PUBLIC_URL}/images/blue-student.png`} alt="" />  :  <img src= {`${process.env.PUBLIC_URL}/images/edu.png`} alt="" />}
+              <NavLink to='/students' className={`mysidebar ${isLinkActive('/students') || isLinkActive(`/sectionallocate/${Id}`) || isLinkActive('/multi-sectionallocate') ? 'activemysidebar' : null}`}>Students</NavLink>
             </div>
           </li>
           <li style={isLinkActive(`/feecollection/${Id}`) || isLinkActive(`/feepayment/${name}`) || isLinkActive('/feecomplete') ? {

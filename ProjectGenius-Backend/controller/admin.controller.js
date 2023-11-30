@@ -424,7 +424,7 @@ const feesPaid = async (req, res) => {
 const verifysingleSection = async (req,res) => {
     try {
         console.log(req.body, '---body');
-        const result = await GroupSection.findOne({ 'students.studentId': req.body.students.studentId }, { section: 1 }).lean();
+        const result = await GroupSection.findOne({ 'students.studentId': req.body.students.studentId }).lean();
         console.log(result, '---result');
         return res.status(200).json({ 'status': true, 'result': result });
     } catch (err) {
@@ -462,17 +462,17 @@ const singlesectionAllocation = async(req,res) => {
 }
 const updatesingleSection = async (req, res) => {
     try {
-        // console.log(req.body,'---body')
+        console.log(req.body,'---body')
         const { admissiongrade, section, students } = req.body;
         const newSection = await GroupSection.findOne({admissiongrade,section});
-        // console.log(newSection,'---newsec')
+        console.log(newSection,'---newsec')
         if(newSection){
             const updatedList = newSection.students.filter(item => item.studentId !== students.studentId)
             newSection.students = updatedList;
             const newUpdate = await newSection.save(); // Use save method on the model instance
             console.log(newUpdate, '----updatenew');         
         }
-        return res.status(200).json({ 'status': true, 'message': 'Student Removed Successfully', 'result':newSection}); 
+        return res.status(200).json({ 'status': true, 'message': 'Student Removed Successfully',}); 
     } catch (err) {
         console.error(err);
         return res.status(500).json({ status: false, message: 'Error on the server' });

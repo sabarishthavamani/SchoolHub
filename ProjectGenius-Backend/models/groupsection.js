@@ -3,7 +3,6 @@ const { Schema } = mongoose;
 
 const groupsectionSchema = new Schema ({
 
-  
     'admissiongrade':String,
     'section':String,
     'students': [{

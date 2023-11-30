@@ -35,6 +35,10 @@ const admissionSchema = new Schema ({
         default: 1
     },
     'feesamount':Number,
+    'section' : {
+        type : String,
+        ref : 'groupsection'
+    }
 })
 
 let admissionModel = mongoose.model('admission', admissionSchema, 'admission' )

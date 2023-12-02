@@ -35,6 +35,7 @@ import ParentSignup from './pages/parentsignup';
 import TeacherSchedule from './pages/teacherschedule';
 import TeacherDashboard from './pages/teacherdashboard';
 import MultiSectionAllocation from './pages/multisectionallocation';
+import TeacherAllocation from './pages/teacherallocation';
 
 function App() {
   return (
@@ -63,6 +64,7 @@ function App() {
           <Route path="/feeslist" element={<ConditionRoute type="private"><FeesList /></ConditionRoute>} />
           <Route path="/fees-edit/:Id" element={<ConditionRoute type="private"><FeesEdit /></ConditionRoute>} />
           <Route path="/sectionallocate/:Id" element={<ConditionRoute type="private"><SectionAllocation /></ConditionRoute>} />
+          <Route path="/teacher-allocate/:Id" element={<ConditionRoute type="private"><TeacherAllocation /></ConditionRoute>} />
           <Route path="/teacher-login" element={<ConditionRoute type="public"><TeacherLogin /></ConditionRoute>} />
           <Route path="/teacher-signup" element={<ConditionRoute type="public"><TeacherSignup /></ConditionRoute>} />
           <Route path="/teacher-attendance" element={<ConditionRoute type="private2"><StudentAttendance /></ConditionRoute>} />

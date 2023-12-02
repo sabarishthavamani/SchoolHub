@@ -11,6 +11,7 @@ const FeesPaid = require('../models/feespaid');
 const TeacherAdmission = require('../models/teacheradmission');
 const Schedule =require('../models/schedule');
 const GroupSection = require('../models/groupsection');
+const ClassAllocate = require('../models/classallocation');
 
 // config
 const config = require('../config');
@@ -211,7 +212,8 @@ const studentaadhaarValid = async (req, res) => {
 const viewStudent = async (req, res) => {
     try {
         const studentView = await Admission.find({}).lean();
-        return res.status(200).json({ 'status': true, 'result': studentView, 'imageUrl': config.IMAGE.USER_FILE_URL_PATH })
+        const sectionView = await GroupSection.find({}).lean();
+        return res.status(200).json({ 'status': true, 'result': studentView, 'result2':sectionView, 'imageUrl': config.IMAGE.USER_FILE_URL_PATH })
     } catch (err) {
         return res.status(500).json({ 'status': false, 'message': 'Error on server' })
     }
@@ -561,11 +563,9 @@ const findteacherSchedule = async (req, res) => {
         return res.status(500).json({ 'status': false, 'message': "Error on the Server" });
     }
 };
-
 const findFixedSchedule = async (req, res) => {
     try {
       const { teacherId } = req.query; // Access query parameters
-      console.log(req.query,'---query')
       // Now you can use teacherId to find the fixed schedule
       const findresult = await Schedule.findOne({ 'teacherId': teacherId }).lean();
   
@@ -575,7 +575,19 @@ const findFixedSchedule = async (req, res) => {
       return res.status(500).json({ 'status': false, 'message': "Error on the Server" });
     }
   };
-  
+const findScheduleforDetails = async (req,res) =>{
+    try{
+        console.log(req.query,'---query')
+        const { teacherId } = req.query; 
+       const findSchedule = await Schedule.findOne({'teacherId':teacherId}).lean();
+       console.log(findSchedule,'----schedule')
+       return res.status(200).json({'status':true,'result':findSchedule})
+    }catch(err){
+        console.log(err, '--err');
+        return res.status(500).json({ 'status': false, 'message': "Error on the Server" });
+    }
+}
+
 const feePayment = async (req, res) => {
     try {
         const result = await FeeCollection.findOne({ 'name': req.params.name }).lean();
@@ -651,7 +663,8 @@ const teacheraadhaarValid = async (req, res) => {
 const ViewTeacher = async (req, res) => {
     try {
         const teacherView = await TeacherAdmission.find({}).lean();
-        return res.status(200).json({ 'status': true, 'result': teacherView, 'imageUrl': config.IMAGE.TEACHER_FILE_URL_PATH })
+        const sectionView = await ClassAllocate.find({}).lean();
+        return res.status(200).json({ 'status': true, 'result': teacherView,'result2':sectionView, 'imageUrl': config.IMAGE.TEACHER_FILE_URL_PATH })
     } catch (err) {
         return res.status(500).json({ 'status': false, 'message': 'Error on server' })
     }
@@ -739,7 +752,24 @@ const getSingleTeacher = async (req, res) => {
         // teacherData.signatureOriginalName = teacherData.signature;
         return res.status(200).json({ 'status': true, 'result': teacherData });
     } catch (err) {
-        return res.status(500).json({ 'status': false });
+        console.log(err, '--err')
+        return res.status(500).json({ 'status': false, 'message': 'error on server' })
+    }
+}
+const teacherclassAllocate = async (req,res) =>{
+    try{
+        console.log(req.body,'---body')
+        const newDocument = new ClassAllocate({
+            name: req.body.name,
+            teacherId: req.body.teacherId,
+            status: req.body.status,
+        });
+        await newDocument.save();
+        console.log(newDocument, '-----new');
+        return res.status(200).json({ 'status': true, 'message': 'Class Allocated Successfully' }); 
+    }catch(err){
+        console.log(err, '--err')
+        return res.status(500).json({ 'status': false, 'message': 'error on server' })
     }
 }
 module.exports = {
@@ -776,5 +806,7 @@ module.exports = {
     groupsectionallocate,
     verifyGroupSection,
     singlesectionAllocation,
-    updatesingleSection
+    updatesingleSection,
+    findScheduleforDetails,
+    teacherclassAllocate
 };

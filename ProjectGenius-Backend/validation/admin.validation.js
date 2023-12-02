@@ -307,6 +307,25 @@ const teacherupdateValid = (req, res, next) => {
     return next()
 }
 
+const classallocateValid = (req, res, next) => {
+    let errors = {};
+    if (isEmpty(req.body.subjects)) {
+        errors.subjects = 'Please Select subjects';
+    }if (isEmpty(req.body.className)) {
+        errors.className = 'Please Select Class';
+    }
+    if (isEmpty(req.body.role)) {
+        errors.role = 'Please Select Role';
+    }
+    if (isEmpty(req.body.section)) {
+        errors.section = 'Please Select Section';
+    }
+    if (isEmpty(errors) == false) {
+        return res.status(400).json({ 'status': false, 'errors': errors })
+    }
+    return next()
+}
+
 module.exports = { 
     loginValid, 
     verifyValid, 
@@ -315,5 +334,6 @@ module.exports = {
     feesetupValid, 
     feesetupEditValid, 
     teacherupdateValid,
-    sectionValid
+    sectionValid,
+    classallocateValid
 }

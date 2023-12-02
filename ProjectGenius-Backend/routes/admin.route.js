@@ -83,5 +83,7 @@ router.route('/getteacheraadhaar').get(adminCtrl.teacheraadhaarValid);
 router.route('/teacherschedule').post(adminCtrl.createteacherSchedule);
 router.route('/getteacherschedule/:teacherId').get(adminCtrl.findteacherSchedule);
 router.route('/getfixedschedule').get(adminCtrl.findFixedSchedule);
+router.route('/findschedulefordetails').get(adminCtrl.findScheduleforDetails);
+router.route('/teacherallocation').post(adminCtrl.teacherclassAllocate);
 
 module.exports = router;

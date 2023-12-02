@@ -16,15 +16,18 @@ const TeacherList = () => {
     const [data, setData] = useState();
     const [IMAGE_URL, setIMAGE_URL] = useState('');
     const [userSearchInput, setUserSearchInput] = useState("");
+    const [Result, setResult] = useState();
+
 
     const navigate = useNavigate()
     const getData = async () => {
         try {
-            let { status, result, imageUrl } = await viewTeacher();
+            let { status, result, imageUrl,result2 } = await viewTeacher();
             if (status === true) {
                 const teacherData = await result.filter(each => each.active === 1 && each.name.toLowerCase().includes(userSearchInput.toLowerCase()))
                 setData(teacherData)
                 setIMAGE_URL(imageUrl);
+                setResult(result2)
             }
         } catch (err) {
             console.error(err);
@@ -35,11 +38,16 @@ const TeacherList = () => {
         getData()
     }, [userSearchInput])
 
+    console.log(Result,'--result')
+
     const editteacher = (id) => {
         navigate('/teacher-edit/' + id)
     }
+    const allocateteacher = (id) => {
+        navigate('/teacher-allocate/' + id)
+    }
     const teacherdetails = (id) => {
-        navigate('/teacherdetails/' + id)
+        navigate('/teacherdetails/' + id) 
     }
     const deleteteacher = async (id) => {
         try {
@@ -68,6 +76,10 @@ const TeacherList = () => {
           deleteteacher(Id)
              }
       };
+    //   const resultLookup = Result.reduce((acc, item) => {
+    //     acc[item.teacherId] = item;
+    //     return acc;
+    //   }, {});
     return (
         <div className="teacher">
             <Sidebar />
@@ -168,6 +180,8 @@ const TeacherList = () => {
                             {data &&
                                 data.length > 0 &&
                                 data.map((item, key) => {
+                                    const teacherSection = Result.filter(section => section.teacherId === item.teacherId)
+                                    console.log(teacherSection,'---teachersection')
                                     return (
                                         <tr className="tchr-row" onclick="infos()" key={key}>
                                             <td className="teacherprofile">
@@ -176,14 +190,14 @@ const TeacherList = () => {
                                             </td>
                                             <td>{item.teacherId}</td>
                                             <td>
-                                                <span className="grade">X</span>
+                                                <span className="grade">{teacherSection[0].status[0].section}</span>
                                             </td>
                                             <td>
-                                                <span className="grade">Bio</span>
+                                                <span className="grade">{item.subjects}</span>
                                             </td>
                                             <td>+91{item.phoneNumber}</td>
                                             <td>
-                                                <span className="rupee">₹ 122345</span>
+                                                <span className="rupee">₹122345</span>
                                             </td>
                                             <td>
                                                 <span className="due2">Paid</span>
@@ -199,9 +213,9 @@ const TeacherList = () => {
                                                             </a>
                                                         </li>
                                                         <li className="edit-box">
-                                                            <a className="dropdown-item" href="#" >
+                                                            <a className="dropdown-item" href="#" onClick={() => allocateteacher(item._id)} >
                                                                 <i className="fa fa-tags" />
-                                                                More
+                                                                Allocate
                                                             </a>
                                                         </li>
                                                         <li>

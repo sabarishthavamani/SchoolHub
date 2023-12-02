@@ -325,3 +325,19 @@
     border: none;
     margin-top: 0.5rem;
 }
+.teacher-allocation-btn {
+    width: 90%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-top: 1.5rem;
+}
+
+.teacher-allocation-btn button {
+    width: 150px;
+    border-radius: 16px;
+    background: #ff80a6;
+    color: white;
+    padding: 5px 0px;
+    border: none;
+}

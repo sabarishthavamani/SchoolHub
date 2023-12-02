@@ -27,7 +27,8 @@ import { ArrowRightAltOutlined } from "@mui/icons-material";
 
 
 const Students = () => {
-  const [data, setData] = useState();
+  const [data, setData] = useState([]);
+  const [section, setSection] = useState([]);
   const [IMAGE_URL, setIMAGE_URL] = useState("");
   //states for student information toggle-sideviews
   const [showStudentInfo, toggleStudentInfo] = useState(false);
@@ -155,6 +156,10 @@ const Students = () => {
               {data &&
                 data.length > 0 &&
                 studentData.map((item, key) => {
+                   // Check if the studentId is present in any section
+              const sectionForStudent = section.find(sec =>
+                sec.students.some(student => student.studentId === item.studentId)
+              );
                   return (
                     <tr className="std-row" key={key}>
                       <td>
@@ -192,8 +197,8 @@ const Students = () => {
                         <span className="grade">{item.admissiongrade}</span>
                       </td>
                       <td>
-                        <span className="grade">A</span>
-                      </td>
+                          <span className="grade">{sectionForStudent ? sectionForStudent.section : "-"}</span>
+                        </td>
                       <td>+91{item.contactNumber}</td>
                       <td>{item.doj}</td>
                       <td>
@@ -338,12 +343,13 @@ const Students = () => {
   };
   const getData = async () => {
     try {
-      let { status, result, imageUrl } = await viewStudent();
+      let { status, result,result2, imageUrl } = await viewStudent();
       if (status === true) {
         setLoaderView(false)
         const studentData = await result.filter(each => each.active === 1 && each.name.toLowerCase().includes(userSearchInput.toLowerCase()))
         setData(studentData)
         setIMAGE_URL(imageUrl);
+        setSection(result2)
       }
     } catch (err) {
       console.error(err);
@@ -354,6 +360,7 @@ const Students = () => {
   }, []);
 
   console.log(data,'---data')
+  console.log(section,'---section')
   //updating grade sorting state
   const handleGradeSort = (event) => {
     if (event.target.value === "") {

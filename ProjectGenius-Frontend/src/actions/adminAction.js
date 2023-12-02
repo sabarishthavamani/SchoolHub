@@ -126,6 +126,7 @@ export const viewStudent = async () => {
             'status': respData.data.status,
             'result': respData.data.result,
             'imageUrl': respData.data.imageUrl,
+            'result2':respData.data.result2,
         }
     } catch (err) {
         return {
@@ -455,6 +456,7 @@ export const viewTeacher = async () => {
             'status': respData.data.status,
             'result': respData.data.result,
             'imageUrl': respData.data.imageUrl,
+            'result2': respData.data.result2,
         }
     } catch (err) {
         return {
@@ -593,3 +595,42 @@ export const getfixedschedule = async (data) => {
       throw err;
     }
   }
+  export const findschedulefordetails = async (Scheduledata) => {
+    try {
+      let respData = await axios({
+        url: '/findschedulefordetails',
+        method: 'get',
+        params: Scheduledata // Use params for GET requests
+      });
+  
+      return {
+        status: respData.data.status,
+        result: respData.data.result
+      };
+  
+    } catch (err) {
+      console.log(err, 'errrr');
+      // Handle the error or throw it to be caught by the calling code
+      throw err;
+    }
+  }
+  export const teacherAllocation = async (data) => {
+
+    try {
+        let respData = await axios({
+            'url': '/teacherallocation',
+            'method': 'post',
+            'data': data
+        })
+        return {
+            'status': respData.data.status,
+            'message': respData.data.message,
+        }
+    } catch (err) {
+        return {
+            'status': err.response.data.status,
+            'message': err.response.data.message,
+            'errors':err.response.data.errors
+        }
+    }
+}

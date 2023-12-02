@@ -25,6 +25,7 @@ const SectionAllocation = () => {
   const [inputErrors, setInputErrors] = useState({});
   const [data,setData] = useState(null)
   
+  
   //params
   const { Id } = useParams();
 

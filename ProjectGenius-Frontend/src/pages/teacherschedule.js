@@ -433,7 +433,7 @@ useEffect(() => {
       if (status === true) {
             setTimeTable(initialTimeTable)
             toastAlert('success',message)
-            navigate(`/teachertimetable/${teacherId}`, { state: { Data: ID } });
+            navigate(`/teachertimetable/${teacherId}`);
       } else if(status === false){
         toastAlert('error',message)
       } 

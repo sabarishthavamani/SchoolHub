@@ -599,13 +599,14 @@ export const getfixedschedule = async (data) => {
     try {
       let respData = await axios({
         url: '/findschedulefordetails',
-        method: 'get',
+        method: 'post',
         params: Scheduledata // Use params for GET requests
       });
   
       return {
         status: respData.data.status,
-        result: respData.data.result
+        result: respData.data.result,
+        result2: respData.data.result2,
       };
   
     } catch (err) {

@@ -65,12 +65,12 @@ const Students = () => {
     if (loaderView) {
       return (
         <div className="loader-view-container">
-          <div className="logo">
-            <img
-              src={`${process.env.PUBLIC_URL}/images/Polygon 3.png`}
-              alt=""
-            />
-            <span>Loading...</span>
+         <div class="spinner-box">
+            <div class="pulse-container">
+              <div class="pulse-bubble pulse-bubble-1"></div>
+              <div class="pulse-bubble pulse-bubble-2"></div>
+              <div class="pulse-bubble pulse-bubble-3"></div>
+            </div>
           </div>
         </div>
       );

@@ -39,6 +39,7 @@ const TeacherList = () => {
     }, [userSearchInput])
 
     console.log(Result,'--result')
+    console.log(data,'---data')
 
     const editteacher = (id) => {
         navigate('/teacher-edit/' + id)
@@ -180,8 +181,8 @@ const TeacherList = () => {
                             {data &&
                                 data.length > 0 &&
                                 data.map((item, key) => {
-                                    const teacherSection = Result.filter(section => section.teacherId === item.teacherId)
-                                    console.log(teacherSection,'---teachersection')
+                                    // const teacherSection = Result.filter(section => section.teacherId === item.teacherId)
+                                    // console.log(teacherSection,'---teachersection')
                                     return (
                                         <tr className="tchr-row" onclick="infos()" key={key}>
                                             <td className="teacherprofile">
@@ -190,7 +191,7 @@ const TeacherList = () => {
                                             </td>
                                             <td>{item.teacherId}</td>
                                             <td>
-                                                <span className="grade">{teacherSection[0].status[0].section}</span>
+                                                <span className="grade">A</span>
                                             </td>
                                             <td>
                                                 <span className="grade">{item.subjects}</span>

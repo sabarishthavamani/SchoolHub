@@ -5,98 +5,141 @@ import { useState } from "react";
 import { getSingleteacher, teacherAllocation } from "../actions/adminAction";
 import { useNavigate, useParams } from "react-router-dom";
 import toastAlert from "../lib/toast";
+import Table from 'react-bootstrap/Table';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import { v4 as uuid } from 'uuid';
 
-
-
-const initialFormValue = {
-  'name': '',
-  'teacherId': '',
-  'status':''
-}
+const initialValue = {
+  role: '',
+  className: '',
+  section: '',
+  subjects:'',
+};
 
 
 const TeacherAllocation = () => {
-  const [teacherHandles, setTeacherHandles] = useState([])
-  const [formValue, setFormValue] = useState(initialFormValue)
-  const [data, setData] = useState('')
-  const [inputErrors,setInputErrors] = useState({})
-  const [errors,setErrors]=useState({})
+  const [teacherHandles, setTeacherHandles] = useState([]);
+  const [formValue, setFormValue] = useState({});
 
-  const {Id} = useParams() 
+  const [allocateDetails, setAllocateDetails] = useState({...initialValue})
+  const [allocateList, setAllocateList] = useState([])
 
-  const navigate = useNavigate()
-  const { name, teacherId, section, role, subjects, className } = formValue;
+  const [errorMsg, setErrorMsg] = useState({
+    role: false,
+    className: false,
+    section: false,
+    subjects: false,
+  })
 
-  const handleChange = (e) => {
+  const { Id } = useParams();
+
+  const navigate = useNavigate();
+
+  const { name, teacherId} = formValue;
+
+  const {role, className, section, subjects} = allocateDetails
+
+  const handleInputValue = (e) => {
     const { name, value } = e.target;
-    setInputErrors((prevErrors) => ({
-      ...prevErrors,
-      [name]: undefined, // Clear the error for this input
-    }));
-    setFormValue({ ...formValue, ...{ [name]: value } })
+    setAllocateDetails(prev => ({...prev, [name]:value}))
+  }
+
+  const handleAdd = () => {
+    setAllocateList(prev => ([...prev, {id: uuid(), ...allocateDetails}]))
+    setAllocateDetails({...initialValue})
   }
 
   const getData = async (id) => {
     try {
-      let { status, result } = await getSingleteacher(id);
+      let { status, result } = await getSingleteacher(id)
       if (status === true) {
-        setFormValue(prevFormValue => ({ ...prevFormValue, ...result }));
-        setData(result)
-        const subs = result.subjects
-        const subArr = subs.split(",")
-        setTeacherHandles([...subArr])
+        setFormValue(result);
+        const subs = result.subjects;
+        const subArr = subs.split(",");
+        setTeacherHandles([...subArr]);
       }
     } catch (err) {
-      console.log(err, '--err');
+      console.log(err, "--err");
     }
-  }
+  };
   useEffect(() => {
     getData(Id)
-  }, [])
-  console.log(data, '---data')
-  const Status = {
-    role:role,
-    className:className,
-    subjects:subjects,
-    section:section
-  }
+;
+  }, []);
   const handleSubmit = async () => {
-    try {
-
-      let data = {
-        name: name,
-        teacherId: teacherId,
-        status: {...Status}
-      }
-      console.log(data,'---formdata')
-      let { status, message, errors } = await teacherAllocation(data)
-      if (status === true) {
-        setFormValue(initialFormValue)
-        toastAlert('success', message)
-        setErrors({})
-        navigate(`/teacherview`);
-      } if (status === false) {
-        if (errors) {
-          setErrors(errors);
-          // Update the inputErrors state for each input with an error
-          setInputErrors((prevErrors) => ({
-            ...prevErrors,
-            role: errors.role,
-            className: errors.className,
-            section: errors.section,
-            subjects: errors.subjects,
-          }));
-        }
-        if (message) {
-          toastAlert('error', message);
-        }
-      }
-
-    } catch (err) {
-      console.log(err, '...err')
+    const data = {
+      name,
+      teacherId,
+      status: allocateList
     }
-  }
+
+    setAllocateList([])
+
+    try {
+      let { status, message, errors } = await teacherAllocation(data);
+      if (status === true) {
+        setFormValue({});
+        toastAlert("success", message);
+        navigate(`/teacherview`);
+      }
+    } catch (err) {
+      console.log(err, "...err");
+    }
+  };
+
   
+function renderTableView() {
+
+  const handleDel = (id) => {
+    const updatedList = allocateList.filter(item => item.id !== id)
+    setAllocateList(updatedList)
+}
+
+  return (
+    <div className="teacher-allocate-table">
+    <Table striped bordered hover stickyHeader>
+      <thead>
+        <tr>
+          <th>Grade</th>
+          <th>Role</th>
+          <th>Subject</th>
+          <th>Delete</th>
+        </tr>
+      </thead>
+      <tbody>
+    {allocateList.map((item) => {
+      return(
+        <tr key={item.id}>
+          <td>{`${item.className} - ${item.section}`}</td>
+          <td>{item.role}</td>
+          <td>{item.subjects}</td>
+          <td className="text-center">
+            <button type="button" className="del-btn" onClick={() => handleDel(item.id)}>
+            <FontAwesomeIcon icon={faTrash} />
+            </button>
+          </td>
+        </tr>
+      )
+    })}
+    </tbody>
+    </Table>
+    </div>
+  );
+}
+
+const handleError = (e) => {
+  let name = e.target.name
+  if (allocateDetails[name] === '') {
+    setErrorMsg(prev => ({...prev,  [e.target.name]: true }))
+  } else {
+    setErrorMsg(prev => ({...prev,  [e.target.name]: false }))
+  }
+}
+
+const disableAddBtn = role !== '' && subjects !== '' && className !== '' && section !== ''
+
+console.log(errorMsg, "mohan")
 
 
   return (
@@ -117,8 +160,8 @@ const TeacherAllocation = () => {
                 <input
                   type="text"
                   name="name"
-                  onChange={handleChange}
                   value={name}
+                  readOnly
                 />
               </div>
               <div className="teacher-schedule-input">
@@ -129,7 +172,7 @@ const TeacherAllocation = () => {
                   type="text"
                   name="teacherId"
                   value={teacherId}
-                  onChange={handleChange}
+                  readOnly
                 />
               </div>
               <div className="teacher-schedule-input">
@@ -139,7 +182,8 @@ const TeacherAllocation = () => {
                 <select
                   name="className"
                   value={className}
-                  onChange={handleChange}
+                  onChange={handleInputValue}
+                  onBlur={handleError}
                 >
                   <option value="">Select</option>
                   <option>Preschool</option>
@@ -158,16 +202,17 @@ const TeacherAllocation = () => {
                   <option>Class 11</option>
                   <option>Class 12</option>
                 </select>
-                <span className="text-error">{inputErrors.className}</span>
+                {errorMsg.className && <span className="text-error">Please Select Class*</span>}
               </div>
               <div className="teacher-schedule-input">
                 <label htmlFor="section">
                   Section<sup>*</sup>
                 </label>
-                <select
-                  name="section"
-                  value={section}
-                  onChange={handleChange}
+                <select 
+                name="section" 
+                value={section} 
+                onChange={handleInputValue}
+                onBlur={handleError}
                 >
                   <option value="">Select</option>
                   <option>A</option>
@@ -177,22 +222,23 @@ const TeacherAllocation = () => {
                   <option>E</option>
                   <option>F</option>
                 </select>
-                <span className="text-error">{inputErrors.section}</span>
+                {errorMsg.section && <span className="text-error">Please Select Section*</span>}
               </div>
               <div className="teacher-schedule-input">
                 <label htmlFor="role">
                   Teacher Role<sup>*</sup>
                 </label>
-                <select
-                  name="role"
-                  value={role}
-                  onChange={handleChange}
+                <select 
+                name="role" 
+                value={role} 
+                onChange={handleInputValue}
+                onBlur={handleError}
                 >
                   <option value="">Select</option>
                   <option>Class Teacher</option>
-                  <option>Subject</option>
+                  <option>Subject Teacher</option>
                 </select>
-                <span className="text-error">{inputErrors.role}</span>
+                {errorMsg.role && <span className="text-error">Please Select Role*</span>}
               </div>
               <div className="teacher-schedule-input">
                 <label htmlFor="subjects">
@@ -201,22 +247,33 @@ const TeacherAllocation = () => {
                 <select
                   name="subjects"
                   value={subjects}
-                  onChange={handleChange}
+                  onChange={handleInputValue}
+                  onBlur={handleError}
                 >
                   <option value="">Select</option>
-                  {teacherHandles.map(item => (<option value={item}>{item}</option>))}
+                  {teacherHandles.map((item) => (
+                    <option value={item}>{item}</option>
+                  ))}
                 </select>
-                <span className="text-error">{inputErrors.subjects}</span>
+                {errorMsg.subjects && <span className="text-error">Please Select Subjects*</span>}
               </div>
               <div className="teacher-allocation-btn">
-                <button type="button" onClick={handleSubmit}>Submit</button>
+                <button type="button" onClick={handleAdd} disabled={!disableAddBtn} style={{ backgroundColor: disableAddBtn ? null : "gray" }}>
+                  Add
+                </button>
               </div>
             </form>
+            {renderTableView()}
+            <div className="teacher-allocation-btn">
+                <button type="button" onClick={handleSubmit}>
+                  Submit
+                </button>
+              </div>
           </div>
         </div>
       </div>
     </div>
   );
 };
-
 export default TeacherAllocation;
+

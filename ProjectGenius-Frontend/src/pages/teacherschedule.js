@@ -5,7 +5,7 @@ import Sidebar from "./components/sidebar";
 import Navbar from "./components/navbar";
 import TimeTablePreview from "./components/timetablepreview";
 //import Action
-import { getSingleteacher,createteacherschedule, getTeacherSchedule, getfixedschedule } from "../actions/adminAction";
+import { getSingleteacher, createteacherschedule, getTeacherSchedule, getfixedschedule } from "../actions/adminAction";
 import toastAlert from "../lib/toast";
 
 
@@ -292,52 +292,52 @@ function TeacherSchedule() {
   const [selectedSection, setSelectedSection] = useState("");
   const [teachingSubject, setTeachingSubject] = useState([]);
   const [selectedSubject, setSelectedSubject] = useState('')
-  const [ID,setID] = useState();
+  const [ID, setID] = useState();
   const [timeTable, setTimeTable] = useState((initialTimeTable));
 
   // console.log(selectedSubject, "initial")
 
-  
-  const {Id} =useParams()
 
-const navigate = useNavigate()
+  const { Id } = useParams()
 
-const getData =async (id) =>{
-  try{
-   let {status,result} = await getSingleteacher(id)
-   if(status == true){
-    const teachingSubList = result.subjects.split(",")
+  const navigate = useNavigate()
 
-    setTeacherName(result.name)
-    setTeacherId(result.teacherId)
-    setID(result._id)
-    setTeachingSubject([...teachingSubList])
-   }
-  }catch(err){
-    console.log(err,'---err')
-  }
-}
-useEffect(() => {
-  getData(Id)
-}, [])
-
-const getIndividualData = async (req,res) => {
-  try {
-    const data = {
-      teacherId:teacherId
+  const getData = async (id) => {
+    try {
+      let { status, result } = await getSingleteacher(id)
+      if (status == true) {
+        const teachingSubList = result.subjects.split(",").map(sub => sub.trim())
+        console.log('teachingSubList:', teachingSubList);
+        setTeacherName(result.name)
+        setTeacherId(result.teacherId)
+        setID(result._id)
+        setTeachingSubject([...teachingSubList])
+      }
+    } catch (err) {
+      console.log(err, '---err')
     }
-    const { status, result } = await getfixedschedule(data);
-    if (status === true) {
-      setTimeTable(result.schedule);
-    }
-  } catch (error) {
-    console.error("Error fetching data:", error);
   }
-};
+  useEffect(() => {
+    getData(Id)
+  }, [])
 
-useEffect(() => {
+  const getIndividualData = async (req, res) => {
+    try {
+      const data = {
+        teacherId: teacherId
+      }
+      const { status, result } = await getfixedschedule(data);
+      if (status === true) {
+        setTimeTable(result.schedule);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  useEffect(() => {
     getIndividualData();
-}, [teacherId])
+  }, [teacherId])
 
 
   const addTimeSlot = (event) => {
@@ -363,7 +363,7 @@ useEffect(() => {
         setSelectedTimeSlot("");
         setSelectedClass("");
         setSelectedSection("");
-        setSelectedSubject("");
+        setSelectedSubject('')
       } else {
         return alert("Error: Provide valid Time Period!");
       }
@@ -394,7 +394,6 @@ useEffect(() => {
         setSelectedTimeSlot("");
         setSelectedClass("");
         setSelectedSection("");
-        setTeachingSubject("");
       } else {
         alert("Error: Provide valid Time Period!");
       }
@@ -421,22 +420,22 @@ useEffect(() => {
     selectedSection === "" &&
     selectedSubject === "";
 
- console.log(ID,'--id')
+  console.log(ID, '--id')
   const handleSubmit = async () => {
     const data = {
-      teacherName:teacherName,
-      teacherId:teacherId,
+      teacherName: teacherName,
+      teacherId: teacherId,
       schedule: timeTable,
     };
     try {
-      const { status, message,result} = await createteacherschedule(data);
+      const { status, message, result } = await createteacherschedule(data);
       if (status === true) {
-            setTimeTable(initialTimeTable)
-            toastAlert('success',message)
-            navigate(`/teachertimetable/${teacherId}`);
-      } else if(status === false){
-        toastAlert('error',message)
-      } 
+        setTimeTable(initialTimeTable)
+        toastAlert('success', message)
+        navigate(`/teachertimetable/${teacherId}`);
+      } else if (status === false) {
+        toastAlert('error', message)
+      }
     } catch (error) {
       console.error("Error submitting data:", error);
       // Handle other errors, e.g., show a generic error message to the user
@@ -444,7 +443,7 @@ useEffect(() => {
   };
   return (
     <div className="fee-collection">
-      <Sidebar Id={ID}/>
+      <Sidebar Id={ID} />
       <div className="fee-content">
         <Navbar pageTitle={"Teacher Schedule Setup"} />
         <div className="fee-setup">
@@ -570,7 +569,9 @@ useEffect(() => {
                     onChange={(e) => setSelectedSubject(e.target.value)}
                   >
                     <option value="">Select</option>
-                    {teachingSubject.map(sub => (<option value={sub}>{sub}</option>))}
+                    {Array.isArray(teachingSubject) && teachingSubject.map(sub => (
+                      <option key={sub} value={sub}>{sub}</option>
+                    ))}
                   </select>
                 </div>
               </div>
@@ -592,7 +593,7 @@ useEffect(() => {
                 </button>
               </div>
             </form>
-            <TimeTablePreview timeTable={timeTable} teacherId={teacherId} setTimeTable={setTimeTable}/>
+            <TimeTablePreview timeTable={timeTable} teacherId={teacherId} setTimeTable={setTimeTable} />
           </div>
         </div>
         <button className="schedulesubmit" type="button" onClick={handleSubmit}>Submit</button>

@@ -12,6 +12,7 @@ import { faCalendarDays } from '@fortawesome/free-solid-svg-icons';
 const TeacherDetail = ()=>{
 const[data,setData] =useState('')
 const[schedule,setSchedule] =useState('')
+const [Class,setClass] = useState({});
 const [currentDaySchedule, setCurrentDaySchedule] = useState([]);
 const [openAttendance, setOpenAttendance] = useState(false)
 //params
@@ -32,7 +33,6 @@ const getData =async (id) =>{
 useEffect(() => {
   getData(Id)
 }, [])
-console.log(data,'---data')
 
 const getSchedule =async () =>{
   try{
@@ -40,9 +40,11 @@ const getSchedule =async () =>{
     teacherId:data.teacherId
    }
    console.log(Scheduledata,'---sch')
-   let {status,result} = await findschedulefordetails(Scheduledata)
+   let {status,result,result2} = await findschedulefordetails(Scheduledata)
+   console.log(result2,'---result2')
    if(status == true){
     setSchedule(result)
+    setClass(result2.status)
    }
   }catch(err){
     console.log(err,'---err')
@@ -51,7 +53,8 @@ const getSchedule =async () =>{
 useEffect(() => {
   getSchedule()
 }, [data.teacherId])
-
+console.log(schedule,'---schedule')
+console.log(Class,"---Class")
 useEffect(() => {
   // Process the schedule data when it changes
   if (schedule && schedule.schedule) {
@@ -160,26 +163,43 @@ return(
                 <ul>
                   <li>23 Present Days</li>
                   <li>06 Absent Days</li>
-                  <li>04 Holiday</li>
+                  <li>04 Holidays</li>
                 </ul>
               </div>
         <div className="attendan sch">
           <p style={{ color: "#4a86f9" }}>Schedule</p>
           {currentDaySchedule && currentDaySchedule.day ? (
             <div>
-              <p>Day : {currentDaySchedule.day}</p>
-              <div className='schedule-list'>
-              <ul>
-                {currentDaySchedule.periods.map((period, periodIndex) => (
-                  <li key={periodIndex}>
-                    {`${period.class} - ${period.subject}`}
-                  </li>
-                ))}
-              </ul>
-              </div>
-            </div>
+              <p>Day:{currentDaySchedule.day}</p>
+              {currentDaySchedule.periods && currentDaySchedule.periods.length > 0 ? (
+        <div className='schedule-list'>
+          <ul>
+            {currentDaySchedule.periods.map((period, periodIndex) => (
+              <li key={periodIndex}>
+                {`${period.class}(${period.section}) - ${period.subject}`}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : (
+        <ul>
+              <li>Free period</li>
+              <li>Free period</li>
+              <li>Free period</li>
+          </ul>
+      )}
+    </div>
           ) : (
-            <p>No schedule available for today.</p>
+            <>
+            <p>Day:Sunday</p>
+            <div className='schedule-list'>
+            <ul>
+              <li>It's Holiday Buddy..!</li>
+              <li>It's Holiday Buddy..!</li>
+              <li>It's Holiday Buddy..!</li>
+          </ul>
+            </div>
+            </>
           )}
           <button className="schedule" onClick={()=>{navigate('/teachertimetable/'+(data.teacherId))}}>
             <i className="fa fa-eye" style={{ marginRight: 8 }} />
@@ -195,21 +215,16 @@ return(
                 <th>Role</th>
                 <th>Subject</th>
               </tr>
-              <tr className='status-table-row'>
-                <td>Preschool-A</td>
-                <td>ClassTeacher</td>
-                <td>Tamil</td>
-              </tr>
-              <tr className='status-table-row'>
-                <td>LKG-A</td>
-                <td>ClassTeacher</td>
-                <td>Tamil</td>
-              </tr>
-              <tr className='status-table-row'>
-                <td>LKG-A</td>
-                <td>ClassTeacher</td>
-                <td>Tamil</td>
-              </tr>
+              {Class && Class.length >0 && Class.map((item,key) => {
+                return(
+                  <tr className='status-table-row'>
+                  <td>{item.className}-{item.section}</td>
+                  <td>{item.role}</td>
+                  <td>{item.subjects}</td>
+                </tr>
+                )
+              })}
+             
             </table>
           </div>
         </div>

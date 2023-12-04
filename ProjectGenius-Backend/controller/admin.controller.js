@@ -581,13 +581,14 @@ const findScheduleforDetails = async (req,res) =>{
         const { teacherId } = req.query; 
        const findSchedule = await Schedule.findOne({'teacherId':teacherId}).lean();
        console.log(findSchedule,'----schedule')
-       return res.status(200).json({'status':true,'result':findSchedule})
+       const findClass = await ClassAllocate.findOne({'teacherId':teacherId}).lean();
+       console.log(findClass,'---findclass')
+       return res.status(200).json({'status':true,'result':findSchedule,'result2':findClass})
     }catch(err){
         console.log(err, '--err');
         return res.status(500).json({ 'status': false, 'message': "Error on the Server" });
     }
 }
-
 const feePayment = async (req, res) => {
     try {
         const result = await FeeCollection.findOne({ 'name': req.params.name }).lean();

@@ -341,3 +341,20 @@
     padding: 5px 0px;
     border: none;
 }
+.del-btn {
+    color: #eb1515;
+    border: none;
+    background-color: transparent;
+    outline: none;
+}
+
+.teacher-allocate-table {
+    width: 60%;
+    height: 150px;
+    overflow-y: auto;
+}
+
+.teacher-allocate-table th {
+    position: sticky;
+    top: -1px;
+}

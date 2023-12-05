@@ -311,7 +311,7 @@
     padding: 0px 5px;
 }
 .schedule-list {
-    overflow-y: scroll;
+    overflow-y: auto;
     height: 63px;
     padding:0px 10px;
 }
@@ -336,7 +336,7 @@ table.status-table {
     text-align: center;
     border-spacing: 0px 4px;
     font-size: 12px;
-    margin-left: 10px;
+    margin-left: 20px;
 }
 .status-table th {
     color: brown;
@@ -409,11 +409,21 @@ tr.status-table-row {
 }
 .perform-content {
     width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    justify-content: space-evenly;
+    overflow-y: auto;
 }
+.perform-content::-webkit-scrollbar {
+    width: 8px;
+  }
+   /* Track  */
+.perform-content::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 3px #bababa; 
+    border-radius: 10px;
+  }  
+   /* Handle  */
+.perform-content::-webkit-scrollbar-thumb {
+    background:rgb(16, 200, 123); 
+    border-radius: 10px;
+  }
  /* teacher attendance  */
 .teacher-attendance {
     width: 90%;
@@ -422,7 +432,6 @@ tr.status-table-row {
     border-radius: 0px 0px 7px 7px;
     position: relative;
 }
-
 .att-button {
     padding: 0px 5px;
     border-radius: 5px;

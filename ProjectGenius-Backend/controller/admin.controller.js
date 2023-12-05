@@ -9,7 +9,7 @@ const FeeSetup = require('../models/feesetup');
 const FeeCollection = require('../models/feescollection');
 const FeesPaid = require('../models/feespaid');
 const TeacherAdmission = require('../models/teacheradmission');
-const Schedule =require('../models/schedule');
+const Schedule = require('../models/schedule');
 const GroupSection = require('../models/groupsection');
 const ClassAllocate = require('../models/classallocation');
 
@@ -203,7 +203,7 @@ const registerStudent = async (req, res) => {
 }
 const studentaadhaarValid = async (req, res) => {
     try {
-        let checkaadhaarNo = await Admission.find({}, { 'aadhaarNumber': 1,'photo':1,'signature':1 }).lean();
+        let checkaadhaarNo = await Admission.find({}, { 'aadhaarNumber': 1, 'photo': 1, 'signature': 1 }).lean();
         return res.status(200).json({ 'status': true, result: checkaadhaarNo })
     } catch (err) {
         console.log(err, '---err')
@@ -213,7 +213,7 @@ const viewStudent = async (req, res) => {
     try {
         const studentView = await Admission.find({}).lean();
         const sectionView = await GroupSection.find({}).lean();
-        return res.status(200).json({ 'status': true, 'result': studentView, 'result2':sectionView, 'imageUrl': config.IMAGE.USER_FILE_URL_PATH })
+        return res.status(200).json({ 'status': true, 'result': studentView, 'result2': sectionView, 'imageUrl': config.IMAGE.USER_FILE_URL_PATH })
     } catch (err) {
         return res.status(500).json({ 'status': false, 'message': 'Error on server' })
     }
@@ -423,7 +423,7 @@ const feesPaid = async (req, res) => {
         return res.status(500).json({ 'status': false, 'message': 'Error on the server' });
     }
 }
-const verifysingleSection = async (req,res) => {
+const verifysingleSection = async (req, res) => {
     try {
         console.log(req.body, '---body');
         const result = await GroupSection.findOne({ 'students.studentId': req.body.students.studentId }).lean();
@@ -434,11 +434,11 @@ const verifysingleSection = async (req,res) => {
         return res.status(500).json({ 'status': false, 'message': 'Error on the server' });
     }
 }
-const singlesectionAllocation = async(req,res) => {
-    try{
-        console.log(req.body,'---body')
-        const existingDocument = await GroupSection.findOne({ 'section': req.body.section,'admissiongrade':req.body.admissiongrade});
-        console.log(existingDocument,'---exist')
+const singlesectionAllocation = async (req, res) => {
+    try {
+        console.log(req.body, '---body')
+        const existingDocument = await GroupSection.findOne({ 'section': req.body.section, 'admissiongrade': req.body.admissiongrade });
+        console.log(existingDocument, '---exist')
         if (existingDocument) {
             existingDocument.students.push({
                 'name': req.body.students.name,
@@ -447,7 +447,7 @@ const singlesectionAllocation = async(req,res) => {
             const updatedDocument = await existingDocument.save();
             console.log(updatedDocument, '-----updated')
             return res.status(200).json({ 'status': true, 'message': 'Section Allocated Successfully' });
-        }else {
+        } else {
             const newDocument = new GroupSection({
                 section: req.body.section,
                 admissiongrade: req.body.admissiongrade,
@@ -455,26 +455,26 @@ const singlesectionAllocation = async(req,res) => {
             });
             await newDocument.save();
             console.log(newDocument, '-----new');
-            return res.status(200).json({ 'status': true, 'message': 'Section Allocated Successfully' }); 
+            return res.status(200).json({ 'status': true, 'message': 'Section Allocated Successfully' });
         }
-    }catch(err){
-        console.log(err,'---err')
+    } catch (err) {
+        console.log(err, '---err')
         return res.status(500).json({ 'status': false, 'message': 'Error on the server' });
     }
 }
 const updatesingleSection = async (req, res) => {
     try {
-        console.log(req.body,'---body')
+        console.log(req.body, '---body')
         const { admissiongrade, section, students } = req.body;
-        const newSection = await GroupSection.findOne({admissiongrade,section});
-        console.log(newSection,'---newsec')
-        if(newSection){
+        const newSection = await GroupSection.findOne({ admissiongrade, section });
+        console.log(newSection, '---newsec')
+        if (newSection) {
             const updatedList = newSection.students.filter(item => item.studentId !== students.studentId)
             newSection.students = updatedList;
             const newUpdate = await newSection.save(); // Use save method on the model instance
-            console.log(newUpdate, '----updatenew');         
+            console.log(newUpdate, '----updatenew');
         }
-        return res.status(200).json({ 'status': true, 'message': 'Student Removed Successfully',}); 
+        return res.status(200).json({ 'status': true, 'message': 'Student Removed Successfully', });
     } catch (err) {
         console.error(err);
         return res.status(500).json({ status: false, message: 'Error on the server' });
@@ -483,7 +483,7 @@ const updatesingleSection = async (req, res) => {
 
 const groupsectionallocate = async (req, res) => {
     try {
-        console.log(req.body,'---body')
+        console.log(req.body, '---body')
         const existingDocument = await GroupSection.findOne({ 'students.studentId': req.body.students[0].studentId });
         if (existingDocument) {
             // If the student already exists, update the section
@@ -508,21 +508,21 @@ const groupsectionallocate = async (req, res) => {
         return res.status(500).json({ 'status': false, 'message': 'Error on the server' });
     }
 }
-const verifyGroupSection = async (req,res) => {
-    try{
-        console.log(req.body,'---body')
-        const result = await GroupSection.findOne({ 'students.studentId': req.body.students[0].studentId },{section:1}).lean()
-        console.log(result,'---result')
+const verifyGroupSection = async (req, res) => {
+    try {
+        console.log(req.body, '---body')
+        const result = await GroupSection.findOne({ 'students.studentId': req.body.students[0].studentId }, { section: 1 }).lean()
+        console.log(result, '---result')
         return res.status(200).json({ 'status': true, 'result': result });
-    }catch(err){
-        console.log(err,'---err')
+    } catch (err) {
+        console.log(err, '---err')
         return res.status(500).json({ 'status': false, 'message': 'Error on the server' });
     }
 }
 const createteacherSchedule = async (req, res) => {
     try {
         const existingSchedule = await Schedule.findOne({ teacherId: req.body.teacherId });
-         console.log(existingSchedule,'----schedule')
+        console.log(existingSchedule, '----schedule')
         if (existingSchedule) {
             // If a schedule with the teacherId already exists, update the schedule field
             existingSchedule.schedule = req.body.schedule;
@@ -565,26 +565,26 @@ const findteacherSchedule = async (req, res) => {
 };
 const findFixedSchedule = async (req, res) => {
     try {
-      const { teacherId } = req.query; // Access query parameters
-      // Now you can use teacherId to find the fixed schedule
-      const findresult = await Schedule.findOne({ 'teacherId': teacherId }).lean();
-  
-      return res.status(200).json({ 'status': true, "result": findresult });
+        const { teacherId } = req.query; // Access query parameters
+        // Now you can use teacherId to find the fixed schedule
+        const findresult = await Schedule.findOne({ 'teacherId': teacherId }).lean();
+
+        return res.status(200).json({ 'status': true, "result": findresult });
     } catch (err) {
-      console.log(err, '--err');
-      return res.status(500).json({ 'status': false, 'message': "Error on the Server" });
+        console.log(err, '--err');
+        return res.status(500).json({ 'status': false, 'message': "Error on the Server" });
     }
-  };
-const findScheduleforDetails = async (req,res) =>{
-    try{
-        console.log(req.query,'---query')
-        const { teacherId } = req.query; 
-       const findSchedule = await Schedule.findOne({'teacherId':teacherId}).lean();
-       console.log(findSchedule,'----schedule')
-       const findClass = await ClassAllocate.findOne({'teacherId':teacherId}).lean();
-       console.log(findClass,'---findclass')
-       return res.status(200).json({'status':true,'result':findSchedule,'result2':findClass})
-    }catch(err){
+};
+const findScheduleforDetails = async (req, res) => {
+    try {
+        console.log(req.query, '---query')
+        const { teacherId } = req.query;
+        const findSchedule = await Schedule.findOne({ 'teacherId': teacherId }).lean();
+        console.log(findSchedule, '----schedule')
+        const findClass = await ClassAllocate.findOne({ 'teacherId': teacherId }).lean();
+        console.log(findClass, '---findclass')
+        return res.status(200).json({ 'status': true, 'result': findSchedule, 'result2': findClass })
+    } catch (err) {
         console.log(err, '--err');
         return res.status(500).json({ 'status': false, 'message': "Error on the Server" });
     }
@@ -599,13 +599,13 @@ const feePayment = async (req, res) => {
         return res.status(500).json({ 'status': false, 'message': 'Error on the server' });
     }
 }
-const feestatus = async(req,res) =>{
-    try{
+const feestatus = async (req, res) => {
+    try {
         const result = await FeesPaid.findOne({ 'studentId': req.body.studentId }).lean();
-        console.log(req.body,'---body')
-        console.log(result,'---result')
+        console.log(req.body, '---body')
+        console.log(result, '---result')
         return res.status(200).json({ 'status': true, 'result': result });
-    }catch(err){
+    } catch (err) {
         return res.status(500).json({ 'status': false, 'message': 'Error on the server' });
     }
 }
@@ -665,7 +665,7 @@ const ViewTeacher = async (req, res) => {
     try {
         const teacherView = await TeacherAdmission.find({}).lean();
         const sectionView = await ClassAllocate.find({}).lean();
-        return res.status(200).json({ 'status': true, 'result': teacherView,'result2':sectionView, 'imageUrl': config.IMAGE.TEACHER_FILE_URL_PATH })
+        return res.status(200).json({ 'status': true, 'result': teacherView, 'result2': sectionView, 'imageUrl': config.IMAGE.TEACHER_FILE_URL_PATH })
     } catch (err) {
         return res.status(500).json({ 'status': false, 'message': 'Error on server' })
     }
@@ -757,20 +757,39 @@ const getSingleTeacher = async (req, res) => {
         return res.status(500).json({ 'status': false, 'message': 'error on server' })
     }
 }
-const teacherclassAllocate = async (req,res) =>{
-    try{
+const teacherclassAllocate = async (req, res) => {
+    try {
         console.log(req.body,'---body')
-        const newDocument = new ClassAllocate({
-            name: req.body.name,
-            teacherId: req.body.teacherId,
-            status: req.body.status,
-        });
-        await newDocument.save();
-        console.log(newDocument, '-----new');
-        return res.status(200).json({ 'status': true, 'message': 'Class Allocated Successfully' }); 
-    }catch(err){
+        const updateClass = await ClassAllocate.findOne({ name: req.body.name, teacherId: req.body.teacherId });
+        console.log(updateClass, '----class')
+        if (updateClass) {
+           const ans = await ClassAllocate.updateOne({ name: req.body.name, teacherId: req.body.teacherId },{'$set':{status:req.body.status}})
+           console.log(ans,'---ans')
+            return res.status(200).json({ 'status': true, 'message': 'Class Updated Successfully' });
+        } else {
+            const newDocument = new ClassAllocate({
+                name: req.body.name,
+                teacherId: req.body.teacherId,
+                status: req.body.status,
+            });
+            await newDocument.save();
+            console.log(newDocument, '-----new');
+            return res.status(200).json({ 'status': true, 'message': 'Class Allocated Successfully' });
+        }
+    } catch (err) {
         console.log(err, '--err')
-        return res.status(500).json({ 'status': false, 'message': 'error on server' })
+        return res.status(500).json({ 'status': false, 'message': 'Error On Server' })
+    }
+}
+const findTeacherClass = async (req,res) =>{
+    try{
+     console.log(req.query,'---query')
+     const findClass = await ClassAllocate.findOne({'teacherId':req.query.teacherId}).lean()
+     console.log(findClass,'---find')
+     return res.status(200).json({'status':true,'result':findClass})
+    }catch(err){
+        console.log(err,'---err')
+        return res.status(500).json({'status':false,'message':'Error On Server'})
     }
 }
 module.exports = {
@@ -809,5 +828,6 @@ module.exports = {
     singlesectionAllocation,
     updatesingleSection,
     findScheduleforDetails,
-    teacherclassAllocate
+    teacherclassAllocate,
+    findTeacherClass,
 };

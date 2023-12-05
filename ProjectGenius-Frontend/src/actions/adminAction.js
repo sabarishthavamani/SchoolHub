@@ -591,8 +591,6 @@ export const getfixedschedule = async (data) => {
   
     } catch (err) {
       console.log(err, 'errrr');
-      // Handle the error or throw it to be caught by the calling code
-      throw err;
     }
   }
   export const findschedulefordetails = async (Scheduledata) => {
@@ -611,8 +609,6 @@ export const getfixedschedule = async (data) => {
   
     } catch (err) {
       console.log(err, 'errrr');
-      // Handle the error or throw it to be caught by the calling code
-      throw err;
     }
   }
   export const teacherAllocation = async (data) => {
@@ -631,7 +627,22 @@ export const getfixedschedule = async (data) => {
         return {
             'status': err.response.data.status,
             'message': err.response.data.message,
-            'errors':err.response.data.errors
         }
+    }
+}
+export const findClass = async (Classdata) => {
+    try {
+      let respData = await axios({
+        url: '/findteacherclass',
+        method: 'get',
+        params: Classdata
+      });
+      return {
+        status: respData.data.status,
+        result: respData.data.result
+      };
+  
+    } catch (err) {
+      console.log(err, 'errrr');
     }
 }

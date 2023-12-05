@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import Sidebar from "./components/sidebar";
 import Navbar from "./components/navbar";
 import { useState } from "react";
-import { getSingleteacher, teacherAllocation } from "../actions/adminAction";
+import { findClass, getSingleteacher, teacherAllocation } from "../actions/adminAction";
 import { useNavigate, useParams } from "react-router-dom";
 import toastAlert from "../lib/toast";
 import Table from 'react-bootstrap/Table';
@@ -21,6 +21,7 @@ const initialValue = {
 const TeacherAllocation = () => {
   const [teacherHandles, setTeacherHandles] = useState([]);
   const [formValue, setFormValue] = useState({});
+  const [data,setData] = useState('');
 
   const [allocateDetails, setAllocateDetails] = useState({...initialValue})
   const [allocateList, setAllocateList] = useState([])
@@ -67,6 +68,24 @@ const TeacherAllocation = () => {
     getData(Id)
 ;
   }, []);
+
+  const getClass = async () => {
+    try{
+    const Classdata = {
+      teacherId:teacherId
+    }
+    let {status,result} = await findClass(Classdata)
+    if(status === true){
+      setAllocateList(result.status)
+    }
+    }catch(err){
+      console.log(err,'--err')
+    }
+  }
+  useEffect(()=>{
+    getClass()
+  },[teacherId])
+
   const handleSubmit = async () => {
     const data = {
       name,
@@ -75,9 +94,9 @@ const TeacherAllocation = () => {
     }
 
     setAllocateList([])
-
+    
     try {
-      let { status, message, errors } = await teacherAllocation(data);
+      let { status, message } = await teacherAllocation(data);
       if (status === true) {
         setFormValue({});
         toastAlert("success", message);
@@ -108,7 +127,7 @@ function renderTableView() {
         </tr>
       </thead>
       <tbody>
-    {allocateList.map((item) => {
+        {allocateList.map((item) => {
       return(
         <tr key={item.id}>
           <td>{`${item.className} - ${item.section}`}</td>

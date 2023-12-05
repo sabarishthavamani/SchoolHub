@@ -39,7 +39,7 @@ const TeacherList = () => {
     }, [userSearchInput])
 
     console.log(Result,'--result')
-    console.log(data,'---data')
+    // console.log(data,'---data')
 
     const editteacher = (id) => {
         navigate('/teacher-edit/' + id)
@@ -77,10 +77,6 @@ const TeacherList = () => {
           deleteteacher(Id)
              }
       };
-    //   const resultLookup = Result.reduce((acc, item) => {
-    //     acc[item.teacherId] = item;
-    //     return acc;
-    //   }, {});
     return (
         <div className="teacher">
             <Sidebar />
@@ -181,8 +177,11 @@ const TeacherList = () => {
                             {data &&
                                 data.length > 0 &&
                                 data.map((item, key) => {
-                                    // const teacherSection = Result.filter(section => section.teacherId === item.teacherId)
-                                    // console.log(teacherSection,'---teachersection')
+                                    const matchedTeacher = Result.find(teacher => teacher.teacherId === item.teacherId);
+                                    // Check if the matched teacher's role is "Class Teacher"
+                                    const isClassTeacher = matchedTeacher && matchedTeacher.status.find(status => status.role === 'Class Teacher');
+                                    console.log(isClassTeacher,'---classTeacher')  
+                                    const gradeColumn = isClassTeacher ? `${isClassTeacher.className}-${isClassTeacher.section}` : ('-');                     
                                     return (
                                         <tr className="tchr-row" onclick="infos()" key={key}>
                                             <td className="teacherprofile">
@@ -191,7 +190,7 @@ const TeacherList = () => {
                                             </td>
                                             <td>{item.teacherId}</td>
                                             <td>
-                                                <span className="grade">A</span>
+                                                <span className="grade">{gradeColumn}</span>
                                             </td>
                                             <td>
                                                 <span className="grade">{item.subjects}</span>

@@ -86,5 +86,6 @@ router.route('/getfixedschedule').get(adminCtrl.findFixedSchedule);
 router.route('/findschedulefordetails').post(adminCtrl.findScheduleforDetails);
 router.route('/teacherallocation').post(adminCtrl.teacherclassAllocate);
 router.route('/findteacherclass').get(adminCtrl.findTeacherClass);
+router.route('/teacherattendance').post(adminCtrl.teacherAttendanceSetup);
 
 module.exports = router;

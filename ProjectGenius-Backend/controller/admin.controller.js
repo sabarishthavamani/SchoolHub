@@ -12,6 +12,7 @@ const TeacherAdmission = require('../models/teacheradmission');
 const Schedule = require('../models/schedule');
 const GroupSection = require('../models/groupsection');
 const ClassAllocate = require('../models/classallocation');
+const TeacherAttendance = require('../models/teacherattendance');
 
 // config
 const config = require('../config');
@@ -792,6 +793,30 @@ const findTeacherClass = async (req,res) =>{
         return res.status(500).json({'status':false,'message':'Error On Server'})
     }
 }
+const teacherAttendanceSetup = async (req, res) => {
+    try {
+        console.log(req.body,'---body')
+        const updateClass = await TeacherAttendance.findOne({ name: req.body.name, teacherId: req.body.teacherId });
+        console.log(updateClass, '----class')
+        if (updateClass) {
+           const ans = await TeacherAttendance.updateOne({ name: req.body.name, teacherId: req.body.teacherId },{'$set':{attendance:req.body.attendance}})
+           console.log(ans,'---ans')
+            return res.status(200).json({ 'status': true, 'message': 'Attendance Updated Successfully' });
+        } else {
+            const newDocument = new TeacherAttendance({
+                name: req.body.name,
+                teacherId: req.body.teacherId,
+                attendance: req.body.attendance,
+            });
+            await newDocument.save();
+            console.log(newDocument, '-----new');
+            return res.status(200).json({ 'status': true, 'message': 'Attendance Updated Successfully' });
+        }
+    } catch (err) {
+        console.log(err, '--err')
+        return res.status(500).json({ 'status': false, 'message': 'Error On Server' })
+    }
+}
 module.exports = {
     adminLogin,
     verifyCode,
@@ -830,4 +855,5 @@ module.exports = {
     findScheduleforDetails,
     teacherclassAllocate,
     findTeacherClass,
+    teacherAttendanceSetup
 };

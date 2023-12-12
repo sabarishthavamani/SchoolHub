@@ -2,7 +2,7 @@ import React,{useEffect, useState} from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Sidebar from './components/sidebar';
 //import Actions
-import { findschedulefordetails, getSingleteacher } from '../actions/adminAction';
+import { findAttendance, findAttendanceForMonth, findschedulefordetails, getSingleteacher } from '../actions/adminAction';
 //hooks
 import { useParams } from 'react-router-dom';
 import Attendance from './components/attendance';
@@ -15,6 +15,7 @@ const[schedule,setSchedule] =useState('')
 const [Class,setClass] = useState({});
 const [currentDaySchedule, setCurrentDaySchedule] = useState([]);
 const [openAttendance, setOpenAttendance] = useState(false)
+const [AttendanceView,setAttendanceView] = useState('');
 //params
 const {Id} =useParams()
 
@@ -78,7 +79,32 @@ useEffect(() => {
 const handlePopUp = () => {
   setOpenAttendance(prevState => !prevState)
 }
- 
+
+const getAttendance = async () => {
+  try {
+    const attendata = {
+      date: new Date().toLocaleDateString(),
+    }
+    let { status, result } = await findAttendance(attendata);
+    if (status === true) {
+      setAttendanceView(result);
+    }
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+useEffect(() => {
+  getAttendance();
+}, []);
+ console.log(AttendanceView,'----View')
+
+ const IndividualAttendanceView = AttendanceView && AttendanceView.attendance &&  AttendanceView.attendance ? AttendanceView.attendance.find((each) => data.teacherId === each.teacherId) : null
+ const StatusView = IndividualAttendanceView &&  IndividualAttendanceView ? IndividualAttendanceView.status : null;
+ console.log(StatusView,'----sview')
+
+ const Thismonth = new Date().toLocaleString('en-US', { month: 'long' })
+  const Today =  new Date().toLocaleDateString()
 return(
   <>
     <div className="teacher">
@@ -160,10 +186,16 @@ return(
                   View
                 </button>
                 </div>
-                <ul>
-                  <li>23 Present Days</li>
-                  <li>06 Absent Days</li>
-                  <li>04 Holidays</li>
+                <ul className='attendancelist'>
+                  {AttendanceView && AttendanceView ? (<><li className='monthrow'>Month:{AttendanceView.month}</li>
+                  <li className='daterow'>Date:{AttendanceView.date}</li>
+                  <li style={StatusView && StatusView === 'Present'?{color:'#0fc478'}:{color:'red'}}>Status: <span className={StatusView && StatusView === 'Present'? 'due2' :'grade'}>{StatusView}</span> </li>
+                  </>):(
+                    <>
+                    <li className='monthrow'>Month:{Thismonth}</li>
+                    <li className='daterow'>Date:{Today}</li>
+                    <li>Status: <span className='due2'>Waiting...</span></li>
+                    </> )}
                 </ul>
               </div>
         <div className="attendan sch">
@@ -215,7 +247,7 @@ return(
                 <th>Role</th>
                 <th>Subject</th>
               </tr>
-              {Class && Class.length >0 && Class.map((item,key) => {
+              {Class && Class.length >0 ? (Class.map((item,key) => {
                 return(
                   <tr className='status-table-row'>
                   <td>{item.className}-{item.section}</td>
@@ -223,8 +255,11 @@ return(
                   <td>{item.subjects}</td>
                 </tr>
                 )
-              })}
-             
+              })):( <tr className='status-table-row'>
+              <td>className-section</td>
+              <td>role</td>
+              <td>subjects</td>
+            </tr>)}
             </table>
           </div>
         </div>
@@ -234,10 +269,9 @@ return(
 </div>
 {openAttendance && (
         <div className="calender-over-lay">
-          <button type="button" onClick={handlePopUp} className="calender-close">
-            Close
-          </button>
-        <Attendance />
+          {/* <button type="button" onClick={handlePopUp} className="calender-close"> */}
+          {/* </button> */}
+        <Attendance CloseModel={handlePopUp} TeacherId={data.teacherId} Month={Thismonth}/>
       </div>
       )}
 </>

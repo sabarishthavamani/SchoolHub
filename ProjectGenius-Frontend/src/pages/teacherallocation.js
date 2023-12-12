@@ -1,14 +1,19 @@
-import React, { useEffect } from "react";
-import Sidebar from "./components/sidebar";
-import Navbar from "./components/navbar";
-import { useState } from "react";
-import { findClass, getSingleteacher, teacherAllocation } from "../actions/adminAction";
+import React, {  useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import toastAlert from "../lib/toast";
 import Table from 'react-bootstrap/Table';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { v4 as uuid } from 'uuid';
+//import components
+import Sidebar from "./components/sidebar";
+import Navbar from "./components/navbar";
+//import actions
+import { findClass, getSingleteacher, teacherAllocation } from "../actions/adminAction";
+//import Lib
+import toastAlert from "../lib/toast";
+//react confirm pop-up package
+import "react-alert-confirm/lib/style.css";
+import AlertConfirm, { Button } from "react-alert-confirm";
 
 const initialValue = {
   role: '',
@@ -25,6 +30,9 @@ const TeacherAllocation = () => {
 
   const [allocateDetails, setAllocateDetails] = useState({...initialValue})
   const [allocateList, setAllocateList] = useState([])
+  const [wholeClass, setWholeclass] = useState([])
+
+
 
   const [errorMsg, setErrorMsg] = useState({
     role: false,
@@ -46,11 +54,31 @@ const TeacherAllocation = () => {
     setAllocateDetails(prev => ({...prev, [name]:value}))
   }
 
-  const handleAdd = () => {
-    setAllocateList(prev => ([...prev, {id: uuid(), ...allocateDetails}]))
-    setAllocateDetails({...initialValue})
-  }
 
+
+  const handleAdd = async () => {
+    // Check if the selected role is 'Class Teacher' and if there's already data for that role
+    const isClassTeacher = allocateDetails.role === 'Class Teacher';
+    const existingClassTeacherData = allocateList.find(item => item.role === 'Class Teacher');
+  
+    if (isClassTeacher && existingClassTeacherData) {
+      // Display confirmation message
+      const [action] = await AlertConfirm("He/She already allocate as a Class Teacher,Are sure you want to replace it? This will delete  the previous data.");
+  
+      if (action) {
+        // User confirmed, filter out the existing class teacher data
+        const updatedList = allocateList.filter(item => item.role !== 'Class Teacher');
+        // Add the new class teacher data
+        setAllocateList([...updatedList, { id: uuid(), ...allocateDetails }]);
+        setAllocateDetails({ ...initialValue });
+      }
+    } else {
+      // Role is not 'Class Teacher' or there's no existing data for 'Class Teacher', proceed as usual
+      setAllocateList(prev => [...prev, { id: uuid(), ...allocateDetails }]);
+      setAllocateDetails({ ...initialValue });
+    }
+  };
+  
   const getData = async (id) => {
     try {
       let { status, result } = await getSingleteacher(id)
@@ -74,9 +102,10 @@ const TeacherAllocation = () => {
     const Classdata = {
       teacherId:teacherId
     }
-    let {status,result} = await findClass(Classdata)
+    let {status,result,result2} = await findClass(Classdata)
     if(status === true){
       setAllocateList(result.status)
+      setWholeclass(result2)
     }
     }catch(err){
       console.log(err,'--err')
@@ -85,7 +114,7 @@ const TeacherAllocation = () => {
   useEffect(()=>{
     getClass()
   },[teacherId])
-
+ console.log(wholeClass,'----wclass')
   const handleSubmit = async () => {
     const data = {
       name,
@@ -115,6 +144,14 @@ function renderTableView() {
     setAllocateList(updatedList)
 }
 
+ //confirmation pop-up box
+ const openBasic = async (Id) => {
+  const [action] = await AlertConfirm("Are you sure, you want to delete it");
+  // action
+  if (action) {
+    handleDel(Id);
+  }
+};
   return (
     <div className="teacher-allocate-table">
     <Table striped bordered hover stickyHeader>
@@ -134,7 +171,7 @@ function renderTableView() {
           <td>{item.role}</td>
           <td>{item.subjects}</td>
           <td className="text-center">
-            <button type="button" className="del-btn" onClick={() => handleDel(item.id)}>
+            <button type="button" className="del-btn" onClick={() => openBasic(item.id)}>
             <FontAwesomeIcon icon={faTrash} />
             </button>
           </td>
@@ -172,7 +209,7 @@ console.log(errorMsg, "mohan")
           </div>
           <div className="teacher-schedule-container">
             <form className="teacher-schedule-form">
-              <div className="teacher-schedule-input">
+              <div className="teacher-allocation-input">
                 <label htmlFor="teacherName">
                   Teacher Name<sup>*</sup>
                 </label>
@@ -183,7 +220,7 @@ console.log(errorMsg, "mohan")
                   readOnly
                 />
               </div>
-              <div className="teacher-schedule-input">
+              <div className="teacher-allocation-input">
                 <label htmlFor="teacherId">
                   Teacher ID<sup>*</sup>
                 </label>
@@ -194,7 +231,7 @@ console.log(errorMsg, "mohan")
                   readOnly
                 />
               </div>
-              <div className="teacher-schedule-input">
+              <div className="teacher-allocation-input">
                 <label htmlFor="class">
                   Class <sup>*</sup>
                 </label>
@@ -223,7 +260,7 @@ console.log(errorMsg, "mohan")
                 </select>
                 {errorMsg.className && <span className="text-error">Please Select Class*</span>}
               </div>
-              <div className="teacher-schedule-input">
+              <div className="teacher-allocation-input">
                 <label htmlFor="section">
                   Section<sup>*</sup>
                 </label>
@@ -243,7 +280,7 @@ console.log(errorMsg, "mohan")
                 </select>
                 {errorMsg.section && <span className="text-error">Please Select Section*</span>}
               </div>
-              <div className="teacher-schedule-input">
+              <div className="teacher-allocation-input">
                 <label htmlFor="role">
                   Teacher Role<sup>*</sup>
                 </label>
@@ -259,7 +296,7 @@ console.log(errorMsg, "mohan")
                 </select>
                 {errorMsg.role && <span className="text-error">Please Select Role*</span>}
               </div>
-              <div className="teacher-schedule-input">
+              <div className="teacher-allocation-input">
                 <label htmlFor="subjects">
                   Teacher Handling Subjects<sup>*</sup>
                 </label>

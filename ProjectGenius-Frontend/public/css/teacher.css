@@ -335,7 +335,9 @@
 .tchr-table{
     width: 100%;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
 }
 .tchr-info{
     width: 95%;
@@ -427,3 +429,9 @@ ul {
     position :absolute;
 }
 
+.multi-select-control {
+    width: 95%;
+    display: flex;
+    align-items: center;
+    margin: 16px 0;
+}

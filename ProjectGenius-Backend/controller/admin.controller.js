@@ -784,10 +784,11 @@ const teacherclassAllocate = async (req, res) => {
 }
 const findTeacherClass = async (req,res) =>{
     try{
-     console.log(req.query,'---query')
+    //  console.log(req.query,'---query')
      const findClass = await ClassAllocate.findOne({'teacherId':req.query.teacherId}).lean()
-     console.log(findClass,'---find')
-     return res.status(200).json({'status':true,'result':findClass})
+     const findWholeClass = await ClassAllocate.find({}).lean()
+     console.log(findWholeClass,'---find')
+     return res.status(200).json({'status':true,'result':findClass, 'result2':findWholeClass})
     }catch(err){
         console.log(err,'---err')
         return res.status(500).json({'status':false,'message':'Error On Server'})
@@ -795,24 +796,42 @@ const findTeacherClass = async (req,res) =>{
 }
 const teacherAttendanceSetup = async (req, res) => {
     try {
-        console.log(req.body,'---body')
-        const updateClass = await TeacherAttendance.findOne({ name: req.body.name, teacherId: req.body.teacherId });
-        console.log(updateClass, '----class')
-        if (updateClass) {
-           const ans = await TeacherAttendance.updateOne({ name: req.body.name, teacherId: req.body.teacherId },{'$set':{attendance:req.body.attendance}})
-           console.log(ans,'---ans')
-            return res.status(200).json({ 'status': true, 'message': 'Attendance Updated Successfully' });
-        } else {
+        // console.log(req.body,'---body')
+        const Getmonth =new Date();
+        const Month =Getmonth.toLocaleString('en-US', { month: 'long' })
+        const Day = Getmonth.toLocaleString('en-US', { weekday: 'long' });
             const newDocument = new TeacherAttendance({
-                name: req.body.name,
-                teacherId: req.body.teacherId,
+                date:req.body.date,
+                month:Month,
+                day:Day,
                 attendance: req.body.attendance,
             });
             await newDocument.save();
-            console.log(newDocument, '-----new');
+            // console.log(newDocument, '-----new');
             return res.status(200).json({ 'status': true, 'message': 'Attendance Updated Successfully' });
-        }
     } catch (err) {
+        console.log(err, '--err')
+        return res.status(500).json({ 'status': false, 'message': 'Error On Server' })
+    }
+}
+const getAttendance = async(req,res) => {
+    try{
+    //    console.log(req.query,'---query')
+       const getData = await TeacherAttendance.findOne({date:req.query.date}).lean()
+    //    console.log(getData,'---date')
+       return res.status(200).json({ 'status': true, 'result':getData})
+    }catch{
+        console.log(err, '--err')
+        return res.status(500).json({ 'status': false, 'message': 'Error On Server' })
+    }
+}
+const getAttendanceforMonth =async(req,res)=>{
+    try{
+        // console.log(req.query,'---query')
+        const getData = await TeacherAttendance.find({month:req.query.month}).lean()
+        // console.log(getData,'---date')
+        return res.status(200).json({ 'status': true, 'result':getData})
+    }catch{
         console.log(err, '--err')
         return res.status(500).json({ 'status': false, 'message': 'Error On Server' })
     }
@@ -855,5 +874,7 @@ module.exports = {
     findScheduleforDetails,
     teacherclassAllocate,
     findTeacherClass,
-    teacherAttendanceSetup
+    teacherAttendanceSetup,
+    getAttendance,
+    getAttendanceforMonth
 };

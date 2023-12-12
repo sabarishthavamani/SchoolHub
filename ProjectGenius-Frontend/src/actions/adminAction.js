@@ -639,6 +639,55 @@ export const findClass = async (Classdata) => {
       });
       return {
         status: respData.data.status,
+        result: respData.data.result,
+        result2: respData.data.result2,
+      };
+  
+    } catch (err) {
+      console.log(err, 'errrr');
+    }
+}
+export const createAttendance = async (Attendata) => {
+    try {
+      let respData = await axios({
+        url: '/teacherattendance',
+        method: 'post',
+        data: Attendata
+      });
+      return {
+        'status': respData.data.status,
+        'message': respData.data.message,
+      };
+  
+    } catch (err) {
+      console.log(err, 'errrr');
+    }
+}
+export const findAttendance = async (attendata) => {
+    try {
+      let respData = await axios({
+        url: '/findteacherattendance',
+        method: 'get',
+        params: attendata
+      });
+      return {
+        status: respData.data.status,
+        result: respData.data.result
+      };
+  
+    } catch (err) {
+      console.log(err, 'errrr');
+    }
+}
+export const findAttendanceForMonth = async (MonthData) => {
+    try {
+      let respData = await axios({
+        url: '/findmonthlyattendance',
+        method: 'get',
+        params:MonthData
+      });
+      return {
+        status: respData.data.status,
         result: respData.data.result
       };
   

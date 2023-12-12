@@ -1,18 +1,17 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
-const teacherAttendanceSchema = new Schema ({
-
-    'name':String,
-    'teacherId':String,
+const teacherAttendanceSchema = new Schema({
+    'date': String,
+    'month':String,
+    'day':String,
     'attendance': [{
-        'start' : String,
-        'end' : String,
-        'date':String,
-        'title':String,
-       }],
+        'name': String,
+        'teacherId': String,
+        'status': String,
+    }],
 })
 
-let teacherAttendanceModel = mongoose.model('teacherAttendance', teacherAttendanceSchema, 'teacherAttendance' )
+let teacherAttendanceModel = mongoose.model('teacherAttendance', teacherAttendanceSchema, 'teacherAttendance')
 
 module.exports = teacherAttendanceModel;

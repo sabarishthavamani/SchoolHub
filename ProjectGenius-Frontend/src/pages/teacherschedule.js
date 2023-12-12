@@ -5,8 +5,11 @@ import Sidebar from "./components/sidebar";
 import Navbar from "./components/navbar";
 import TimeTablePreview from "./components/timetablepreview";
 //import Action
-import { getSingleteacher, createteacherschedule, getTeacherSchedule, getfixedschedule } from "../actions/adminAction";
+import { getSingleteacher,createteacherschedule, getTeacherSchedule, getfixedschedule } from "../actions/adminAction";
 import toastAlert from "../lib/toast";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
+import AlertConfirm, { Button } from "react-alert-confirm";
 
 
 const initialTimeTable = [
@@ -292,55 +295,54 @@ function TeacherSchedule() {
   const [selectedSection, setSelectedSection] = useState("");
   const [teachingSubject, setTeachingSubject] = useState([]);
   const [selectedSubject, setSelectedSubject] = useState('')
-  const [ID, setID] = useState();
+  const [ID,setID] = useState();
   const [timeTable, setTimeTable] = useState((initialTimeTable));
+  const [submitErr, setSubmitErr] = useState(false)
 
-  // console.log(selectedSubject, "initial")
+  
+  const {Id} =useParams()
 
+const navigate = useNavigate()
 
-  const { Id } = useParams()
+const getData =async (id) =>{
+  try{
+   let {status,result} = await getSingleteacher(id)
+   if(status === true){
+    const teachingSubList = result.subjects.split(",")
 
-  const navigate = useNavigate()
-
-  const getData = async (id) => {
-    try {
-      let { status, result } = await getSingleteacher(id)
-      if (status == true) {
-        const teachingSubList = result.subjects.split(",").map(sub => sub.trim())
-        console.log('teachingSubList:', teachingSubList);
-        setTeacherName(result.name)
-        setTeacherId(result.teacherId)
-        setID(result._id)
-        setTeachingSubject([...teachingSubList])
-      }
-    } catch (err) {
-      console.log(err, '---err')
-    }
+    setTeacherName(result.name)
+    setTeacherId(result.teacherId)
+    setID(result._id)
+    setTeachingSubject([...teachingSubList])
+   }
+  }catch(err){
+    console.log(err,'---err')
   }
-  useEffect(() => {
-    getData(Id)
-  }, [])
+}
+useEffect(() => {
+  getData(Id)
+}, [])
 
-  const getIndividualData = async (req, res) => {
-    try {
-      const data = {
-        teacherId: teacherId
-      }
-      const { status, result } = await getfixedschedule(data);
-      if (status === true) {
-        setTimeTable(result.schedule);
-      }
-    } catch (error) {
-      console.error("Error fetching data:", error);
+const getIndividualData = async (req,res) => {
+  try {
+    const data = {
+      teacherId:teacherId
     }
-  };
+    const { status, result } = await getfixedschedule(data);
+    if (status === true) {
+      setTimeTable(result.schedule);
+    }
+  } catch (error) {
+    console.error("Error fetching data:", error);
+  }
+};
 
-  useEffect(() => {
+useEffect(() => {
     getIndividualData();
-  }, [teacherId])
+}, [teacherId])
 
 
-  const addTimeSlot = (event) => {
+  const addTimeSlot = async (event) => {
     event.preventDefault();
     const updatedTimeTable = [...timeTable];
     const dayIndex = updatedTimeTable.findIndex(
@@ -352,18 +354,37 @@ function TeacherSchedule() {
 
       if (selectedPeriods.hasOwnProperty(selectedTimeSlot)) {
         // Update the selected time slot with the provided details
-        selectedPeriods[selectedTimeSlot] = {
-          class: selectedClass,
-          section: selectedSection,
-          subject: selectedSubject,
-        };
-
-        setTimeTable(updatedTimeTable);
-        setSelectedDay("");
-        setSelectedTimeSlot("");
-        setSelectedClass("");
-        setSelectedSection("");
-        setSelectedSubject('')
+        const addPeriod = selectedPeriods[selectedTimeSlot]
+        if (addPeriod.class !== '' && addPeriod.section !== '' && addPeriod.subject !== '') {
+          const [action] = await AlertConfirm("Are you sure, you want to update Time Slot");
+          if (action) {
+            selectedPeriods[selectedTimeSlot] = {
+              class: selectedClass,
+              section: selectedSection,
+              subject: selectedSubject,
+            };
+            setSubmitErr(true)
+            setTimeTable(updatedTimeTable);
+            setSelectedDay("");
+            setSelectedTimeSlot("");
+            setSelectedClass("");
+            setSelectedSection("");
+            setSelectedSubject("");
+          }   
+        } else {
+          selectedPeriods[selectedTimeSlot] = {
+            class: selectedClass,
+            section: selectedSection,
+            subject: selectedSubject,
+          };
+          setSubmitErr(true)
+          setTimeTable(updatedTimeTable);
+          setSelectedDay("");
+          setSelectedTimeSlot("");
+          setSelectedClass("");
+          setSelectedSection("");
+          setSelectedSubject("");
+        }
       } else {
         return alert("Error: Provide valid Time Period!");
       }
@@ -372,7 +393,7 @@ function TeacherSchedule() {
     }
   };
 
-  const handleDeleteTimeSlot = () => {
+  const handleDeleteTimeSlot = async () => {
     const updatedTimeTable = [...timeTable];
     const dayIndex = updatedTimeTable.findIndex(
       (day) => day.day === selectedDay
@@ -380,15 +401,24 @@ function TeacherSchedule() {
 
     if (dayIndex !== -1) {
       const selectedPeriods = updatedTimeTable[dayIndex].periods;
+      console.log(selectedPeriods, 'Mo')
 
       if (selectedPeriods.hasOwnProperty(selectedTimeSlot)) {
         // Update the selected time slot with the provided details
-        selectedPeriods[selectedTimeSlot] = {
-          class: "",
-          section: "",
-          subject: "",
-        };
-
+        const delPeriod = selectedPeriods[selectedTimeSlot]
+        if (delPeriod.class !== '' && delPeriod.section !== '' && delPeriod.subject !== '') {
+          const [action] = await AlertConfirm("Are you sure, you want to delete the Time Slot");
+          if (action) {
+            selectedPeriods[selectedTimeSlot] = {
+              class: "",
+              section: "",
+              subject: "",
+            };
+            setSubmitErr(true)
+          }   
+        } else {
+          alert('No Time Slot to delete.')
+        }
         setTimeTable(updatedTimeTable);
         setSelectedDay("");
         setSelectedTimeSlot("");
@@ -420,22 +450,21 @@ function TeacherSchedule() {
     selectedSection === "" &&
     selectedSubject === "";
 
-  console.log(ID, '--id')
   const handleSubmit = async () => {
     const data = {
-      teacherName: teacherName,
-      teacherId: teacherId,
+      teacherName:teacherName,
+      teacherId:teacherId,
       schedule: timeTable,
     };
     try {
-      const { status, message, result } = await createteacherschedule(data);
+      const { status, message,result} = await createteacherschedule(data);
       if (status === true) {
-        setTimeTable(initialTimeTable)
-        toastAlert('success', message)
-        navigate(`/teachertimetable/${teacherId}`);
-      } else if (status === false) {
-        toastAlert('error', message)
-      }
+            setTimeTable(initialTimeTable)
+            toastAlert('success',message)
+            navigate(`/teachertimetable/${teacherId}`);
+      } else if(status === false){
+        toastAlert('error',message)
+      } 
     } catch (error) {
       console.error("Error submitting data:", error);
       // Handle other errors, e.g., show a generic error message to the user
@@ -443,7 +472,7 @@ function TeacherSchedule() {
   };
   return (
     <div className="fee-collection">
-      <Sidebar Id={ID} />
+      <Sidebar Id={ID}/>
       <div className="fee-content">
         <Navbar pageTitle={"Teacher Schedule Setup"} />
         <div className="fee-setup">
@@ -451,7 +480,8 @@ function TeacherSchedule() {
             <span>Teacher Schedule</span>
           </div>
           <div className="teacher-schedule-container">
-            <form className="teacher-schedule-form" onSubmit={addTimeSlot}>
+            <form onSubmit={addTimeSlot}>
+              <div className="teacher-schedule-details">
               <div className="teacher-schedule-input">
                 <label htmlFor="teacherName">
                   Teacher Name<sup>*</sup>
@@ -474,6 +504,8 @@ function TeacherSchedule() {
                   onChange={(e) => setTeacherId(e.target.value)}
                 />
               </div>
+              </div>
+              <div className="teacher-schedule-actions">
               <div className="teacher-schedule-controls">
                 <div className="teacher-schedule-input">
                   <label htmlFor="day">
@@ -513,6 +545,16 @@ function TeacherSchedule() {
                     <option>period8</option>
                   </select>
                 </div>
+                <button
+                  type="button"
+                  style={{ backgroundColor: disableDeleteBtn ? null : "gray", border: 'none'}}
+                  disabled={!disableDeleteBtn}
+                  onClick={handleDeleteTimeSlot}
+                  title="Delete Time Slot"
+                  className="btn btn-danger"
+                >
+                  <FontAwesomeIcon icon={faTrash} />
+                </button>
               </div>
               <div className="teacher-schedule-controls">
                 <div className="teacher-schedule-input class-section-input">
@@ -569,34 +611,26 @@ function TeacherSchedule() {
                     onChange={(e) => setSelectedSubject(e.target.value)}
                   >
                     <option value="">Select</option>
-                    {Array.isArray(teachingSubject) && teachingSubject.map(sub => (
-                      <option key={sub} value={sub}>{sub}</option>
-                    ))}
+                    {teachingSubject.map(sub => (<option value={sub}>{sub}</option>))}
                   </select>
                 </div>
-              </div>
-              <div className="teacher-schedule-btn">
-                <button
-                  type="button"
-                  style={{ backgroundColor: disableDeleteBtn ? null : "gray" }}
-                  disabled={!disableDeleteBtn}
-                  onClick={handleDeleteTimeSlot}
-                >
-                  Delete Time Slot
-                </button>
                 <button
                   type="submit"
-                  style={{ backgroundColor: disableAddBtn ? null : "gray" }}
+                  style={{ backgroundColor: disableAddBtn ? null : "gray", border: 'none' }}
                   disabled={!disableAddBtn}
+                  title="Add Time Slot"
+                  className="btn btn-warning"
                 >
-                  Add Time Slot
+                  <FontAwesomeIcon icon={faPlus} />
                 </button>
               </div>
+              </div>
             </form>
-            <TimeTablePreview timeTable={timeTable} teacherId={teacherId} setTimeTable={setTimeTable} />
+            <button className="schedulesubmit" type="button" onClick={handleSubmit}>Submit</button>
+            {submitErr && <span className="submit-err-text">*Changes occurred, click submit once completed your modification</span>}
+            <TimeTablePreview timeTable={timeTable} teacherId={teacherId} setTimeTable={setTimeTable}/>
           </div>
         </div>
-        <button className="schedulesubmit" type="button" onClick={handleSubmit}>Submit</button>
       </div>
     </div>
   );

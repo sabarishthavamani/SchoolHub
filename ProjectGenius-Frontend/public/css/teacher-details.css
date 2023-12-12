@@ -264,6 +264,15 @@
     align-items: center;
     font-size: 14px;
 }
+.attendancelist li {
+    list-style: none;
+}
+ li.monthrow {
+   color: blue!important;
+}
+ li.daterow {
+    color: palevioletred!important;
+ }
 .attendan p:first-child{
     width: 80%;
 }
@@ -410,6 +419,8 @@ tr.status-table-row {
 .perform-content {
     width: 100%;
     overflow-y: auto;
+    position: relative;
+    overflow-x: hidden;
 }
 .perform-content::-webkit-scrollbar {
     width: 8px;
@@ -424,12 +435,13 @@ tr.status-table-row {
     background:rgb(16, 200, 123); 
     border-radius: 10px;
   }
+
  /* teacher attendance  */
 .teacher-attendance {
-    width: 90%;
+    width: 50%;
     background: #ffffff;
-    padding: 0px 0px 25px 0px;
-    border-radius: 0px 0px 7px 7px;
+    padding: 20px 28px;
+    border-radius: 12px;
     position: relative;
 }
 .att-button {
@@ -445,7 +457,63 @@ tr.status-table-row {
     font-size: 11px;
     height: 25px;
 }
-
+.attendance-table tr {
+    height: 30px;
+}
+.attendance-table th {
+    color: #979798;
+}
+.attendance-table{
+    width: 90%;
+    border-collapse: separate;
+    text-align: center;
+    border-spacing: 0px 4px;
+    font-size: 12px;
+    margin-left: 20px;
+}
+.attendance-table-row{
+    background: white;
+    font-size: 12px;
+    text-align: center;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: .5s;
+}
+.attendance-table-row:hover{
+    box-shadow: 0px 4px 5px #cacbcd;
+}
+.crossbutton {
+    position: absolute;
+    top: 10px;
+    right: 0px;
+}
+.monthlypara{
+    color: rgb(255, 128, 166);
+    font-weight: 600;
+    position: relative;
+    top: -25px;
+    left: 22px;
+}
+.monthly-content {
+    width: 100%;
+    overflow-y: auto;
+    position: relative;
+    padding: 25px 0px;
+    overflow-x: hidden;
+}
+.monthly-content::-webkit-scrollbar {
+    width: 8px;
+  }
+   /* Track  */
+.monthly-content::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 3px #bababa; 
+    border-radius: 10px;
+  }  
+   /* Handle  */
+.monthly-content::-webkit-scrollbar-thumb {
+    background:rgb(255, 128, 166); 
+    border-radius: 10px;
+  }
 .calender-over-lay {
     display: flex;
     flex-direction: column;
@@ -467,7 +535,7 @@ tr.status-table-row {
     color: #ffffff;
     cursor: pointer;
     margin: 0px 5% 16px 0px;
-    align-self: self-end;
+    align-self:center;
 }
 .att div:first-child {
     display: flex;

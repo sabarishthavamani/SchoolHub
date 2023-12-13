@@ -8,12 +8,13 @@ import { v4 as uuid } from 'uuid';
 import Sidebar from "./components/sidebar";
 import Navbar from "./components/navbar";
 //import actions
-import { findClass, getSingleteacher, teacherAllocation } from "../actions/adminAction";
+import { findClass, findWholeClass, getSingleteacher, teacherAllocation } from "../actions/adminAction";
 //import Lib
 import toastAlert from "../lib/toast";
 //react confirm pop-up package
 import "react-alert-confirm/lib/style.css";
 import AlertConfirm, { Button } from "react-alert-confirm";
+
 
 const initialValue = {
   role: '',
@@ -44,7 +45,8 @@ const TeacherAllocation = () => {
   const { Id } = useParams();
 
   const navigate = useNavigate();
-
+  
+ 
   const { name, teacherId} = formValue;
 
   const {role, className, section, subjects} = allocateDetails
@@ -54,17 +56,29 @@ const TeacherAllocation = () => {
     setAllocateDetails(prev => ({...prev, [name]:value}))
   }
 
-
-
+  const isDataAlreadyAllocated = (selectedClass, selectedSection, selectedRole) => {
+    // Check if there is any existing allocation with the same class, section, and role
+    return wholeClass.some(
+      teacher => (
+        teacher.status.some(
+          allocation => (
+            allocation.className === selectedClass &&
+            allocation.section === selectedSection &&
+            allocation.role === selectedRole
+          )
+        )
+      )
+    );
+  };
   const handleAdd = async () => {
     // Check if the selected role is 'Class Teacher' and if there's already data for that role
     const isClassTeacher = allocateDetails.role === 'Class Teacher';
     const existingClassTeacherData = allocateList.find(item => item.role === 'Class Teacher');
-  
+    
     if (isClassTeacher && existingClassTeacherData) {
       // Display confirmation message
-      const [action] = await AlertConfirm("He/She already allocate as a Class Teacher,Are sure you want to replace it? This will delete  the previous data.");
-  
+      const [action] = await AlertConfirm("He/She already allocated as a Class Teacher. Are you sure you want to replace it? This will delete the previous data.");
+    
       if (action) {
         // User confirmed, filter out the existing class teacher data
         const updatedList = allocateList.filter(item => item.role !== 'Class Teacher');
@@ -74,10 +88,19 @@ const TeacherAllocation = () => {
       }
     } else {
       // Role is not 'Class Teacher' or there's no existing data for 'Class Teacher', proceed as usual
-      setAllocateList(prev => [...prev, { id: uuid(), ...allocateDetails }]);
-      setAllocateDetails({ ...initialValue });
+      // Check if the data is already allocated for the selected class, section, and role
+      const isDataAlreadyAllocatedForSelectedClass = isDataAlreadyAllocated(allocateDetails.className, allocateDetails.section, allocateDetails.role);
+      if (isDataAlreadyAllocatedForSelectedClass) {
+        // Display an alert to the user
+        AlertConfirm("Same class-section and subject is already allocated for another teacher.please select different one")
+      } else {
+        // Add the new allocation details
+        setAllocateList(prev => [...prev, { id: uuid(), ...allocateDetails }]);
+        setAllocateDetails({ ...initialValue });
+      }
     }
   };
+  
   
   const getData = async (id) => {
     try {
@@ -102,10 +125,9 @@ const TeacherAllocation = () => {
     const Classdata = {
       teacherId:teacherId
     }
-    let {status,result,result2} = await findClass(Classdata)
+    let {status,result } = await findClass(Classdata)
     if(status === true){
       setAllocateList(result.status)
-      setWholeclass(result2)
     }
     }catch(err){
       console.log(err,'--err')
@@ -114,6 +136,19 @@ const TeacherAllocation = () => {
   useEffect(()=>{
     getClass()
   },[teacherId])
+  const getWholeClass = async () => {
+    try{
+    let {status,result } = await findWholeClass()
+    if(status === true){
+      setWholeclass(result)
+    }
+    }catch(err){
+      console.log(err,'--err')
+    }
+  }
+  useEffect(()=>{
+    getWholeClass()
+  },[])
  console.log(wholeClass,'----wclass')
   const handleSubmit = async () => {
     const data = {

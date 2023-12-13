@@ -6,12 +6,18 @@ import { faEllipsis } from "@fortawesome/free-solid-svg-icons";
 
 //lib
 import toastAlert from "../lib/toast";
-import { createAttendance, deleteTeacher, findAttendance, viewTeacher } from "../actions/adminAction";
+import {
+  createAttendance,
+  deleteTeacher,
+  findAttendance,
+  viewTeacher,
+} from "../actions/adminAction";
 
 //Pop up package
 import "react-alert-confirm/lib/style.css";
 import AlertConfirm, { Button } from "react-alert-confirm";
 import CancelIcon from "@mui/icons-material/Cancel";
+
 
 const initialAttendance = {
   date: new Date().toLocaleDateString(),
@@ -25,11 +31,11 @@ const TeacherList = () => {
   const [Result, setResult] = useState();
   const [provideAttendance, setProvideAttendance] = useState(false);
   const [attendanceRecord, setAttendance] = useState(initialAttendance);
-  const [viewAttendance,setviewAttendance] = useState('');
-
+  const [viewAttendance, setviewAttendance] = useState("");
 
   const [selectAll, setSelectAll] = useState(false);
   const [selectedData, setSelectedData] = useState([]);
+  const [multiOption, setMultiOption] = useState('')
 
   const navigate = useNavigate();
   const getData = async () => {
@@ -128,44 +134,46 @@ const TeacherList = () => {
     setAttendance(initialAttendance);
     setSelectedData([]);
     setSelectAll(false);
+    setMultiOption('')
   };
 
   const handleAttendanceSubmit = async () => {
-    try{
+    try {
       const Attendata = {
-        date:attendanceRecord.date,
-        attendance:attendanceRecord.attendance
+        date: attendanceRecord.date,
+        attendance: attendanceRecord.attendance,
+      };
+      let { status, message } = await createAttendance(Attendata);
+      if (status === true) {
+        setProvideAttendance(false);
+        getAttendance();
+        setSelectedData([]);
+        toastAlert("success", message);
       }
-      let {status,message} = await createAttendance(Attendata)
-      if(status === true){
-          setProvideAttendance(false)
-          getAttendance()
-          setSelectedData([]);
-          toastAlert('success',message)
-      }if(status === false){
-          toastAlert('error',message)
+      if (status === false) {
+        toastAlert("error", message);
       }
-     }catch(err){
-      console.log(err,'--err')
-     }
+    } catch (err) {
+      console.log(err, "--err");
     }
-    const getAttendance = async () => {
-      try {
-        const attendata = {
-          date:attendanceRecord.date
-        }
-        let { status, result } = await findAttendance(attendata);
-        if (status === true) {
-          setviewAttendance(result);
-        }
-      } catch (err) {
-        console.error(err);
+  };
+  const getAttendance = async () => {
+    try {
+      const attendata = {
+        date: attendanceRecord.date,
+      };
+      let { status, result } = await findAttendance(attendata);
+      if (status === true) {
+        setviewAttendance(result);
       }
-    };
-  
-    useEffect(() => {
-      getAttendance();
-    }, []);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
+    getAttendance();
+  }, []);
 
   useEffect(() => {
     const allSelected = data.every((item) =>
@@ -203,6 +211,39 @@ const TeacherList = () => {
       }
     });
   };
+
+  const handleMultiSelect = (e) => {
+    if (selectAll) {
+      setMultiOption(e.target.value)
+
+    switch (e.target.value) {
+      case 'Present':
+        const presentData = selectedData.map((each) => ({
+          ...each,
+          status: "Present",
+        }));
+        setAttendance((prev) => ({ ...prev, attendance: [...presentData] }));
+        break;
+      case 'Absent':
+        const absentData = selectedData.map((each) => ({
+          ...each,
+          status: "Absent",
+        }));
+        setAttendance((prev) => ({ ...prev, attendance: [...absentData] }));
+        break;
+      case 'Holiday':
+        const holidayData = selectedData.map((each) => ({
+          ...each,
+          status: "Holiday",
+        }));
+        setAttendance((prev) => ({ ...prev, attendance: [...holidayData] }));
+        break;
+      default:
+        
+        return setAttendance(initialAttendance);
+    }
+    }
+  }
 
   return (
     <div className="teacher">
@@ -298,31 +339,34 @@ const TeacherList = () => {
           {provideAttendance ? (
             <>
               <div className="multi-select-control">
-                <input
-                  type="checkbox"
-                  onChange={toggleSelectAll}
-                  checked={selectAll}
-                  style={{ marginRight: "12px" }}
-                  id="multiSelect"
-                />
-                {selectAll ? (
-                  <>
-                    <button
-                      type="button"
-                      className="btn btn-warning"
-                      style={{ marginRight: "12px" }}
-                      onClick={handleHoliday}
-                    >
+                <div className="multi-select-dropdown">
+                  <input
+                    type="checkbox"
+                    onChange={toggleSelectAll}
+                    checked={selectAll}
+                    id="multiSelect"
+                  />
+                  {selectAll ? <select onChange={handleMultiSelect} value={multiOption}>
+                    <option value=""></option>
+                    <option value="Present">
+                      Present
+                    </option>
+                    <option value="Absent">
+                      Absent
+                    </option>
+                    <option  value="Holiday">
                       Holiday
-                    </button>
-                    <button
-                      type="button"
-                      className="btn"
-                      onClick={handleDeselect}
-                    >
-                      <CancelIcon color="error" />
-                    </button>
-                  </>
+                    </option>
+                  </select> : null}
+                </div>
+                {selectAll ? (
+                  <button
+                    type="button"
+                    className="btn"
+                    onClick={handleDeselect}
+                  >
+                    <CancelIcon color="error" />
+                  </button>
                 ) : (
                   <label htmlFor="multiSelect">Select All</label>
                 )}
@@ -336,20 +380,28 @@ const TeacherList = () => {
                     <th>Teacher ID</th>
                     <th>Date</th>
                     <th>Status</th>
-                    {selectedData.length <= 0 && <th>Action</th>}
+                    <th>Action</th>
                   </tr>
                 </thead>
                 <tbody>
-                {data &&
+                  {data &&
                     data.length > 0 &&
                     data.map((item, key) => {
                       const attendanceStatus = attendanceRecord.attendance.find(
                         (each) => item.teacherId === each.teacherId
                       );
-                      const ViewAttendance = viewAttendance && viewAttendance.attendance ? viewAttendance.attendance.find((each) => item.teacherId === each.teacherId) : null;
-                      const ViewStatus = ViewAttendance &&  ViewAttendance ? ViewAttendance.status : null
-                      console.log(ViewAttendance, 'attenstatus')
-                      console.log(ViewStatus, 'ansss')
+                      const ViewAttendance =
+                        viewAttendance && viewAttendance.attendance
+                          ? viewAttendance.attendance.find(
+                              (each) => item.teacherId === each.teacherId
+                            )
+                          : null;
+                      const ViewStatus =
+                        ViewAttendance && ViewAttendance
+                          ? ViewAttendance.status
+                          : null;
+                      console.log(ViewAttendance, "attenstatus");
+                      console.log(ViewStatus, "ansss");
                       return (
                         <tr className="tchr-row" onclick="infos()" key={key}>
                           <td>
@@ -378,64 +430,82 @@ const TeacherList = () => {
                           <td>{item.teacherId}</td>
                           <td>{new Date().toLocaleDateString()}</td>
                           <td>
-                             {ViewAttendance && ViewAttendance ?(<span
-                               className={
-                                ViewStatus
-                                  ? ViewStatus === "Present"
-                                    ? "due2"
-                                    : "grade"
-                                  : "defaultValue"
-                              }
-                            >{ViewStatus}
-                            </span>):(<span
-                              className={
-                                attendanceStatus
-                                  ? attendanceStatus.status === "Present"
-                                    ? "due2"
-                                    : "grade"
-                                  : "defaultValue"
-                              }
-                            >
-                              {attendanceStatus ? attendanceStatus.status : "-"}
-                            </span>)}
+                            {ViewAttendance && ViewAttendance ? (
+                              <span
+                                className={
+                                  ViewStatus
+                                    ? ViewStatus === "Present"
+                                      ? "due2"
+                                      : "grade"
+                                    : "defaultValue"
+                                }
+                              >
+                                {ViewStatus}
+                              </span>
+                            ) : (
+                              <span
+                                className={
+                                  attendanceStatus
+                                    ? attendanceStatus.status === "Present"
+                                      ? "due2"
+                                      : "grade"
+                                    : "defaultValue"
+                                }
+                              >
+                                {attendanceStatus
+                                  ? attendanceStatus.status
+                                  : "-"}
+                              </span>
+                            )}
                           </td>
                           <td>
-                            {ViewAttendance && ViewAttendance ? (<>
-                              <button
-                              type="button"
-                              className=  "btn btn-secondary"
-                              style={{ marginRight: "12px" }}
-                            >
-                              P
-                            </button>
-                            <button
-                              type="button"
-                              className="btn btn-secondary"
-                            >
-                              A
-                            </button>
-                            </>):(
-                            <>
-                            <button
-                              type="button"
-                              className= "btn btn-success"
-                              style={{ marginRight: "12px" }}
-                              onClick={() =>
-                                handleAttendance(item.teacherId, item.name, "Present")
-                              }
-                            >
-                              P
-                            </button>
-                            <button
-                              type="button"
-                              className="btn btn-danger"
-                              onClick={() =>
-                                handleAttendance(item.teacherId, item.name, "Absent")
-                              }
-                            >
-                              A
-                            </button>
-                            </>)}
+                            {ViewAttendance && ViewAttendance ? (
+                              <>
+                                <button
+                                  type="button"
+                                  className="btn btn-secondary"
+                                  style={{ marginRight: "12px" }}
+                                >
+                                  P
+                                </button>
+                                <button
+                                  type="button"
+                                  className="btn btn-secondary"
+                                >
+                                  A
+                                </button>
+                              </>
+                            ) : (
+                              <>
+                                <button
+                                  type="button"
+                                  className="btn btn-success"
+                                  style={{ marginRight: "12px" }}
+                                  onClick={() =>
+                                    handleAttendance(
+                                      item.teacherId,
+                                      item.name,
+                                      "Present"
+                                    )
+                                  }
+                                >
+                                  P
+                                </button>
+                                <button
+                                  type="button"
+                                  className="btn btn-danger"
+                                  onClick={() =>
+                                    handleAttendance(
+                                      item.teacherId,
+                                      item.name,
+                                      "Absent"
+                                    )
+                                  }
+                                >
+                                  A
+                                </button>
+                              </>
+                            )}
                           </td>
                         </tr>
                       );
@@ -443,18 +513,20 @@ const TeacherList = () => {
                 </tbody>
               </table>
               <div className="w-100 d-flex justify-content-end">
-                {viewAttendance && viewAttendance ? (null):(<button
-                  type="button"
-                  className={`btn m-4 ${
-                    data.length === attendanceRecord.attendance.length
-                      ? "btn-primary"
-                      : "btn-secondary"
-                  }`}
-                  disabled={!data.length === attendanceRecord.length}
-                  onClick={handleAttendanceSubmit}
-                >
-                  Submit
-                </button>)}
+                {viewAttendance && viewAttendance ? null : (
+                  <button
+                    type="button"
+                    className={`btn m-4 ${
+                      data.length === attendanceRecord.attendance.length
+                        ? "btn-primary"
+                        : "btn-secondary"
+                    }`}
+                    disabled={!data.length === attendanceRecord.length}
+                    onClick={handleAttendanceSubmit}
+                  >
+                    Submit
+                  </button>
+                )}
               </div>
             </>
           ) : (

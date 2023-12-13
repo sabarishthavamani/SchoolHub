@@ -640,7 +640,21 @@ export const findClass = async (Classdata) => {
       return {
         status: respData.data.status,
         result: respData.data.result,
-        result2: respData.data.result2,
+      };
+  
+    } catch (err) {
+      console.log(err, 'errrr');
+    }
+}
+export const findWholeClass = async () => {
+    try {
+      let respData = await axios({
+        url: '/findteacherwholeclass',
+        method: 'get',
+      });
+      return {
+        status: respData.data.status,
+        result: respData.data.result,
       };
   
     } catch (err) {

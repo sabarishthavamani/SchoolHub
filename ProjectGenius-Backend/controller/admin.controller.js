@@ -786,9 +786,17 @@ const findTeacherClass = async (req,res) =>{
     try{
     //  console.log(req.query,'---query')
      const findClass = await ClassAllocate.findOne({'teacherId':req.query.teacherId}).lean()
+     return res.status(200).json({'status':true,'result':findClass})
+    }catch(err){
+        console.log(err,'---err')
+        return res.status(500).json({'status':false,'message':'Error On Server'})
+    }
+}
+const findTeacherWholeClass = async (req,res) =>{
+    try{
      const findWholeClass = await ClassAllocate.find({}).lean()
      console.log(findWholeClass,'---find')
-     return res.status(200).json({'status':true,'result':findClass, 'result2':findWholeClass})
+     return res.status(200).json({'status':true, 'result':findWholeClass})
     }catch(err){
         console.log(err,'---err')
         return res.status(500).json({'status':false,'message':'Error On Server'})
@@ -876,5 +884,6 @@ module.exports = {
     findTeacherClass,
     teacherAttendanceSetup,
     getAttendance,
-    getAttendanceforMonth
+    getAttendanceforMonth,
+    findTeacherWholeClass
 };

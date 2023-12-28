@@ -696,7 +696,6 @@ const deleteTeacher = async (req, res) => {
 }
 const updateTeacher = async (req, res) => {
     try {
-
         const firstName = req.body.firstName;
         const lastName = req.body.lastName;
         let FullName = `${firstName} ${lastName}`;

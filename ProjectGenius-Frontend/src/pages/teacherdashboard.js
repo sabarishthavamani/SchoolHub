@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import Sidebar from './components/sidebar';
 import { getTeacherSchedule } from '../actions/adminAction';
 import {useNavigate, useParams } from 'react-router-dom';
 import TeacherSidebar from './components/teachersidebar';

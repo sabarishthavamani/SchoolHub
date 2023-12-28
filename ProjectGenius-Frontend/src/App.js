@@ -1,4 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
+//context-provider
+import { MenuContextProvider } from './context/teachermenucontext';
 
 //import CondionRoute
 import ConditionRoute from './Routes/conditionroute';
@@ -36,9 +38,11 @@ import TeacherSchedule from './pages/teacherschedule';
 import TeacherDashboard from './pages/teacherdashboard';
 import MultiSectionAllocation from './pages/multisectionallocation';
 import TeacherAllocation from './pages/teacherallocation';
+import GenerateReport from './pages/studentmarksheetgenerate';
 
 function App() {
   return (
+    <MenuContextProvider>
     <div className="App">
       {/* Routes */}
       <BrowserRouter basename='/'>
@@ -65,6 +69,7 @@ function App() {
           <Route path="/fees-edit/:Id" element={<ConditionRoute type="private"><FeesEdit /></ConditionRoute>} />
           <Route path="/sectionallocate/:Id" element={<ConditionRoute type="private"><SectionAllocation /></ConditionRoute>} />
           <Route path="/teacher-allocate/:Id" element={<ConditionRoute type="private"><TeacherAllocation /></ConditionRoute>} />
+          <Route path="/multi-sectionallocate" element={<ConditionRoute type="private"><MultiSectionAllocation /></ConditionRoute>} />
           <Route path="/teacher-login" element={<ConditionRoute type="public"><TeacherLogin /></ConditionRoute>} />
           <Route path="/teacher-signup" element={<ConditionRoute type="public"><TeacherSignup /></ConditionRoute>} />
           <Route path="/teacher-attendance" element={<ConditionRoute type="private2"><StudentAttendance /></ConditionRoute>} />
@@ -74,12 +79,13 @@ function App() {
           <Route path="/student-signup" element={<ConditionRoute type="private2"><StudentSignup /></ConditionRoute>} />
           <Route path="/parent-login" element={<ConditionRoute type="private2"><ParentLogin /></ConditionRoute>} />
           <Route path="/parent-signup" element={<ConditionRoute type="private2"><ParentSignup /></ConditionRoute>} />
-          <Route path="/multi-sectionallocate" element={<ConditionRoute type="public"><MultiSectionAllocation /></ConditionRoute>} />
+          <Route path="/teacher-generatecard" element={<ConditionRoute type="private2"><GenerateReport /></ConditionRoute>} />
           {/* Redirecting to 404 page*/}
           <Route path="*" element={<ConditionRoute type="public"><Page404 /></ConditionRoute>} />
         </Routes>
       </BrowserRouter>
     </div>
+    </MenuContextProvider>
   );
 }
 

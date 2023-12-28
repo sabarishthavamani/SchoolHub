@@ -2,11 +2,8 @@ const isEmpty = require('is-empty');
 
 const teacherloginValid = (req, res, next) => {
     let errors = {};
-    let emailRegax = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-    if (isEmpty(req.body.email)) {
-        errors.email = 'Please enter your Registered Email Id'
-    } else if (!(emailRegax).test(req.body.email)) {
-        errors.email = 'Please enter a valid email addressEx(abc123@gmail.com)';
+    if (isEmpty(req.body.teacherId)) {
+        errors.teacherId = 'Please enter your Registered Teacher Id'
     }
     if (isEmpty(req.body.password)) {
         errors.password = 'Please enter your password'
@@ -19,13 +16,10 @@ const teacherloginValid = (req, res, next) => {
 }
 const teacherregisterValid = (req, res, next) => {
     let errors = {};
-    let emailRegax = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     let passwordRegex = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,16}$/;
-    if (isEmpty(req.body.email)) {
-        errors.email = 'Please enter your Email Id'
-    } else if (!(emailRegax).test(req.body.email)) {
-        errors.email = 'Please enter a valid email address Ex(abc123@gmail.com)';
-    }
+    if (isEmpty(req.body.teacherId)) {
+        errors.teacherId = 'Please enter your teacherId'
+    } 
     if (isEmpty(req.body.password)) {
         errors.password = 'Please Create Your Password'
     } else if (!passwordRegex.test(req.body.password)) {
@@ -52,6 +46,27 @@ const findsectionValid = (req,res,next) =>{
     if (isEmpty(req.body.admissiongrade)) {
         errors.admissiongrade ='Please Select the Classname'
     }
+    if (isEmpty(req.body.date)) {
+        errors.date ='Please Select the Date'
+    }
+    if (isEmpty(errors) == false) {
+        return res.status(400).json({ 'status': false, 'errors': errors })
+    }
+
+    return next();
+}
+const findmarksectionValid = (req,res,next) =>{
+    let errors = {};
+
+    if (isEmpty(req.body.section)) {
+      errors.section ='Please Select the Section'
+    }
+    if (isEmpty(req.body.admissiongrade)) {
+        errors.admissiongrade ='Please Select the Classname'
+    }
+    if (isEmpty(req.body.exam)) {
+        errors.exam ='Please Select the Exam Name'
+    }
     if (isEmpty(errors) == false) {
         return res.status(400).json({ 'status': false, 'errors': errors })
     }
@@ -63,4 +78,5 @@ module.exports = {
     teacherloginValid,
     teacherregisterValid,
     findsectionValid,
+    findmarksectionValid
 }

@@ -139,7 +139,7 @@ const NewAdmission = () => {
       <div className="right-content">
       <Navbar pageTitle="New Student" />
       <div className='progress-bar-section'>
-        <FormProgressBar formValue={formValue} />
+        {/* <FormProgressBar formValue={formValue} /> */}
         </div>
         {renderForm()}
       </div>

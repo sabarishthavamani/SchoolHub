@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Form from 'react-bootstrap/Form';
 // import lib
-import { setAuthToken } from '../lib/localstorage';
+import { setAuthRec, setAuthToken } from '../lib/localstorage';
 import toastAlert from '../lib/toast';
 //import Actions
 import { teacherlogin } from '../actions/teacherAction';
@@ -12,7 +12,7 @@ import { setAuthorization } from '../config/axios'
 import isEmpty from 'is-empty';
 
 const initialFormValue = {
-    email: '',
+    teacherId: '',
     password: '',
 }
 
@@ -23,8 +23,8 @@ const TeacherLogin = () => {
     const [formValue, setFormValue] = useState(initialFormValue);
     const [errors, setErrors] = useState({});
     const [inputErrors,setInputErrors] = useState({});
-    //destructuring
-    const { email, password } = formValue;
+  
+    const { teacherId, password } = formValue;
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -38,23 +38,24 @@ const TeacherLogin = () => {
         try {
 
             let data = {
-                email: email,
+                teacherId: teacherId,
                 password: password
             }
-            let { status, message, errors, token } = await teacherlogin(data)
+            let { status, message, errors, token, result} = await teacherlogin(data)
             if (status === true) {
                 setFormValue(initialFormValue)
                 setErrors({})
                 setAuthToken(`Bearer ${token}`);
                 setAuthorization(`Bearer ${token}`);
                 toastAlert('success',message)
-                navigate('/teacher-attendance')         
+                setAuthRec(result)     
+                navigate('/teacher-attendance')
             } else if (status === false) {
                 if (errors) {
                     setErrors(errors)
                     setInputErrors((prevErrors) => ({
                       ...prevErrors,
-                      email:errors.email,
+                      teacherId:errors.teacherId,
                       password:errors.password
                     }))
                 } else if (message) {
@@ -69,6 +70,7 @@ const TeacherLogin = () => {
     const isValid = (errName) => {
       return !isEmpty(errName);
   }
+
     return(
         <div className="container1">
         <div className="leftcontent">
@@ -87,16 +89,16 @@ const TeacherLogin = () => {
               </div>
               <h3>Teacher Sign In</h3>
                <Form.Group controlId="formEmail" className="field">
-                            <Form.Label>Email</Form.Label>
+                            <Form.Label>TeacherId</Form.Label>
                             <Form.Control
-                                type="email"
-                                placeholder="abcxyz@gmail.com"
-                                name="email"
-                                value={email}
+                                type="teacherId"
+                                placeholder="Enter Your TeacherId"
+                                name="teacherId"
+                                value={teacherId}
                                 onChange={handleChange}
-                                isInvalid={(inputErrors && inputErrors.email) && isValid(inputErrors.email)} 
+                                isInvalid={(inputErrors && inputErrors.teacherId) && isValid(inputErrors.teacherId)} 
                             />
-                            <Form.Control.Feedback type="invalid">{inputErrors && inputErrors.email}
+                            <Form.Control.Feedback type="invalid">{inputErrors && inputErrors.teacherId}
                             </Form.Control.Feedback>
                         </Form.Group>
                <Form.Group controlId="formEmail" className="field">

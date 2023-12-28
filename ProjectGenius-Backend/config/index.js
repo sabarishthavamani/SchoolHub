@@ -11,4 +11,4 @@ let key = {
         'TEACHER_FILE_URL_PATH': `${API_URL}/teacherprofile`,
     }
 }
-module.exports = key 
+module.exports = key

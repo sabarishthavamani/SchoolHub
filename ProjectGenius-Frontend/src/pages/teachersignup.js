@@ -8,7 +8,7 @@ import { teachersignup } from '../actions/teacherAction';
 import isEmpty from 'is-empty';
 
 const initialFormValue = {
-    email: '',
+    teacherId: '',
     password: '',
     confirmpassword:'',
 }
@@ -21,7 +21,7 @@ const TeacherSignup = () => {
     const [errors, setErrors] = useState({});
     const [inputErrors,setInputErrors] = useState({});
     //destructuring
-    const { email, password, confirmpassword } = formValue;
+    const { teacherId, password, confirmpassword } = formValue;
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -35,7 +35,7 @@ const TeacherSignup = () => {
         try {
 
             let data = {
-                email: email,
+                teacherId: teacherId,
                 password: password,
                 confirmpassword: confirmpassword,
             }
@@ -50,7 +50,7 @@ const TeacherSignup = () => {
                     setErrors(errors)
                     setInputErrors((prevErrors) => ({
                       ...prevErrors,
-                      email:errors.email,
+                      teacherId:errors.teacherId,
                       password:errors.password,
                       confirmpassword:errors.confirmpassword,
                     }))
@@ -83,16 +83,16 @@ const TeacherSignup = () => {
               </div>
               <h3>Teacher Sign In</h3>
                <Form.Group controlId="formEmail" className="field">
-                            <Form.Label>Email</Form.Label>
+                            <Form.Label>TeacherId</Form.Label>
                             <Form.Control
-                                type="email"
-                                placeholder="abcxyz@gmail.com"
-                                name="email"
-                                value={email}
+                                type="teacherId"
+                                placeholder="Enter Your TeacherId"
+                                name="teacherId"
+                                value={teacherId}
                                 onChange={handleChange}
-                                isInvalid={(inputErrors && inputErrors.email) && isValid(inputErrors.email)} 
+                                isInvalid={(inputErrors && inputErrors.teacherId) && isValid(inputErrors.teacherId)} 
                             />
-                            <Form.Control.Feedback type="invalid">{inputErrors && inputErrors.email}
+                            <Form.Control.Feedback type="invalid">{inputErrors && inputErrors.teacherId}
                             </Form.Control.Feedback>
                         </Form.Group>
                <Form.Group controlId="formEmail" className="field">

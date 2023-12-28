@@ -1,9 +1,13 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
+
+//Components
 import TeacherHeader from './components/teachernavbar'
 import TeacherSidebar from './components/teachersidebar'
-
+//Actions
 import { Dailyattendance, findsection } from '../actions/teacherAction'
+//Lib
 import toastAlert from '../lib/toast'
+
 
 const initialFormValue = {
   "admissiongrade": "",
@@ -11,13 +15,14 @@ const initialFormValue = {
   "date": "",
   "attendance": "",
 }
+
 const StudentAttendance = () => {
   const [attendanceRecord, setAttendanceRecord] = useState({});
   const [data, setData] = useState([]);
+  const [attendancecheck, setattendancecheck] = useState('');
   const [formValue, setFormValue] = useState(initialFormValue);
   const [errors, setErrors] = useState({});
   const [inputErrors, setInputErrors] = useState({});
-
 
   const { admissiongrade, section, date, attendance, checkbox1, checkbox2 } = formValue;
 
@@ -28,7 +33,7 @@ const StudentAttendance = () => {
   const handleAbsent = (id, status) => {
     setAttendanceRecord((prevState) => ({ ...prevState, [id]: status }))
   }
-  console.log(attendanceRecord)
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -43,10 +48,12 @@ const StudentAttendance = () => {
       let Data = {
         admissiongrade: admissiongrade,
         section: section,
+        date: date
       }
-      let { status, result, errors, message } = await findsection(Data);
+      let { status, result, errors, message, result2 } = await findsection(Data);
       if (status === true) {
         setData(result)
+        setattendancecheck(result2)
       }
       if (status === false) {
         if (errors) {
@@ -55,6 +62,7 @@ const StudentAttendance = () => {
             ...prevErrors,
             admissiongrade: errors.admissiongrade,
             section: errors.section,
+            date: errors.date
           }))
         }
         else if (message) {
@@ -66,7 +74,8 @@ const StudentAttendance = () => {
     }
   };
 
-  
+
+  console.log(attendancecheck, '---check')
 
   const handleSubmit = async () => {
     // Check if data is available
@@ -150,6 +159,7 @@ const StudentAttendance = () => {
             <div className="std-class">
               <label>Date</label>
               <input type="date" name='date' value={date} onChange={handleChange} />
+              <span className='attendance-error'>{inputErrors.date}</span>
             </div>
             <button className="sheet-button" type='button' onClick={getData}>Generate Sheet</button>
           </div>
@@ -158,10 +168,10 @@ const StudentAttendance = () => {
             <table className="sheet">
               <thead>
                 <tr className="sheet-head">
-                  <th>
+                {attendancecheck && attendancecheck ? (null):( <th>
                     <span className="p-a prs">P</span>
                     <span className="p-a abs">A</span>
-                  </th>
+                  </th>)}
                   <th>Student Name</th>
                   <th>Student ID</th>
                   <th>Status</th>
@@ -169,10 +179,20 @@ const StudentAttendance = () => {
               </thead>
               <tbody>
                 {data && data.length > 0 && data[0].students.map((item, key) => {
-                  console.log(item,'---item')
+                  const checkstatus = attendancecheck && attendancecheck ? attendancecheck.attendance.find(status => item.studentId === status.studentId) : null;
+                  console.log(checkstatus, '---item')
                   return (
                     <tr className="sheet-body" key={key}>
-                      <td>
+                      
+                      {checkstatus && checkstatus ? (
+                        <>
+                          <td>{checkstatus.studentName}</td>
+                          <td>{checkstatus.studentId}</td>
+                          <td><span className={checkstatus.status === "present" ? "present" : "absent"}>{checkstatus.status}</span></td>
+                        </>
+                      ) : (
+                        <>
+                        <td>
                         <label className="lab" style={{ marginRight: '8px' }}>
                           <input type="checkbox" onChange={() => handlePresent(item.studentId, 'present')} checked={attendanceRecord[item.studentId] === 'present'} />
                           <span className="checking"></span>
@@ -182,16 +202,16 @@ const StudentAttendance = () => {
                           <span className="cross"></span>
                         </label>
                       </td>
-                      <td>{item.name}</td>
-                      <td>{item.studentId}</td>
-                      <td><span className={attendanceRecord[item.studentId] ? attendanceRecord[item.studentId] === 'present' ? "present" : "absent" : null}>{attendanceRecord[item.studentId] ? attendanceRecord[item.studentId] === 'present' ? "Present" : "Absent" : null}</span></td>
-                    </tr>
-                  )
+                          <td>{item.name}</td>
+                          <td>{item.studentId}</td>
+                          <td><span className={attendanceRecord[item.studentId] ? attendanceRecord[item.studentId] === 'present' ? "present" : "absent" : null}>{attendanceRecord[item.studentId] ? attendanceRecord[item.studentId] === 'present' ? "Present" : "Absent" : null}</span></td>
+                        </>)}
+                    </tr>)
                 })}
               </tbody>
             </table>
           </div>
-          <button className="sheet-submit" disabled={!isButtonDisable} style={{ backgroundColor: isButtonDisable ? '#ff3672' : 'gray' }} type='button' onClick={handleSubmit}>Submit</button>
+          {attendancecheck && attendancecheck ? (null):( <button className="sheet-submit" disabled={!isButtonDisable} style={{ backgroundColor: isButtonDisable ? '#ff3672' : 'gray' }} type='button' onClick={handleSubmit}>Submit</button>)}
         </div>
       </div>
     </div>

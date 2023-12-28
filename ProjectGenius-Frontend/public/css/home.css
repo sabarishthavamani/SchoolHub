@@ -94,3 +94,56 @@
     top: 0;
     z-index: 2;
 }
+@media (max-width:800px) {
+    .home-content {
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+     justify-content: center;
+    }
+    .grass{
+        position: static;
+        width: 100%;
+    }
+    .grass img{
+        width: 100%;
+    }
+    .rain img {
+        width: 80%;
+    }
+    .home-menu{
+        margin-top: 3rem;
+    }
+    .right-home{
+        width: 100%;
+    }
+    .left-home {
+       width: 100%;
+       justify-content: center;
+    }
+}
+@media (max-width:500px) {
+    .home-menu{
+        width: 95%;
+        min-height: 50px;
+    }
+    .home-menu ul {
+        font-size: 10px;
+        padding-right: 25px;
+    }
+    .home-head img {
+        width: 25%;
+    }
+    .rain{
+        width: 50%;
+    }
+    .rain img{
+        width: 100%;
+    }
+    .high-school{
+        width: 100%;
+    }
+    .welcome p{
+        font-size: 35px;
+    }
+}

@@ -31,7 +31,8 @@ export const teacherlogin = async (data) => {
         return {
             'status': respData.data.status,
             'message': respData.data.message,
-            'token': respData.data.token
+            'token': respData.data.token,
+            'result': respData.data.result
         }
     } catch (err) {
         return {
@@ -52,7 +53,8 @@ export const findsection = async (Data) => {
         return {
             'status': respData.data.status,
             'message': respData.data.message,
-            'result':respData.data.result
+            'result':respData.data.result,
+            'result2':respData.data.result2
         }
     } catch (err) {
         return {
@@ -78,6 +80,68 @@ export const Dailyattendance = async (Data) => {
         return {
             'status': err.response.data.status,
             'message': err.response.data.message,
+    }
+}
+}
+export const findsectionformarks = async (Data) => {
+
+    try {
+        let respData = await axios({
+            'url': '/findsectionformarks',
+            'method': 'post',
+            'data':Data
+        })
+        return {
+            'status': respData.data.status,
+            'message': respData.data.message,
+            'result':respData.data.result,
+            'result2':respData.data.result2,
+        }
+    } catch (err) {
+        return {
+            'status': err.response.data.status,
+            'message': err.response.data.message,
+            'errors': err.response.data.errors
+        }
+    }
+}
+export const savemarksheet = async (Data) => {
+
+    try {
+        let respData = await axios({
+            'url': '/marksheet',
+            'method': 'post',
+            'data':Data
+        })
+        return {
+            'status': respData.data.status,
+            'message': respData.data.message,
+        }
+    } catch (err) {
+        return {
+            'status': err.response.data.status,
+            'message': err.response.data.message,
+    }
+}
+}
+export const findmarksheet = async (Data) => {
+
+    try {
+        let respData = await axios({
+            'url': '/find-marksheet',
+            'method': 'post',
+            'data':Data
+        })
+        return {
+            'status': respData.data.status,
+            'message': respData.data.message,
+            'result':respData.data.result,
+        }
+    } catch (err) {
+        return {
+            'status': err.response.data.status,
+            'message': err.response.data.message,
+            'errors': err.response.data.errors
     }
 }
 }

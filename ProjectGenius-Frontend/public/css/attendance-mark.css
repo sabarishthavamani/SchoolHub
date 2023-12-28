@@ -22,9 +22,30 @@
 .genius-logo{
     position: relative;
     margin-left: 30px;
+    height: 40px;
+    width: 80px;
+}
+@media (max-width: 767px) {
+    .genius-logo {
+        margin-left: 12px;
+    }
 }
 .genius-logo img {
     width: 25px;
+}
+.teacher-ham-btn {
+    outline: none;
+    border: none;
+    background-color: transparent;
+    color: #B2B2B2;
+    margin-left: 12px;
+    height: 35px;
+    width: 35px;
+}
+@media (min-width: 767px) {
+    .teacher-ham-btn {
+        display: none;
+    }
 }
 .genius-logo span {
     position: absolute;
@@ -41,17 +62,60 @@
     color: #012970;
     font-weight: 600;
     font-size: 14px;
-
+    margin-left: 12px;
+}
+@media (max-width: 767px){
+    .scl-std span {
+        display: none;
+    }
 }
 .attendance-content {
     width: 100%;
-    min-height:550px;
+    height: 100%;
     display: flex;
 }
+
 .side-menu-content {
-    position: relative;
-    width: 22%;
-    box-shadow: 4px 0px 8px #e8ecf7;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: absolute;
+    box-shadow: 4px 1px 5px 0px #c3c3c3;
+    background-color: #ffffff;
+    width: 220px;
+    height: 100%;
+    z-index: 100;
+    transition: all 0.5s ease-in-out;
+}
+.side-menu-overlay {
+    width: 100%;
+    height: 100vh;
+    background-color: #00000050;
+    position: absolute;
+    z-index: 99;
+}
+.open {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+.close {
+    transform: translateX(-100%);
+    opacity: 0;
+}
+
+@media (min-width: 767px) {
+    .side-menu-content {
+        position: relative;
+        width: 22%;
+        opacity: 1;
+        transform: translateX(0);
+    }
+    .side-menu-overlay {
+        display: block;
+        opacity: 0;
+        transform: translateX(-100%);
+    }
 }
 .att-part-one {
     margin-top: 20px;
@@ -66,15 +130,26 @@
 }
 .am {
     width: 100%;
-    padding: 7px;
+    padding: 10px 0;
     margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 .am a {
    text-decoration: none;
+   white-space: nowrap;
    color: #012970;
    font-weight: 600;
-   font-size: 14px;
+   font-size: 15px;
    margin-left: 13px;
+   margin-right: 10px;
+   display: flex;
+   align-items: center;
+}
+.am span {
+    color: #012970;
+    margin-right: 10px;
 }
 .report {
     margin-left: 10px!important;
@@ -83,33 +158,53 @@
     margin-left: 15px!important;
 }
 .am a img {
-    margin-right: 15px;
+    margin-right: 8px;
 }
 .att-sheet {
     width: 78%;
+    height: 100%;
     background-color: #f6f9ff;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
+@media (max-width: 767px) {
+    .att-sheet {
+        width: 100%;
+    }
+}
 .class-details {
-    width: 80%;
-    min-height: 100px;
+    width: 90%;
     display: flex;
     align-items: center;
     justify-content: space-evenly;
     background: #fcfad3;
     border-radius: 7px;
-    padding: 10px 0px 20px 0px;
+    padding: 16px 24px;
     margin: 28px 0px;
 }
+@media (max-width: 767px) {
+    .class-details {
+        flex-direction: column;
+        width: 90%;
+        max-width: 400px;
+    }
+}
 .std-class {
-    width: 140px;
+    width: 22%;
     display: flex;
     flex-direction: column;
     color: #858585;
     position: relative;
+    margin-right: 14px;
+    margin-bottom: 12px;
 }
+@media (max-width: 767px) {
+    .std-class {
+        width: 100%;
+    }
+}
+
 .std-class select,input {
     border: 1px solid #ced4da;
     border-radius: 5px;
@@ -120,42 +215,59 @@
 }
 .sheet-button {
     padding: 7px 12px;
-    border-radius: 6px;
+    border-radius: 4px;
     color: white;
     background: #ff3672;
     border: none;
+    height: 33px;
     font-size: 12px;
-    margin-top: 21px;
+    margin-top: 8px;
+    white-space: nowrap;
     cursor: pointer;
    
 }
 .att-record {
-    width: 80%;
-    max-height: 300px;
+    width: 90%;
     background: #ffffff;
-    padding: 0px 0px 25px 0px;
     border-radius: 0px 0px 7px 7px;
     position: relative;
-    overflow-y: scroll;
+    overflow-y: auto;
+    max-height: 350px;
 }
+
+@media (max-width: 600px) {
+    .att-record{
+        width: 95%;
+    }
+}
+
 .sheet {
     width: 100%;
-    height: 100%;
     text-align: center;
+    border-collapse: collapse;
 }
 .sheet th {
     position: sticky;
-    top: 0;
+    top: -1px;
     z-index: 1;
     background: #f9f6b8;
+    padding: 8px;
+    border-right: 1px solid #2b4c87;
 }
 .sheet-head {
     text-align: center;
     color: #2b4c87;
     font-size: 13px;
+    white-space: nowrap;
+}
+@media (max-width: 424px) {
+    .sheet-head {
+        font-size: 10px;
+    }
 }
 .sheet-head th {
     padding: 7px 0px;
+    margin-right: 8px;
 }
 .sheet-body {
     color: #7d7d7d;
@@ -163,6 +275,7 @@
 .sheet-body td {
     border-bottom: 1px solid #d9d9d9;
     font-size: 14px;
+    padding: 8px 6px;
 }
 .eye i {
     color:#4f4e69;
@@ -184,6 +297,13 @@
     border: 1px solid #fa7e7e;
     font-size: 13px;
 }
+
+@media (max-width: 500px) {
+    .present , .absent {
+        padding: 3px 6px;
+        font-size: 10px;
+    }
+}
 .sheet-submit {
     color: #ffffff;
     padding: 7px 15px;
@@ -198,6 +318,7 @@
 .att-record p:first-child {
     color: #012970;
     font-weight: 600;
+    padding: 12px 0;
     margin-left: 25px;
 }
 .p-a {
@@ -277,26 +398,25 @@
     box-shadow: 0 0 0 transparent;
     transform: rotate(-45deg) translate(7px,6px);
 }
-.teacher-logout {
-    margin-top: 17rem;
-    margin-left: 4rem;
-    border-radius: 10px;
-    background: #ff3672;
-    text-align: center;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.teachersignout {
     height: 35px;
     width: 140px;
-}
-.teachersignout {
-    border: none;
-    background: none;
     font-size: 16px;
     color: white;
+    background: #ff3672;
     font-weight: 500;
+    border: none;
+    align-self: center;
+    border-radius: 12px;
+    text-align: center;
+    margin-bottom: 2rem;
 }
-.teacher-logout span {
+@media (max-width: 767px) {
+    .teachersignout {
+        margin-bottom: 6rem;
+    }
+}
+.teachersignout span {
     margin-left: 10px;
 }
 .attendance-error{
@@ -307,24 +427,22 @@
 }
 
  /* scrollbar style  */
-
+ @media(min-width:800px){
 .att-sheet ::-webkit-scrollbar {
     width: 8px;
   }
-  
-   /* Track  */
 .att-sheet ::-webkit-scrollbar-track {
     box-shadow: inset 0 0 3px #bababa; 
     border-radius: 10px;
   }
-   
-   /* Handle  */
 .att-sheet ::-webkit-scrollbar-thumb {
     background: #012a70ba; 
     border-radius: 10px;
   }
+}
 /* scrollbar style  */
-@media(max-width:800px){
+
+@media(max-width:900px){
     .am a {
         font-size: 12px;
         margin-left: 4px;
@@ -339,10 +457,18 @@
 /* Student Mark List*/
 
 .stdmark-class {
-    width: 100px;
+    width: 22%;
     display: flex;
     flex-direction: column;
     color: #858585;
+    position: relative;
+    margin-right: 14px;
+    margin-bottom: 12px;
+}
+@media (max-width: 767px){
+.stdmark-class {
+    width: 100%;
+}
 }
 .stdmark-class label {
     font-size: 14px;
@@ -354,25 +480,33 @@
     border-radius: 5px;
     outline: none;
     padding-left: 5px;
-}
-.stc {
-    width: 250px;
+    height: 36px;
 }
 .mark-record {
     width: 90%;
-    min-height: 300px;
     background: #ffffff;
-    padding: 25px 0px;
-    border-radius: 7px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
+    border-radius: 0px 0px 7px 7px;
+    position: relative;
+    overflow: auto;
+    max-height: 350px;
+}
+@media (max-width: 700px){
+.mark-record {
+    width: 97%;
+}
 }
 .mark-sheet {
-    width: 90%;
+    width: 100%;
     text-align: center;
-    min-height: 200px;
+    border-collapse: collapse;
+}
+.mark-sheet th {
+    position: sticky;
+    top: -1px;
+    z-index: 1;
+    background: #f9f6b8;
+    padding: 8px;
+    border-right: 1px solid #2b4c87;
 }
 .sub1 {
     background: #fff8eb;
@@ -415,25 +549,21 @@
     font-weight: 600;
 }
 .total {
-    background: #e5fff4;
-    color: #000;
+    background: #f1c997a1;
+    color: brown;
     border-radius: 13px;
     border: none;
-    padding: 4px 20px;
+    padding: 4px 0px 0px 35px;
     font-weight: 600; 
 }
 .mark-record p:first-child {
     color: #012970;
     font-weight: 600;
     width: 90%;
+    margin-left: 1.5rem;
+    padding: 12px 0;
 }
 @media(max-width:800px){
-    .mark-record {
-        width: 95%;
-    }
-    .mark-sheet {
-        width: 95%;
-    }
     .sheet-body td {
         font-size: 12px;
     }
@@ -441,7 +571,11 @@
         font-size: 12px;
         padding: 3px 15px;
     }
-    .mark-record p:first-child {
-        width: 95%;
-    }
+}
+
+.mark-input input {
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    width: 60px;
+    text-align: center;
 }

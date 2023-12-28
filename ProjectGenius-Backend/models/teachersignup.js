@@ -4,12 +4,8 @@ const ObjectId = mongoose.Types.ObjectId
 
 const teachersignupSchema  = new Schema ({
 
-    'email' : String,
+    'teacherId' : String,
     'password' : String,
-    'teacherId':{
-        type:ObjectId,
-        ref:'teacheradmission'
-    }
 
 })
 

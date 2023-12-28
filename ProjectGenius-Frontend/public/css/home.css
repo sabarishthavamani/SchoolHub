@@ -1,0 +1,149 @@
+@import url('https://fonts.googleapis.com/css2?family=Gloria+Hallelujah&family=Itim&family=Jacques+Francois&family=Marko+One&family=Martel+Sans&family=Montserrat&family=Poppins&family=Raleway&family=Risque&family=Rosarivo&family=Slabo+13px&display=swap');
+*{
+    margin:0;
+    padding:0;
+    box-sizing: border-box;
+}
+.home {
+    width: 100%;
+    min-height:100vh;
+    background:#f8f8fe;
+    font-family: poppins;
+    position: relative;
+}
+.home-head {
+    width: 100%;
+}
+.home-head img {
+    margin-left: 3%;
+    margin-top: 1%;
+}
+.home-content {
+    width: 100%;
+    display: flex;
+    align-items: start;
+    justify-content: center;
+    min-height: 300px;
+}
+.left-home {
+    width: 45%;
+    display: flex;
+    align-items: center;
+    justify-content: end;
+}
+.high-school {
+    width: 90%;
+}
+.high-school img {
+    width: 100%;
+}
+.right-home {
+    width: 55%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 90px 0px;
+}
+.home-menu {
+    width: 90%;
+    background: #fcfad3;
+    min-height: 90px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 15px;
+    box-shadow: 1px 3px 8px #bababe;
+    z-index: 3;
+}
+.home-menu ul {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    justify-content: space-evenly;
+    margin-bottom: 0;
+}
+.home-menu ul li {
+    list-style: none;
+}
+.home-menu ul li a {
+    color: #000;
+    text-decoration: none;
+    font-weight: 600;
+    padding: 8px 15px;
+    border-radius: 15px;
+}
+.home-menu ul li a:hover {
+    background: white;
+    box-shadow: 1px 3px 8px #bababe;
+    transition: all 0.3s;
+}
+.welcome p{
+    font-family: 'Gloria Hallelujah', cursive!important;
+    font-size: 50px;
+    color: #455a64;
+}
+.grass {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+}
+.rain {
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: 2;
+}
+@media (max-width:800px) {
+    .home-content {
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+     justify-content: center;
+    }
+    .grass{
+        position: static;
+        width: 100%;
+    }
+    .grass img{
+        width: 100%;
+    }
+    .rain img {
+        width: 80%;
+    }
+    .home-menu{
+        margin-top: 3rem;
+    }
+    .right-home{
+        width: 100%;
+    }
+    .left-home {
+       width: 100%;
+       justify-content: center;
+    }
+}
+@media (max-width:500px) {
+    .home-menu{
+        width: 95%;
+        min-height: 50px;
+    }
+    .home-menu ul {
+        font-size: 10px;
+        padding-right: 25px;
+    }
+    .home-head img {
+        width: 25%;
+    }
+    .rain{
+        width: 50%;
+    }
+    .rain img{
+        width: 100%;
+    }
+    .high-school{
+        width: 100%;
+    }
+    .welcome p{
+        font-size: 35px;
+    }
+}

@@ -1,0 +1,51 @@
+@import url('https://fonts.googleapis.com/css2?family=Gloria+Hallelujah&family=Itim&family=Jacques+Francois&family=Marko+One&family=Martel+Sans&family=Montserrat&family=Poppins&family=Raleway&family=Risque&family=Rosarivo&family=Slabo+13px&display=swap');
+*{
+    margin:0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.not-found {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    gap: 20px 0px;
+    align-items: center;
+    justify-content: center;
+}
+.not-img {
+    width: 40%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.not-img img {
+    width: 100%;
+}
+.go-home {
+    padding: 2px 25px;
+    border-radius: 24px;
+    font-family: poppins;
+    font-weight: 600;
+    background: #feeeee;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0px 10px;
+    letter-spacing: 1px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: .5s;
+    border: 2px solid #c53f3f;
+}
+.go-home:hover {
+    transform: translateY(-5px);
+}
+.go-home img {
+    width: 30px;
+}
+@media (max-width:700px){
+    .not-img {
+        width: 90%;
+    } 
+}

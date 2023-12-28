@@ -1,0 +1,38 @@
+.progress-bar-section {
+    width: 800px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.progress-bar-container {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.progress-bar-container::before {
+    content: "";
+    position: absolute;
+    width: inherit;
+    height: 2px;
+    background-color: grey;
+    z-index: -2;
+  }
+
+.progress-bar-completion {
+    position: absolute;
+    height: 3px;
+    background-color: #00C271;
+    z-index: -1;
+    transition: all 0.5s;
+}
+
+.step span{
+    /* color: #ff80a6 ; */
+    font-size: 35px;
+    background-color: #ffffff;
+    transition: all 0.3s;
+}

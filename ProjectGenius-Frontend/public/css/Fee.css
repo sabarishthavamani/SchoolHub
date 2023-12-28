@@ -1,0 +1,706 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+*{
+    margin:0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'poppins';
+}
+.fee-collection {
+    width: 100%;
+    display: flex;
+}
+.fee-side-bar {
+    width: 20%;
+    background: #fcfad3;
+    min-height: 600px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    justify-content: space-between;
+}
+.fee-part-one {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 280px;
+    width: 100%;
+}
+.logo-content{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 15px;
+}
+.logo {
+    width: 100px;
+    position: relative;
+}
+.logo img {
+    width: 25px;
+}
+.logo span {
+    position: absolute;
+    left: 5px;
+    top: 5px;
+    font-size: 20px;
+    color: #2d00f7;
+    font-weight: 700;
+}
+.fee-side-bar ul li {
+    list-style: none;
+    font-size: 13px;
+    padding: 7px 0px;
+    cursor: pointer;
+    width: 100%;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.fee-side-bar ul li:nth-child(3) {
+    background: linear-gradient(to right,#fde4cb,#fcfad3);
+}
+.fee-side-bar ul li img{
+    position: relative;
+    padding-right: 10px;
+    top: 4px;
+}
+.menu-bar{
+    width: 150px;
+}
+.menu-bar a {
+    text-decoration: none;
+    color: black;
+}
+.fee-side-bar ul li:hover{
+    color: #2d00f7;
+}
+.fee-side-bar ul li a:hover{
+    color: #2d00f7;
+}
+.fee-part-two {
+    display: flex;
+    font-size: 12px;
+    padding-bottom: 15px;
+}
+.fee-part-two img {
+    padding-right: 10px;
+}
+.fee-part-two i {
+    font-size: 20px;
+    color: #1d3557;
+    margin-top: 8px;
+    margin-left: 15px;
+    cursor: pointer;
+}
+.fee-content {
+    width: 80%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+.fee-header {
+    width: 95%;
+    display: flex;
+    min-height: 60px;
+    align-items: center;
+    justify-content: center;
+    justify-content: space-between;
+}
+.fee-l-header {
+    margin-left: 30px;
+    color: #ff80a6;
+    font-weight: 600;
+}
+.fee-r-header {
+    width: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    justify-content: space-between;
+    font-size: 12px;
+    margin-right: 30px;
+}
+.fee-form {
+    width: 90%;
+    border-radius: 20px;
+    border:none;
+    min-height: 350px;
+    margin-top: 45px;
+}
+.fee-form-header {
+    height: 40px;
+    display: flex;
+    align-items: center;
+    padding-left: 20px;
+    background: #ff80a6;
+    color: white;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+}
+.fee-form-header span {
+    padding-left: 15px;
+}
+.fee {
+    display: flex;
+    flex-direction: column;
+}
+.fee-form-content {
+    width: 100%;
+    display: flex;
+}
+.fee-left {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    margin-top:5px;
+    margin-left: 20px;
+}
+.fee-box {
+    width: 370px;
+    display: flex;
+    flex-direction: column;
+    margin:10px 0px;
+}
+.fee-box input,select {
+    height: 33px;
+    border: 1px solid #c1bbeb;
+    border-radius: 4px;
+    margin-top: 5px;
+    outline: none;
+    padding-left: 10px;
+}
+.fee-box label {
+    color: #303972;
+    font-size: 13px;
+    font-weight: 600;
+}
+.fee-right {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: start;
+    margin-top:5px;
+    margin-left: 20px;
+}
+#multiselect {
+    max-width: 100%;
+    width: 370px;
+}
+.vscomp-toggle-button {
+    align-items: center;
+    background-color: #fff;
+    border: 1px solid #c1bbeb!important;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    padding: 7px 30px 7px 10px;
+    position: relative;
+    width: 100%;
+}
+.process-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 35px;
+}
+.process-btn button {
+    width: 250px;
+    padding: 8px;
+    background: #ff80a6;
+    color: white;
+    border-radius: 15px;
+    border: none;
+    cursor: pointer;
+    margin-top: 35px;
+}
+@media(max-width:1050px){
+    .fee-box {
+        width: 300px;
+    }
+    .fee-box label {
+        font-size: 12px;
+    }
+}
+@media(max-width:800px){
+    .fee-box {
+        width: 250px;
+    }
+    .fee-left {
+        margin-left: 10px;
+    }
+    .fee-part-two {
+        display: flex;
+        font-size: 10px;
+        padding-bottom: 15px;
+        align-items: center;
+        justify-content: center;
+    }
+    .fee-part-two i {
+        font-size: 18px;
+        color: #ccc;
+        margin-left: 10px;
+        cursor: pointer;
+    }
+    .fee-r-header {
+        width: 230px;
+    }
+    .proof {
+        display: none;
+    }
+}
+/*Fee Payment - 1*/
+.payment-content {
+    width: 80%;
+    display: flex;
+    align-items: start;
+    justify-content: center;
+    justify-content: space-evenly;
+}
+.payment {
+    width: 40%;
+    display: flex;
+    margin-top: 55px;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+.paywith {
+    width: 70%;
+    display: flex;
+    justify-content: space-between;
+    color: #acacac;
+}
+.paywith label {
+    margin-left: 8px;
+    font-size: 13px;
+    position: relative;
+    top: -1px;
+}
+.pay-form {
+    width: 95%;
+    min-height: 330px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+.payment h3 {
+    color: #ff80a6;
+    padding-bottom: 7px;
+    border-bottom: 2px solid #ccc;
+    margin-top: 20px;
+    width: 100%;
+}
+.payment label {
+    font-size: 14px;
+    font-weight: 600;
+}
+.payment input {
+    border: 1px solid #acacac;
+    border-radius: 5px;
+    margin-top: 5px;
+    height: 35px;
+    padding-left: 10px;
+    outline: none;
+}
+.payment input[type="radio"]{
+    height: auto;
+}
+.payment input[type="checkbox"]{
+    height: auto;
+}
+.pay-box {
+    display: flex;
+    flex-direction: column;
+    width: 45%;
+}
+
+.pay label {
+    cursor: pointer;
+}
+
+.exp-cv {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0px;
+}
+.pay-part {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding:10px 0px;
+}
+.save {
+    color: #ccc;    
+}
+.save span {
+    margin-left: 10px;
+    font-size: 13px;
+}
+.pay-button {
+    width: 100%;
+    margin:20px 0px;
+}
+.pay-button button {
+    width: 100%;
+    background-color: #ff80a6;
+    padding: 8px 0px;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-weight: 600;
+    cursor: pointer;
+}
+.pay-details p {
+    color: #acacac;
+    font-size: 13px;
+}
+.payment-summary {
+    width: 45%;
+    min-height: 450px;
+    display: flex;
+    justify-content: center;
+    background: #fcfad3;
+    margin-top: 40px;
+}
+.summary-content {
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    background: #fcfad3;
+}
+.summary-content h3 {
+    color:#ff80a6;
+    margin-top: 10px;
+    border-bottom: 2px solid #ccc;
+    padding-bottom: 10px;
+}
+.summary-content span {
+    font-size: 14px;
+    font-weight: 600;
+}
+.apply {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    border-top: 2px solid #ccc;
+    padding-top: 20px;
+    padding-bottom: 5px;
+}
+.apply input {
+    width: 70%;
+    outline: none;
+    padding-left: 10px;
+    outline: none;
+    border: 1px solid #cac9bb;
+    border-radius: 5px;
+    background: white;
+}
+.apply-btn {
+    width: 100px;
+    padding: 7px;
+    border: none;
+    color: white;
+    background: #acacac;
+    text-align: center;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.gst {
+    border-bottom: 2px solid #ccc;
+    border-top: 2px solid #ccc;
+}
+.gst span {
+    font-size: 12px;
+}
+.total {
+    padding: 10px 0px;
+    display: flex;
+    justify-content: space-between;
+}
+.total span {
+    font-size: 12px;
+}
+.gst-1 {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 0px 5px 0px;
+}
+.gst-2 {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 0px 15px 0px;
+}
+.person-profile {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+}
+.pro-left {
+    display: flex;
+    font-size: 13px;
+    font-weight: 600;
+}
+.pro-left img {
+    margin-right: 10px;
+}
+.include {
+    color: #acacac;
+    font-size: 11px;
+}
+@media(max-width:1050px){
+    .paywith {
+        width: 90%;
+    }
+    .pay label {
+        font-size: 13px;
+    }
+    .apply input {
+        width: 60%;
+    }
+}
+@media(max-width:800px){
+    .pay label {
+        font-size: 12px;
+    }
+    .card1 {
+        display: none;
+    }
+    .apply input {
+        width: 50%;
+    }
+}
+/* Fee-Payment - 2 */
+
+.upi-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    min-height: 330px;
+    justify-content: space-evenly;
+}
+.upi-content img {
+    width: 35%;
+}
+.upi-content p {
+    width: 80%;
+    text-align: center;
+    color: #625f5f;
+    font-size: 13px;
+    font-weight: 600;
+}
+/* Fee - PAyment - 3 */
+.cash-form {
+    width: 95%;
+    min-height: 330px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+.cash-form h3 {
+    color: #ff80a6;
+    padding-bottom: 7px;
+    border-bottom: 2px solid #ccc;
+    margin-top: 20px;
+}
+.cash-form label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #303972;
+}
+.cash-form input {
+    border: 1px solid #acacac;
+    border-radius: 5px;
+    margin-top: 5px;
+    height: 35px;
+    padding-left: 10px;
+    outline: none;
+}
+.cash-form input[type="radio"]{
+    height: auto;
+}
+.paid-box {
+    display: flex;
+    flex-direction: column;
+    margin: 10px 0px;
+}
+.confirm-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 35px;
+}
+.confirm-btn button {
+    width: 230px;
+    padding: 8px 0px;
+    background: #ff80a6;
+    color: white;
+    border-radius: 15px;
+    border: none;
+    cursor: pointer;
+}
+/* Generate Receipt */
+
+.payment-success {
+    width: 80%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    justify-content: space-evenly;
+}
+.success {
+    width: 40%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    justify-content: space-evenly;
+    min-height: 250px;
+}
+.receipt {
+    width: 100%;
+    padding: 5px 0px;
+    background: #ff80a6;
+    color: white;
+    border-radius: 3px;
+   border: none;
+}
+.success span {
+    font-size: 18px;
+    font-weight: 600;
+}
+@media(max-width:1050px){
+    .success span {
+        font-size: 16px;
+    }
+}
+@media(max-width:800px){
+    .success span {
+        font-size: 13px;
+    }
+}
+.option {
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    background-color: #fcfad3;
+  }
+  
+  .selected .checkmark {
+    color: green; /* Change the color of the checkmark for selected options */
+  }
+
+  /*Payment Failure*/
+.payment-failure {
+    width: 80%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 30px 0px;
+}
+.payment-failure a {
+    font-weight: 600;
+}
+.payment-failure a img {
+    margin-left: 10px;
+}
+.failure {
+    width: 35%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    justify-content: space-evenly;
+    min-height: 200px;
+    background: #f7f7f8;
+    color: #dc0b0b;
+    font-weight: 600;
+}
+.fail img {
+    width: 25px;
+}
+.fail {
+    background: #dc0b0b;
+    padding: 13px 13px 13px 13px;
+    border-radius: 50%;
+}
+@media(max-width:800px){
+    .failure {
+        width: 50%;
+    }
+    .failure p {
+        font-size: 14px;
+    }
+    .failure h2 {
+        font-size: 20px;
+    }
+}
+.blc {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    gap: 0px 20px;
+    padding-top: 20px;
+}
+.blc-amt {
+    width: 80px;
+    height: 40px;
+    padding: 5px 0px 0px 5px;
+    border: 1px solid;
+}
+.hrs {
+    width: 100%;
+    margin-top: 10px;
+    display: flex;
+    justify-content: end;
+}
+.hrs hr {
+    width: 50%;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.fee-view {
+    width: 100%;
+    height: 90px;
+    display: flex;
+    align-items: end;
+    justify-content: end;
+}
+.fee-view button {
+    border-radius: 16px;
+    background:transparent;
+    color: white;
+    border: none;
+    margin-right: 15px;
+    outline: none;
+    color:#303972;
+    font-weight: 600;
+}
+.fee-view button i:first-child {
+    margin-left: 10px;
+}
+.removebutton {
+    width: 100px;
+    padding: 8px;
+    background: royalblue;
+    color: white;
+    border-radius: 8px;
+    border: none;
+    font-size: 10px;
+    font-weight: 500;
+}

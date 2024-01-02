@@ -39,15 +39,27 @@ const GenerateReport = () => {
 
   const handleAdmission = (event) => {
     dispatch({ type: 'ADMISSION_GRADE', payload: event.target.value })
+    setInputErrors((prevErrors) => ({
+      ...prevErrors,
+      admissiongrade: null,
+    }));
   }
 
   const handleSection = (event) => {
 
     dispatch({ type: 'SECTION', payload: event.target.value })
+    setInputErrors((prevErrors) => ({
+      ...prevErrors,
+      section: null,
+    }));
   }
 
   const handleExam = (event) => {
     dispatch({ type: 'EXAM', payload: event.target.value })
+    setInputErrors((prevErrors) => ({
+      ...prevErrors,
+      exam: null,
+    }));
   }
 
   const handleMark = (e, student) => {
@@ -112,6 +124,12 @@ const GenerateReport = () => {
       if (status === false) {
         if (errors) {
           setErrors(errors)
+          setInputErrors((prevErrors) => ({
+            ...prevErrors,
+            admissiongrade:errors.admissiongrade,
+            section:errors.section,
+            exam:errors.exam
+          }))
         }
         else if (message) {
           toastAlert('error', message)
@@ -171,7 +189,7 @@ const GenerateReport = () => {
                 <option>Class 11</option>
                 <option>Class 12</option>
               </select>
-              <span className='attendance-error'>{errors.admissiongrade}</span>
+              <span className='attendance-error'>{inputErrors.admissiongrade}</span>
             </div>
             <div className="stdmark-class">
               <label>Section</label>
@@ -184,7 +202,7 @@ const GenerateReport = () => {
                 <option>E</option>
                 <option>F</option>
               </select>
-              <span className='attendance-error'>{errors.section}</span>
+              <span className='attendance-error'>{inputErrors.section}</span>
             </div>
             <div className="stdmark-class">
               <label>Exam Name</label>
@@ -194,7 +212,7 @@ const GenerateReport = () => {
                 <option>Half Yearly Examination</option>
                 <option>Annual Examination</option>
               </select>
-              <span className='attendance-error'>{errors.exam}</span>
+              <span className='attendance-error'>{inputErrors.exam}</span>
             </div>
             <button className="sheet-button" type="button" onClick={getData}>Generate Report Card</button>
           </div>

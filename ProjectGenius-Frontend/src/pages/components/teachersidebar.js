@@ -22,10 +22,31 @@ const TeacherSidebar = () => {
             <p
               className="am"
               style={
+                pathname === "/teacher-dashboard"
+                  ? { backgroundColor: "#f9f6b8" }
+                  : {}
+              }
+              onClick={() => toggleMenu()}
+            >
+              <Link to="/teacher-dashboard">
+                <img
+                  src={`${process.env.PUBLIC_URL}/images/dashboard.png`}
+                  alt="dashboard"
+                />
+                Dashboard
+              </Link>
+            </p>
+          </div>
+          <div className="att-menu">
+            <span>Analyze</span>
+            <p
+              className="am"
+              style={
                 pathname === "/teacher-attendance"
                   ? { backgroundColor: "#f9f6b8" }
                   : {}
               }
+              onClick={() => toggleMenu()}
             >
               <Link to="/teacher-attendance">
                 <img
@@ -36,25 +57,6 @@ const TeacherSidebar = () => {
                 Attendance Sheet
               </Link>
             </p>
-          </div>
-          <div className="att-menu">
-            <span>Analyze</span>
-            <p
-              className="am"
-              style={
-                pathname === "/teacher-dashboard"
-                  ? { backgroundColor: "#f9f6b8" }
-                  : {}
-              }
-            >
-              <Link to="/teacher-dashboard">
-                <img
-                  src={`${process.env.PUBLIC_URL}/images/dashboard.png`}
-                  alt="dashboard"
-                />
-                Dashboard
-              </Link>
-            </p>
             <p
               className="am"
               style={
@@ -62,6 +64,7 @@ const TeacherSidebar = () => {
                   ? { backgroundColor: "#f9f6b8" }
                   : {}
               }
+              onClick={() => toggleMenu()}
             >
               <Link to="/teacher-marksheet" className="report">
                 <img
@@ -84,15 +87,16 @@ const TeacherSidebar = () => {
                 pathname === "/teacher-generatecard"
                   ? { backgroundColor: "#f9f6b8" }
                   : {}
-              }>
+              }
+              onClick={() => toggleMenu()}>
                 <Link to="/teacher-generatecard" className="report ms-3">
-                  <span><FaRegEdit size={18} /></span>
+                  <span><FaRegEdit size={25} /></span>
                   Generate Report
                 </Link>
               </p>
             ) : null}
           </div>
-          <div className="att-menu">
+          {/* <div className="att-menu">
             <span>Manage</span>
             <p
               className="am"
@@ -110,7 +114,7 @@ const TeacherSidebar = () => {
                 Student
               </Link>
             </p>
-          </div>
+          </div> */}
         </div>
         <button
           data-bs-toggle="tooltip"

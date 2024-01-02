@@ -1,7 +1,8 @@
 const express = require('express')
 const isEmpty = require('is-empty')
 const router = express.Router()
-
+//config
+const passportAuth = require('../config/passport')
 //validation
 const teacherValid = require('../validation/teacher.validation')
 //controller
@@ -10,9 +11,11 @@ const teacherCtrl = require('../controller/teacher.controller')
 //teacher-login
 router.route('/teacher-register').post(teacherValid.teacherregisterValid,teacherCtrl.createteacher);
 router.route('/teacher-login').post(teacherValid.teacherloginValid,teacherCtrl.teacherLogin);
+router.route('/changepassword').post(passportAuth, teacherValid.changepasswordValid, teacherCtrl.changePassword);
 router.route('/findsection').post(teacherValid.findsectionValid,teacherCtrl.findSection);
 router.route('/daily-attendance').post(teacherCtrl.dailyattendance);
 router.route('/marksheet').post(teacherCtrl.createmarksheet);
+router.route('/marksheet-update').post(teacherCtrl.updatemarksheet);
 router.route('/find-marksheet').post(teacherValid.findmarksectionValid,teacherCtrl.findmarksheet);
 router.route('/findsectionformarks').post(teacherValid.findmarksectionValid,teacherCtrl.findSectionforMarks);
 

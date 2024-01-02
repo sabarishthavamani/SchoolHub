@@ -74,7 +74,7 @@ function App() {
           <Route path="/teacher-signup" element={<ConditionRoute type="public"><TeacherSignup /></ConditionRoute>} />
           <Route path="/teacher-attendance" element={<ConditionRoute type="private2"><StudentAttendance /></ConditionRoute>} />
           <Route path="/teacher-marksheet" element={<ConditionRoute type="private2"><StudentMarksheet /></ConditionRoute>} />
-          <Route path="/teacher-dashboard/:teacherId" element={<ConditionRoute type="private2"><TeacherDashboard /></ConditionRoute>} />
+          <Route path="/teacher-dashboard+teacherId" element={<ConditionRoute type="private2"><TeacherDashboard /></ConditionRoute>} />
           <Route path="/student-login" element={<ConditionRoute type="private2"><StudentLogin /></ConditionRoute>} />
           <Route path="/student-signup" element={<ConditionRoute type="private2"><StudentSignup /></ConditionRoute>} />
           <Route path="/parent-login" element={<ConditionRoute type="private2"><ParentLogin /></ConditionRoute>} />

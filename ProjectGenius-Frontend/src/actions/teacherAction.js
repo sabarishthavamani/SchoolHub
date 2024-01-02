@@ -145,3 +145,22 @@ export const findmarksheet = async (Data) => {
     }
 }
 }
+export const updatemarksheet = async (Data) => {
+
+    try {
+        let respData = await axios({
+            'url': '/marksheet-update',
+            'method': 'post',
+            'data':Data
+        })
+        return {
+            'status': respData.data.status,
+            'message': respData.data.message,
+        }
+    } catch (err) {
+        return {
+            'status': err.response.data.status,
+            'message': err.response.data.message,
+    }
+}
+}

@@ -106,13 +106,13 @@ const renderBody = () => {
       <>
       <TeacherHeader />
         <div className="teacher">  
- <TeacherSidebar/>
+ <TeacherSidebar />
   <div className="teacher-content" style={{ background: "#f7f7f8" }}>
     <div className="header" style={{ width: "100%" }}>
       <div className="l-header">
         <p>Teacher Time Table</p>
       </div>
-      {/* <div className="r-header" style={{ width: 600 }}>
+      <div className="r-header" style={{ width: 600 }}>
         <input type="search" placeholder="search" />
         <img src="images/filter.png" />
         <a href="#" className="notify">
@@ -137,21 +137,21 @@ const renderBody = () => {
           <span style={{ color: "#ccc" }}>Admin</span>
         </div>
         <img src="images/Profile photo.png" alt="" title="profile" />
-      </div> */}
+      </div>
     </div>
     <div className="time-table-content">
       <div className="time-header">
         <p style={{ fontSize: 15, fontWeight: 600 }}>Time Table</p>
-        <div className="time-buttons">
+        {/* <div className="time-buttons">
           <button style={{ color: "#605bff" }} onClick={EditSchedule}>
             <i className="fa fa-pencil" style={{ marginRight: 10 }} onClick={EditSchedule}/>
             Edit
           </button>
-          {/* <button style={{ color: "hotpink" }} onClick={AssignSchedule}>
+          <button style={{ color: "hotpink" }} onClick={AssignSchedule}>
             <FontAwesomeIcon icon={faCalendarDays} style={{ marginRight: 10 }} onClick={AssignSchedule}/>
             Assign Schedule
-          </button> */}
-        </div>
+          </button>
+        </div> */}
       </div>
       <table className="time-table" border={1}>
         <thead>

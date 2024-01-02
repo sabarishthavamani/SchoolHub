@@ -37,6 +37,31 @@ const teacherregisterValid = (req, res, next) => {
 
     return next();
 }
+const changepasswordValid = (req, res, next) => {
+    let errors = {};
+    let passwordRegex = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,16}$/;
+    console.log(req.body, '----req.body')
+    if (isEmpty(req.body.password)) {
+        errors.password = 'Please enter your password'
+    } 
+
+    if (isEmpty(req.body.newpassword)) {
+        errors.newpassword = 'Please enter your  new password'
+    } else if (!passwordRegex.test(req.body.newpassword)) {
+        errors.newpassword = 'Password should be atleast One Uppercase, Lowercase, numbers and special characters, Minimum 8 to Maxximum 16 letters alloewd only';
+    }
+
+    if (isEmpty(req.body.confirmpassword)) {
+        errors.confirmpassword = 'Please re-enter your new password'
+    } else if (req.body.newpassword != req.body.confirmpassword) {
+        errors.confirmpassword = 'Confirm Password Not Same';
+    }
+
+    if (isEmpty(errors) == false) {
+        return res.status(400).json({ 'status': false, 'errors': errors })
+    }
+    return next();
+}
 const findsectionValid = (req,res,next) =>{
     let errors = {};
 
@@ -78,5 +103,6 @@ module.exports = {
     teacherloginValid,
     teacherregisterValid,
     findsectionValid,
-    findmarksectionValid
+    findmarksectionValid,
+    changepasswordValid
 }

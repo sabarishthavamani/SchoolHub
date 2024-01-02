@@ -30,8 +30,8 @@ const createteacher = async (req, res) => {
 }
 const teacherLogin = async (req, res) => {
     try {
-        const admin = await Teacher.findOne({ 'teacherId': req.body.teacherId }).lean(); 
-        const teacher = await TeacherAdmission.findOne({ 'teacherId': req.body.teacherId },{name:1,teacherphoto:1,teacherId:1}).lean(); 
+        const admin = await Teacher.findOne({ 'teacherId': req.body.teacherId }).lean();
+        const teacher = await TeacherAdmission.findOne({ 'teacherId': req.body.teacherId }, { name: 1, teacherphoto: 1, teacherId: 1 }).lean();
         teacher.teacherphoto = `${config.IMAGE.TEACHER_FILE_URL_PATH}/${teacher.teacherphoto}`;
         // console.log(teacher,'---teacher')
         if (!admin) {
@@ -43,7 +43,7 @@ const teacherLogin = async (req, res) => {
         }
         let payload = { _id: admin._id }
         let token = jwtSign(payload)
-        return res.status(200).json({ 'status': true, 'message': 'Login Successfully', token, 'result':teacher });
+        return res.status(200).json({ 'status': true, 'message': 'Login Successfully', token, 'result': teacher });
     } catch (err) {
         console.log(err);
         return res.status(500).json({ 'status': false, 'message': 'Error on the server' });
@@ -70,87 +70,118 @@ const jwtVerify = (token) => {
         }
     }
 }
+
+const changePassword = async (req, res) => {
+
+    let checkUser = await Teacher.findOne({ 'teacherId': req.user.teacherId }).lean();
+    if (!checkUser) {
+        return res.status(400).json({ 'status': false, 'message': 'Invalid User' });
+    }
+
+    const comparePassword = await bcrypt.compare(req.body.password, checkUser.password);
+    if (!comparePassword) {
+        return res.status(400).json({ 'status': false, 'errors': { 'password': 'Your Old Password is Wrong.' } });
+    }
+    const salt = bcrypt.genSaltSync(10);
+    const hash = bcrypt.hashSync(req.body.newpassword, salt);
+    const changepassword = await Teacher.findOneAndUpdate({ _id: req.user._id }, { $set: { 'password': hash } });
+    console.log(changepassword);
+    return res.status(200).json({ 'status': true, 'message': "Password changed successfully" })
+}
+
 const findSection = async (req, res) => {
     try {
-        const { section, admissiongrade,date } = req.body;
-        console.log(req.body,'---body')
-        let checksection = await GroupSection.findOne({ section,admissiongrade }).lean()
+        const { section, admissiongrade, date } = req.body;
+        console.log(req.body, '---body')
+        let checksection = await GroupSection.findOne({ section, admissiongrade }).lean()
         // console.log(checksection,'----sec')
         if (isEmpty(checksection)) {
             return res.status(400).json({ 'status': false, 'errors': { 'section': 'Selected Section Not Exist' } })
         }
-        const result = await GroupSection.find({ section, admissiongrade },{students:1}).lean();
-        const attendanceData = await Attendance.findOne({admissiongrade,section,date},{attendance:1}).lean()
-        console.log(attendanceData,'--attt')
-        return res.status(200).json({ 'status': true, 'result': result, 'result2':attendanceData });
+        const result = await GroupSection.find({ section, admissiongrade }, { students: 1 }).lean();
+        const attendanceData = await Attendance.findOne({ admissiongrade, section, date }, { attendance: 1 }).lean()
+        console.log(attendanceData, '--attt')
+        return res.status(200).json({ 'status': true, 'result': result, 'result2': attendanceData });
     } catch (err) {
-        console.log(err,'--err')
+        console.log(err, '--err')
         return res.status(500).json({ 'status': false, 'message': 'Error on the Server' });
     }
 }
-const dailyattendance = async (req,res) =>{
-    try{
-        const attendanceData  = new Attendance ({
-            'admissiongrade':req.body.admissiongrade,
-            'section':req.body.section,
-            'date':req.body.date,
-             'attendance':req.body.attendance
+const dailyattendance = async (req, res) => {
+    try {
+        const attendanceData = new Attendance({
+            'admissiongrade': req.body.admissiongrade,
+            'section': req.body.section,
+            'date': req.body.date,
+            'attendance': req.body.attendance
         })
         await attendanceData.save()
         // console.log(attendanceData,'---data')
-        return res.status(200).json({'status':true,'message':`Attendence for ${req.body.date} submitted successfully`})
-    }catch(err) {
-        console.log(err,'---err')
-        return res.status(500).json({'status':false,'message':'Error on the Server'});
-    }
-} 
-const createmarksheet = async (req,res) =>{
-    try{
-        const marksheetData  = new MarkSheet({
-            'admissiongrade':req.body.admissiongrade,
-            'section':req.body.section,
-            'exam':req.body.exam,
-            'marks':req.body.marks
-        })
-        await marksheetData.save()
-        console.log(marksheetData,'---data')
-        return res.status(200).json({'status':true,'message':`Marks for ${req.body.exam} submitted successfully`})
-    }catch(err) {
-        console.log(err,'---err')
-        return res.status(500).json({'status':false,'message':'Error on the Server'});
+        return res.status(200).json({ 'status': true, 'message': `Attendence for ${req.body.date} submitted successfully` })
+    } catch (err) {
+        console.log(err, '---err')
+        return res.status(500).json({ 'status': false, 'message': 'Error on the Server' });
     }
 }
-const findmarksheet = async (req,res) =>{
-    try{
-        console.log(req.body,'---body')
-        const {admissiongrade,section,exam} = req.body;
-        const MarksheetData = await MarkSheet.findOne({admissiongrade,section,exam}).lean();
-        console.log(MarksheetData,'---data')
+const createmarksheet = async (req, res) => {
+    try {
+        const marksheetData = new MarkSheet({
+            'admissiongrade': req.body.admissiongrade,
+            'section': req.body.section,
+            'exam': req.body.exam,
+            'marks': req.body.marks
+        })
+        await marksheetData.save()
+        console.log(marksheetData, '---data')
+        return res.status(200).json({ 'status': true, 'message': `Marks for ${req.body.exam} submitted successfully` })
+    } catch (err) {
+        console.log(err, '---err')
+        return res.status(500).json({ 'status': false, 'message': 'Error on the Server' });
+    }
+}
+const updatemarksheet = async (req, res) => {
+    try {
+        console.log(req.body, '---body')
+        const { admissiongrade, section, exam, marks } = req.body;
+            const updatemarksheetData = await MarkSheet.findOneAndUpdate({ admissiongrade, section, exam }, { $set: { marks: marks } })
+            console.log(updatemarksheetData, '---data')
+            return res.status(200).json({ 'status': true, 'message': `Marks Updated Successfully` })
+    } catch (err) {
+        console.log(err, '---err')
+        return res.status(500).json({ 'status': false, 'message': 'Error on the Server' });
+    }
+}
+const findmarksheet = async (req, res) => {
+    try {
+        console.log(req.body, '---body')
+        const { admissiongrade, section, exam } = req.body;
+        const MarksheetData = await MarkSheet.findOne({ admissiongrade, section, exam }).lean();
+        console.log(MarksheetData, '---data')
         if (isEmpty(MarksheetData)) {
             return res.status(400).json({ 'status': false, 'errors': { 'exam': 'Selected Exam Result Not Generated Yet' } })
         }
-        return res.status(200).json({'status':true,'result':MarksheetData})
-    }catch(err) {
-        console.log(err,'---err')
-        return res.status(500).json({'status':false,'message':'Error on the Server'});
+        return res.status(200).json({ 'status': true, 'result': MarksheetData })
+    } catch (err) {
+        console.log(err, '---err')
+        return res.status(500).json({ 'status': false, 'message': 'Error on the Server' });
     }
 }
 const findSectionforMarks = async (req, res) => {
     try {
-        const { section, admissiongrade,exam } = req.body;
-        console.log(req.body,'---body')
-        let checksection = await GroupSection.findOne({ section,admissiongrade}).lean()
+        const { section, admissiongrade, exam } = req.body;
+        console.log(req.body, '---body')
+        let checksection = await GroupSection.findOne({ section, admissiongrade }).lean()
         // console.log(checksection,'----sec')
         if (isEmpty(checksection)) {
             return res.status(400).json({ 'status': false, 'errors': { 'section': 'Selected Section Not Exist' } })
         }
-        const SectionData = await GroupSection.findOne({ section, admissiongrade },{students:1}).lean();
-        console.log(SectionData,'--sec')
-        const MarksheetData = await MarkSheet.findOne({admissiongrade,section,exam},{marks:1}).lean()
-        console.log(MarksheetData,'--mark')
+        const SectionData = await GroupSection.findOne({ section, admissiongrade }, { students: 1 }).lean();
+        console.log(SectionData, '--sec')
+        const MarksheetData = await MarkSheet.findOne({ admissiongrade, section, exam }, { marks: 1 }).lean()
+        console.log(MarksheetData, '--mark')
         return res.status(200).json({ 'status': true, 'result': SectionData, 'result2': MarksheetData });
     } catch (err) {
-        console.log(err,'--err')
+        console.log(err, '--err')
         return res.status(500).json({ 'status': false, 'message': 'Error on the Server' });
     }
 }
@@ -159,9 +190,11 @@ module.exports = {
     teacherLogin,
     jwtSign,
     jwtVerify,
+    changePassword,
     findSection,
     dailyattendance,
     createmarksheet,
     findmarksheet,
-    findSectionforMarks
+    findSectionforMarks,
+    updatemarksheet
 }

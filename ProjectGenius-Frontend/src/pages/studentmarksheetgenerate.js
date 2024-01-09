@@ -1,10 +1,12 @@
 import React, { useReducer, useState } from "react";
+import { useNavigate } from "react-router-dom";
+//import Components
 import TeacherHeader from "./components/teachernavbar";
 import TeacherSidebar from "./components/teachersidebar";
+//import Actions
 import { findsectionformarks, savemarksheet } from "../actions/teacherAction";
+//import Lib
 import toastAlert from "../lib/toast";
-import { useNavigate } from "react-router-dom";
-
 
 const reducer = (state, action) => {
   switch (action.type) {

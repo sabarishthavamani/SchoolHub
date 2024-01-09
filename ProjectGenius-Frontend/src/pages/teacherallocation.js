@@ -1,4 +1,4 @@
-import React, {  useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Table from 'react-bootstrap/Table';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -20,21 +20,19 @@ const initialValue = {
   role: '',
   className: '',
   section: '',
-  subjects:'',
+  subjects: '',
 };
 
 
 const TeacherAllocation = () => {
+  //state
   const [teacherHandles, setTeacherHandles] = useState([]);
   const [formValue, setFormValue] = useState({});
-  const [data,setData] = useState('');
-
-  const [allocateDetails, setAllocateDetails] = useState({...initialValue})
+  const [data, setData] = useState('');
+  const [allocateDetails, setAllocateDetails] = useState({ ...initialValue })
   const [allocateList, setAllocateList] = useState([])
   const [wholeClass, setWholeclass] = useState([])
-
-
-
+  //state for ErrorMsg
   const [errorMsg, setErrorMsg] = useState({
     role: false,
     className: false,
@@ -45,15 +43,14 @@ const TeacherAllocation = () => {
   const { Id } = useParams();
 
   const navigate = useNavigate();
-  
- 
-  const { name, teacherId} = formValue;
 
-  const {role, className, section, subjects} = allocateDetails
+  const { name, teacherId } = formValue;
+
+  const { role, className, section, subjects } = allocateDetails
 
   const handleInputValue = (e) => {
     const { name, value } = e.target;
-    setAllocateDetails(prev => ({...prev, [name]:value}))
+    setAllocateDetails(prev => ({ ...prev, [name]: value }))
   }
 
   const isDataAlreadyAllocated = (selectedClass, selectedSection, selectedRole) => {
@@ -74,11 +71,11 @@ const TeacherAllocation = () => {
     // Check if the selected role is 'Class Teacher' and if there's already data for that role
     const isClassTeacher = allocateDetails.role === 'Class Teacher';
     const existingClassTeacherData = allocateList.find(item => item.role === 'Class Teacher');
-    
+
     if (isClassTeacher && existingClassTeacherData) {
       // Display confirmation message
       const [action] = await AlertConfirm("He/She already allocated as a Class Teacher. Are you sure you want to replace it? This will delete the previous data.");
-    
+
       if (action) {
         // User confirmed, filter out the existing class teacher data
         const updatedList = allocateList.filter(item => item.role !== 'Class Teacher');
@@ -100,8 +97,8 @@ const TeacherAllocation = () => {
       }
     }
   };
-  
-  
+
+
   const getData = async (id) => {
     try {
       let { status, result } = await getSingleteacher(id)
@@ -117,39 +114,39 @@ const TeacherAllocation = () => {
   };
   useEffect(() => {
     getData(Id)
-;
+      ;
   }, []);
 
   const getClass = async () => {
-    try{
-    const Classdata = {
-      teacherId:teacherId
-    }
-    let {status,result } = await findClass(Classdata)
-    if(status === true){
-      setAllocateList(result.status)
-    }
-    }catch(err){
-      console.log(err,'--err')
+    try {
+      const Classdata = {
+        teacherId: teacherId
+      }
+      let { status, result } = await findClass(Classdata)
+      if (status === true) {
+        setAllocateList(result.status)
+      }
+    } catch (err) {
+      console.log(err, '--err')
     }
   }
-  useEffect(()=>{
+  useEffect(() => {
     getClass()
-  },[teacherId])
+  }, [teacherId])
   const getWholeClass = async () => {
-    try{
-    let {status,result } = await findWholeClass()
-    if(status === true){
-      setWholeclass(result)
-    }
-    }catch(err){
-      console.log(err,'--err')
+    try {
+      let { status, result } = await findWholeClass()
+      if (status === true) {
+        setWholeclass(result)
+      }
+    } catch (err) {
+      console.log(err, '--err')
     }
   }
-  useEffect(()=>{
+  useEffect(() => {
     getWholeClass()
-  },[])
- console.log(wholeClass,'----wclass')
+  }, [])
+  console.log(wholeClass, '----wclass')
   const handleSubmit = async () => {
     const data = {
       name,
@@ -158,7 +155,7 @@ const TeacherAllocation = () => {
     }
 
     setAllocateList([])
-    
+
     try {
       let { status, message } = await teacherAllocation(data);
       if (status === true) {
@@ -171,66 +168,66 @@ const TeacherAllocation = () => {
     }
   };
 
-  
-function renderTableView() {
 
-  const handleDel = (id) => {
-    const updatedList = allocateList.filter(item => item.id !== id)
-    setAllocateList(updatedList)
-}
+  function renderTableView() {
 
- //confirmation pop-up box
- const openBasic = async (Id) => {
-  const [action] = await AlertConfirm("Are you sure, you want to delete it");
-  // action
-  if (action) {
-    handleDel(Id);
+    const handleDel = (id) => {
+      const updatedList = allocateList.filter(item => item.id !== id)
+      setAllocateList(updatedList)
+    }
+
+    //confirmation pop-up box
+    const openBasic = async (Id) => {
+      const [action] = await AlertConfirm("Are you sure, you want to delete it");
+      // action
+      if (action) {
+        handleDel(Id);
+      }
+    };
+    return (
+      <div className="teacher-allocate-table">
+        <Table striped bordered hover stickyHeader>
+          <thead>
+            <tr>
+              <th>Grade</th>
+              <th>Role</th>
+              <th>Subject</th>
+              <th>Delete</th>
+            </tr>
+          </thead>
+          <tbody>
+            {allocateList.map((item) => {
+              return (
+                <tr key={item.id}>
+                  <td>{`${item.className} - ${item.section}`}</td>
+                  <td>{item.role}</td>
+                  <td>{item.subjects}</td>
+                  <td className="text-center">
+                    <button type="button" className="del-btn" onClick={() => openBasic(item.id)}>
+                      <FontAwesomeIcon icon={faTrash} />
+                    </button>
+                  </td>
+                </tr>
+              )
+            })}
+          </tbody>
+        </Table>
+      </div>
+    );
   }
-};
-  return (
-    <div className="teacher-allocate-table">
-    <Table striped bordered hover stickyHeader>
-      <thead>
-        <tr>
-          <th>Grade</th>
-          <th>Role</th>
-          <th>Subject</th>
-          <th>Delete</th>
-        </tr>
-      </thead>
-      <tbody>
-        {allocateList.map((item) => {
-      return(
-        <tr key={item.id}>
-          <td>{`${item.className} - ${item.section}`}</td>
-          <td>{item.role}</td>
-          <td>{item.subjects}</td>
-          <td className="text-center">
-            <button type="button" className="del-btn" onClick={() => openBasic(item.id)}>
-            <FontAwesomeIcon icon={faTrash} />
-            </button>
-          </td>
-        </tr>
-      )
-    })}
-    </tbody>
-    </Table>
-    </div>
-  );
-}
 
-const handleError = (e) => {
-  let name = e.target.name
-  if (allocateDetails[name] === '') {
-    setErrorMsg(prev => ({...prev,  [e.target.name]: true }))
-  } else {
-    setErrorMsg(prev => ({...prev,  [e.target.name]: false }))
+  const handleError = (e) => {
+    let name = e.target.name
+    if (allocateDetails[name] === '') {
+      setErrorMsg(prev => ({ ...prev, [e.target.name]: true }))
+    } else {
+      setErrorMsg(prev => ({ ...prev, [e.target.name]: false }))
+    }
   }
-}
 
-const disableAddBtn = role !== '' && subjects !== '' && className !== '' && section !== ''
+  const disableAddBtn = role !== '' && subjects !== '' && className !== '' && section !== ''
 
-console.log(errorMsg, "mohan")
+  console.log(errorMsg, "mohan")
 
 
   return (
@@ -299,11 +296,11 @@ console.log(errorMsg, "mohan")
                 <label htmlFor="section">
                   Section<sup>*</sup>
                 </label>
-                <select 
-                name="section" 
-                value={section} 
-                onChange={handleInputValue}
-                onBlur={handleError}
+                <select
+                  name="section"
+                  value={section}
+                  onChange={handleInputValue}
+                  onBlur={handleError}
                 >
                   <option value="">Select</option>
                   <option>A</option>
@@ -319,11 +316,11 @@ console.log(errorMsg, "mohan")
                 <label htmlFor="role">
                   Teacher Role<sup>*</sup>
                 </label>
-                <select 
-                name="role" 
-                value={role} 
-                onChange={handleInputValue}
-                onBlur={handleError}
+                <select
+                  name="role"
+                  value={role}
+                  onChange={handleInputValue}
+                  onBlur={handleError}
                 >
                   <option value="">Select</option>
                   <option>Class Teacher</option>
@@ -356,10 +353,10 @@ console.log(errorMsg, "mohan")
             </form>
             {renderTableView()}
             <div className="teacher-allocation-btn">
-                <button type="button" onClick={handleSubmit}>
-                  Submit
-                </button>
-              </div>
+              <button type="button" onClick={handleSubmit}>
+                Submit
+              </button>
+            </div>
           </div>
         </div>
       </div>

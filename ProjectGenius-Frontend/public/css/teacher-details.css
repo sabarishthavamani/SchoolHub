@@ -438,7 +438,7 @@ tr.status-table-row {
 
  /* teacher attendance  */
 .teacher-attendance {
-    width: 50%;
+    width: 100%;
     background: #ffffff;
     padding: 20px 28px;
     border-radius: 12px;
@@ -490,9 +490,7 @@ tr.status-table-row {
 .monthlypara{
     color: rgb(255, 128, 166);
     font-weight: 600;
-    position: relative;
-    top: -25px;
-    left: 22px;
+    text-align: left;
 }
 .monthly-content {
     width: 100%;
@@ -514,14 +512,21 @@ tr.status-table-row {
     background:rgb(255, 128, 166); 
     border-radius: 10px;
   }
-.calender-over-lay {
+.claender-container {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     width: 100%;
     height: 100vh;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+.calender-over-lay {
     background-color: #00000080;
+    width: 100%;
+    height: 100%;
     position: absolute;
     top: 0;
     left: 0;

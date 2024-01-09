@@ -39,6 +39,9 @@ import TeacherDashboard from './pages/teacherdashboard';
 import MultiSectionAllocation from './pages/multisectionallocation';
 import TeacherAllocation from './pages/teacherallocation';
 import GenerateReport from './pages/studentmarksheetgenerate';
+import TeacherChangepassword from './pages/teacherchangepassword';
+import TeacherForgetpassword from './pages/teacherforgetpassword';
+import TeacherResetpassword from './pages/teacherresetpassword';
 
 function App() {
   return (
@@ -72,9 +75,12 @@ function App() {
           <Route path="/multi-sectionallocate" element={<ConditionRoute type="private"><MultiSectionAllocation /></ConditionRoute>} />
           <Route path="/teacher-login" element={<ConditionRoute type="public"><TeacherLogin /></ConditionRoute>} />
           <Route path="/teacher-signup" element={<ConditionRoute type="public"><TeacherSignup /></ConditionRoute>} />
+          <Route path="/teacher-changepassword" element={<ConditionRoute type="private2"><TeacherChangepassword /></ConditionRoute>} />
+          <Route path="/teacher-forgetpassword" element={<ConditionRoute type="public"><TeacherForgetpassword /></ConditionRoute>} />
+          <Route path="/teacher-resetpassword/:Id" element={<ConditionRoute type="public"><TeacherResetpassword /></ConditionRoute>} />
           <Route path="/teacher-attendance" element={<ConditionRoute type="private2"><StudentAttendance /></ConditionRoute>} />
           <Route path="/teacher-marksheet" element={<ConditionRoute type="private2"><StudentMarksheet /></ConditionRoute>} />
-          <Route path="/teacher-dashboard+teacherId" element={<ConditionRoute type="private2"><TeacherDashboard /></ConditionRoute>} />
+          <Route path="/teacher-dashboard" element={<ConditionRoute type="private2"><TeacherDashboard /></ConditionRoute>} />
           <Route path="/student-login" element={<ConditionRoute type="private2"><StudentLogin /></ConditionRoute>} />
           <Route path="/student-signup" element={<ConditionRoute type="private2"><StudentSignup /></ConditionRoute>} />
           <Route path="/parent-login" element={<ConditionRoute type="private2"><ParentLogin /></ConditionRoute>} />

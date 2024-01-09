@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import Sidebar from "./components/sidebar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsis } from "@fortawesome/free-solid-svg-icons";
-
-//lib
+//import lib
 import toastAlert from "../lib/toast";
+//import Action
 import {
   createAttendance,
   deleteTeacher,
   findAttendance,
   viewTeacher,
 } from "../actions/adminAction";
-
+//import components
+import Sidebar from "./components/sidebar";
 //Pop up package
 import "react-alert-confirm/lib/style.css";
 import AlertConfirm, { Button } from "react-alert-confirm";

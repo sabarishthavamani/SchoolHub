@@ -566,8 +566,7 @@ const findteacherSchedule = async (req, res) => {
 };
 const findFixedSchedule = async (req, res) => {
     try {
-        const { teacherId } = req.query; // Access query parameters
-        // Now you can use teacherId to find the fixed schedule
+        const { teacherId } = req.query; 
         const findresult = await Schedule.findOne({ 'teacherId': teacherId }).lean();
 
         return res.status(200).json({ 'status': true, "result": findresult });

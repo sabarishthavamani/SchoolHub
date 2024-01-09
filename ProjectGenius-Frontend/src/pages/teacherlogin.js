@@ -118,6 +118,7 @@ const TeacherLogin = () => {
             </form>
           </div>
         <p>Don't Have an Account..!<Link to={'/teacher-signup'} >SignUp Here</Link></p>
+        <p>Forget Password..!<Link to={'/teacher-forgetpassword'} >Click Here</Link></p>
         </div>
       </div>      
       

@@ -1,12 +1,13 @@
 import React, { useState } from "react";
-import { FaEdit, FaEye } from "react-icons/fa";
-//components
+import { FaEdit } from "react-icons/fa";
+//import Components
 import TeacherHeader from "./components/teachernavbar";
 import TeacherSidebar from "./components/teachersidebar";
-//Actions
+//import Actions
 import { findmarksheet, updatemarksheet } from "../actions/teacherAction";
-//Lib
+//import Lib
 import toastAlert from "../lib/toast";
+//import Components
 import EditMarkPopUp from "./components/editmarkpopup";
 
 const initialFormValue = {

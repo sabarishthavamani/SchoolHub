@@ -1,20 +1,21 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Form from 'react-bootstrap/Form';
-//import lib
+//import Lib
 import toastAlert from '../lib/toast';
+import { removeAuthToken } from '../lib/localstorage';
 //import Actions
-import { teachersignup } from '../actions/teacherAction';
+import { changepassword } from '../actions/teacherAction';
 //import pacakages
 import isEmpty from 'is-empty';
 
 const initialFormValue = {
-    teacherId: '',
     password: '',
+    newpassword:'',
     confirmpassword:'',
 }
 
-const TeacherSignup = () => {
+const TeacherChangepassword = () => {
     // hooks
     const navigate = useNavigate();
     // state
@@ -22,7 +23,7 @@ const TeacherSignup = () => {
     const [errors, setErrors] = useState({});
     const [inputErrors,setInputErrors] = useState({});
     //destructuring
-    const { teacherId, password, confirmpassword } = formValue;
+    const { password, newpassword, confirmpassword } = formValue;
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -36,22 +37,23 @@ const TeacherSignup = () => {
         try {
 
             let data = {
-                teacherId: teacherId,
                 password: password,
+                newpassword: newpassword,
                 confirmpassword: confirmpassword,
             }
-            let { status, message, errors } = await teachersignup(data)
+            let { status, message, errors } = await changepassword(data)
             if (status === true) {
                 setFormValue(initialFormValue)
                 setErrors({})
                 toastAlert('success',message)
+                removeAuthToken()
                 navigate('/teacher-login')         
             } else if (status === false) {
                 if (errors) {
                     setErrors(errors)
                     setInputErrors((prevErrors) => ({
                       ...prevErrors,
-                      teacherId:errors.teacherId,
+                      newpassword:errors.newpassword,
                       password:errors.password,
                       confirmpassword:errors.confirmpassword,
                     }))
@@ -71,7 +73,7 @@ const TeacherSignup = () => {
         <div className="leftcontent">
           <img className="ellipse" src="images/Ellipse 17.svg" />
           <img className="ell" src="images/Ellipse 17.png" />
-          <img className="tech" src="images/teacher-signup.png" />
+          <img className="tech" src="images/changepassword.png" />
         </div>
         <div className="rightcontent">
           <div className="sign-in">
@@ -82,20 +84,7 @@ const TeacherSignup = () => {
                   <h2>Genius</h2>
                 </span>
               </div>
-              <h3>Teacher Sign In</h3>
-               <Form.Group controlId="formEmail" className="field">
-                            <Form.Label>TeacherId</Form.Label>
-                            <Form.Control
-                                type="teacherId"
-                                placeholder="Enter Your TeacherId"
-                                name="teacherId"
-                                value={teacherId}
-                                onChange={handleChange}
-                                isInvalid={(inputErrors && inputErrors.teacherId) && isValid(inputErrors.teacherId)} 
-                            />
-                            <Form.Control.Feedback type="invalid">{inputErrors && inputErrors.teacherId}
-                            </Form.Control.Feedback>
-                        </Form.Group>
+              <h3>Change Password</h3>
                <Form.Group controlId="formEmail" className="field">
                             <Form.Label className='form-lable'>Password</Form.Label>
                             <Form.Control
@@ -110,10 +99,23 @@ const TeacherSignup = () => {
                             </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group controlId="formEmail" className="field">
+                            <Form.Label>New Password</Form.Label>
+                            <Form.Control
+                                type="password"
+                                placeholder="Enter Your New Password"
+                                name="newpassword"
+                                value={newpassword}
+                                onChange={handleChange}
+                                isInvalid={(inputErrors && inputErrors.newpassword) && isValid(inputErrors.newpassword)} 
+                            />
+                            <Form.Control.Feedback type="invalid">{inputErrors && inputErrors.newpassword}
+                            </Form.Control.Feedback>
+                        </Form.Group>
+                        <Form.Group controlId="formEmail" className="field">
                             <Form.Label className='form-lable'>Confirm Password</Form.Label>
                             <Form.Control
                                  type='password'
-                                placeholder="Enter Your Confirm Password"
+                                placeholder="Re-Enter Your New Password"
                                 name="confirmpassword"
                                 value={confirmpassword}
                                 onChange={handleChange}
@@ -131,6 +133,6 @@ const TeacherSignup = () => {
     )
 }
 
-export default TeacherSignup;
+export default TeacherChangepassword;
 
 

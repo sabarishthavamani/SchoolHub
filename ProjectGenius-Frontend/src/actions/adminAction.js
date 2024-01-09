@@ -581,7 +581,7 @@ export const getfixedschedule = async (data) => {
       let respData = await axios({
         url: '/getfixedschedule',
         method: 'get',
-        params: data // Use params for GET requests
+        params: data
       });
   
       return {

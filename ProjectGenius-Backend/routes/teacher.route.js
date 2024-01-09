@@ -11,6 +11,8 @@ const teacherCtrl = require('../controller/teacher.controller')
 //teacher-login
 router.route('/teacher-register').post(teacherValid.teacherregisterValid,teacherCtrl.createteacher);
 router.route('/teacher-login').post(teacherValid.teacherloginValid,teacherCtrl.teacherLogin);
+router.route('/forgetpassword').post(teacherValid.forgetpasswordValid,teacherCtrl.forgetpassword);
+router.route('/resetpassword').post(teacherValid.resetpasswordValid,teacherCtrl.resetpassword);
 router.route('/changepassword').post(passportAuth, teacherValid.changepasswordValid, teacherCtrl.changePassword);
 router.route('/findsection').post(teacherValid.findsectionValid,teacherCtrl.findSection);
 router.route('/daily-attendance').post(teacherCtrl.dailyattendance);

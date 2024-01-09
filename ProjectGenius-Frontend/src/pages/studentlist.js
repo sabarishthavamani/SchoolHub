@@ -3,28 +3,21 @@ import { useNavigate } from "react-router-dom";
 import Sidebar from "./components/sidebar";
 //fontawesome pacakage
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faEllipsis,
-  faMoneyCheck,
-  faSchool,
-  faSection,
-  faSort,
-} from "@fortawesome/free-solid-svg-icons";
+import { faEllipsis, faMoneyCheck, faSchool, faSort } from "@fortawesome/free-solid-svg-icons";
 //react confirm pop-up package
 import "react-alert-confirm/lib/style.css";
 import AlertConfirm, { Button } from "react-alert-confirm";
-//import actions
-import { viewStudent, deleteStudent } from "../actions/adminAction";
-//components
-import StudentInfo from "./components/StudentInfo";
-//lib
-import toastAlert from "../lib/toast";
-
+//material UI components
 import Badge from "@mui/material/Badge";
 import SwitchAccountRounded from "@mui/icons-material/SwitchAccountRounded";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { ArrowRightAltOutlined } from "@mui/icons-material";
-
+//import Actions
+import { viewStudent, deleteStudent } from "../actions/adminAction";
+//impotr Components
+import StudentInfo from "./components/StudentInfo";
+//import Lib
+import toastAlert from "../lib/toast";
 
 const Students = () => {
   const [data, setData] = useState([]);
@@ -58,14 +51,14 @@ const Students = () => {
       formattedData,
       sortGrade,
     };
-    navigate('/multi-sectionallocate', {state : {studentData}})
+    navigate('/multi-sectionallocate', { state: { studentData } })
   };
 
   const renderUserView = () => {
     if (loaderView) {
       return (
         <div className="loader-view-container">
-         <div class="spinner-box">
+          <div class="spinner-box">
             <div class="pulse-container">
               <div class="pulse-bubble pulse-bubble-1"></div>
               <div class="pulse-bubble pulse-bubble-2"></div>
@@ -156,10 +149,10 @@ const Students = () => {
               {data &&
                 data.length > 0 &&
                 studentData.map((item, key) => {
-                   // Check if the studentId is present in any section
-              const sectionForStudent = section.find(sec =>
-                sec.students.some(student => student.studentId === item.studentId)
-              );
+                  // Check if the studentId is present in any section
+                  const sectionForStudent = section.find(sec =>
+                    sec.students.some(student => student.studentId === item.studentId)
+                  );
                   return (
                     <tr className="std-row" key={key}>
                       <td>
@@ -197,8 +190,8 @@ const Students = () => {
                         <span className="grade">{item.admissiongrade}</span>
                       </td>
                       <td>
-                          <span className="grade">{sectionForStudent ? sectionForStudent.section : "-"}</span>
-                        </td>
+                        <span className="grade">{sectionForStudent ? sectionForStudent.section : "-"}</span>
+                      </td>
                       <td>+91{item.contactNumber}</td>
                       <td>{item.doj}</td>
                       <td>
@@ -343,7 +336,7 @@ const Students = () => {
   };
   const getData = async () => {
     try {
-      let { status, result,result2, imageUrl } = await viewStudent();
+      let { status, result, result2, imageUrl } = await viewStudent();
       if (status === true) {
         setLoaderView(false)
         const studentData = await result.filter(each => each.active === 1 && each.name.toLowerCase().includes(userSearchInput.toLowerCase()))
@@ -359,8 +352,8 @@ const Students = () => {
     getData();
   }, []);
 
-  console.log(data,'---data')
-  console.log(section,'---section')
+  console.log(data, '---data')
+  console.log(section, '---section')
   //updating grade sorting state
   const handleGradeSort = (event) => {
     if (event.target.value === "") {
@@ -438,9 +431,9 @@ const Students = () => {
           </div>
           <div className="middle-header-right">
             {sortGrade !== "" && (
-                <button type="button" className="allocate-btn-sm" onClick={handleSectionAllocate}>
-                  {`No.of Students ${selectedStudents.length}`} <ArrowRightAltOutlined />
-                </button>
+              <button type="button" className="allocate-btn-sm" onClick={handleSectionAllocate}>
+                {`No.of Students ${selectedStudents.length}`} <ArrowRightAltOutlined />
+              </button>
             )}
             <input
               type="search"

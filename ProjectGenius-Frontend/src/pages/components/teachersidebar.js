@@ -1,12 +1,14 @@
 import React, { useContext } from "react";
 import { useLocation, Link, useNavigate } from "react-router-dom";
-
-import { removeAuthToken } from "../../lib/localstorage";
 import { faSignOut } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { TeacherMenuContext } from "../../context/teachermenucontext";
 import { IoMdArrowDropdown, IoMdArrowDropright } from "react-icons/io";
 import { FaRegEdit } from "react-icons/fa";
+//import Lib
+import { removeAuthRec, removeAuthToken } from "../../lib/localstorage";
+//import Context
+import { TeacherMenuContext } from "../../context/teachermenucontext";
+
 
 const TeacherSidebar = () => {
   const { openMenu, toggleMenu } = useContext(TeacherMenuContext);
@@ -15,6 +17,7 @@ const TeacherSidebar = () => {
   const navigate = useNavigate();
   return (
     <>
+     
       <div className={`side-menu-content ${openMenu ? "open" : "close"}`}>
         <div className="att-part-one">
           <div className="att-menu">
@@ -123,6 +126,7 @@ const TeacherSidebar = () => {
           className="teachersignout"
           onClick={() => {
             removeAuthToken();
+            removeAuthRec();
             navigate("/teacher-login");
           }}
         >

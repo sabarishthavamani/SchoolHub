@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Form from 'react-bootstrap/Form';
+//import Lib
 import toastAlert from '../lib/toast';
 //import Actions
 import { teachersignup } from '../actions/teacherAction';

@@ -1,16 +1,16 @@
-import React, { useEffect, useReducer, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
+import AlertConfirm, { Button } from "react-alert-confirm";
 //import components
 import Sidebar from "./components/sidebar";
 import Navbar from "./components/navbar";
 import TimeTablePreview from "./components/timetablepreview";
 //import Action
-import { getSingleteacher,createteacherschedule, getTeacherSchedule, getfixedschedule } from "../actions/adminAction";
+import { getSingleteacher,createteacherschedule, getfixedschedule } from "../actions/adminAction";
+//import lib
 import toastAlert from "../lib/toast";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
-import AlertConfirm, { Button } from "react-alert-confirm";
-
 
 const initialTimeTable = [
   {
@@ -286,9 +286,9 @@ const initialTimeTable = [
 ];
 
 function TeacherSchedule() {
+  //state
   const [teacherName, setTeacherName] = useState("");
   const [teacherId, setTeacherId] = useState("");
-
   const [selectedDay, setSelectedDay] = useState("");
   const [selectedTimeSlot, setSelectedTimeSlot] = useState("");
   const [selectedClass, setSelectedClass] = useState("");

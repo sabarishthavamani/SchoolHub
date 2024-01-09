@@ -13,6 +13,7 @@ const MarkSheet = require('../models/marksheet');
 const config = require('../config/index');
 //control functions
 const createteacher = async (req, res) => {
+    let checkEmail = await TeacherAdmission.findOne({ 'teacherId': req.body.teacherId },{email:1,phone:1}).lean()
     let checkTeacherId = await Teacher.findOne({ 'teacherId': req.body.teacherId }).lean()
     if (!isEmpty(checkTeacherId)) {
         return res.status(400).json({ 'status': false, 'errors': { 'teacherId': 'Same TeacherId Id Already Exist' } })
@@ -20,9 +21,11 @@ const createteacher = async (req, res) => {
     //passwordhashing
     let salt = bcrypt.genSaltSync(10);
     let hash = bcrypt.hashSync(req.body.password, salt);
+    let Email = checkEmail.email
     let newUser = new Teacher({
         'teacherId': req.body.teacherId,
-        'password': hash
+        'password': hash,
+        'email':Email
     })
     await newUser.save();
     return res.status(200).json({ 'status': true, 'message': 'Registered successfully' })
@@ -73,11 +76,10 @@ const jwtVerify = (token) => {
 
 const changePassword = async (req, res) => {
 
-    let checkUser = await Teacher.findOne({ 'teacherId': req.user.teacherId }).lean();
+    let checkUser = await Teacher.findOne({ '_id': req.user._id }).lean();
     if (!checkUser) {
         return res.status(400).json({ 'status': false, 'message': 'Invalid User' });
     }
-
     const comparePassword = await bcrypt.compare(req.body.password, checkUser.password);
     if (!comparePassword) {
         return res.status(400).json({ 'status': false, 'errors': { 'password': 'Your Old Password is Wrong.' } });
@@ -88,7 +90,26 @@ const changePassword = async (req, res) => {
     console.log(changepassword);
     return res.status(200).json({ 'status': true, 'message': "Password changed successfully" })
 }
-
+const forgetpassword = async (req, res) => {
+    console.log(req.body,'---body')
+    let find = await Teacher.findOne({ 'email': req.body.email }).lean();
+    console.log(find);
+    if (isEmpty(find)) {
+        return res.status(400).json({ 'status': false, 'message': 'Invalid EmailId' })
+    }
+    sendMail({
+        to: req.body.email,
+        content: `<a target="_self" href="http://localhost:3000/teacher-resetpassword/${find._id}"><span>To Reset your Password</span> >>> Click here</a>`
+    })
+    return res.status(200).json({ 'status': true, 'message': `Please Check the Message Received in : ${find.email}` })
+}
+const resetpassword = async (req, res) => {
+    const salt = bcrypt.genSaltSync(10);
+    const hash = bcrypt.hashSync(req.body.newpassword, salt);
+    const resetpassword = await Teacher.findOneAndUpdate({ _id: req.body._id }, { $set: { 'password': hash } });
+    console.log(resetpassword);
+    return res.status(200).json({ 'status': true, 'message': "Password changed successfully" })
+}
 const findSection = async (req, res) => {
     try {
         const { section, admissiongrade, date } = req.body;
@@ -196,5 +217,7 @@ module.exports = {
     createmarksheet,
     findmarksheet,
     findSectionforMarks,
-    updatemarksheet
+    updatemarksheet,
+    forgetpassword,
+    resetpassword
 }

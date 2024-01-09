@@ -1,266 +1,529 @@
-import React, { useEffect, useState } from 'react'
-import { getTeacherSchedule } from '../actions/adminAction';
-import {useNavigate, useParams } from 'react-router-dom';
-import TeacherSidebar from './components/teachersidebar';
-import TeacherHeader from './components/teachernavbar';
+import React, { useEffect, useState } from "react";
+import TeacherHeader from "./components/teachernavbar";
+import TeacherSidebar from "./components/teachersidebar";
+import "react-datepicker/dist/react-datepicker.css";
 
+import { RiArrowDropDownLine } from "react-icons/ri";
+import { FaCheckCircle, FaClosedCaptioning, FaCross, FaPercent, FaRegArrowAltCircleRight } from "react-icons/fa";
+import { SiGoogleclassroom } from "react-icons/si";
+import { FaArrowTrendDown, FaArrowTrendUp, FaX } from "react-icons/fa6";
+import {
+  MdOutlineRemoveRedEye,
+  MdOutlineClass,
+  MdOutlineToday,
+} from "react-icons/md";
+import TimeTablePopup from "./components/timetablepopup";
+import Attendance from "./components/attendance";
+import { findAttendance, getfixedschedule } from "../actions/adminAction";
+import { setAuthRec } from "../lib/localstorage";
+import { FaxRounded } from "@mui/icons-material";
+import { IoIosCloseCircle } from "react-icons/io";
 
-const TeacherDashboard = () =>{
-  const [data,setData] = useState();
-  const {teacherId} = useParams();
-  // const location = useLocation();
-  // const { Data } = location.state || "";
-// console.log(Data,'---Data')
-const [Result,setResult] = useState()
- 
-const getData = async (teacherId) => {
-  try {
-    const { status, result,result2 } = await getTeacherSchedule(teacherId);
-    if (status === true) {
-      console.log(result, "--result");
-      if (result.schedule) {
-        setData(result.schedule);
-        setResult(result2._id);
-      } else {
-        setResult(result2._id);
-      }
-    }
-  } catch (error) {
-    console.error("Error fetching data:", error);
-  }
-};
-  useEffect(() => {
-    getData(teacherId);
-  }, [teacherId,Result]);
+const TeacherDashboard = () => {
+    
+  const [teacherId,setTeacherId] = useState(JSON.parse(localStorage.getItem("TEACHER_DATA")))
+  const [schedule, setSchedule] = useState('')
+  const [currentDaySchedule, setCurrentDaySchedule] = useState([]);
+  const [AttendanceView, setAttendanceView] = useState('');
+
+  const TeacherId = teacherId.teacherId
+  const Thismonth = new Date().toLocaleString('en-US', { month: 'long' })
+  const Today = new Date().toLocaleDateString()
+  const [showPopup, setShowPopup] = useState({
+    teacherTimetable: false,
+    teacherAttendance: false,
+  });
+  const [tchrAttDate, settchrAttDate] = useState("");
+  const [stdAttDetails, setStdAttDetails] = useState({
+    class: "",
+    section: "",
+    date: "",
+  });
+  const [stdMarkDetails, setStdMarkDetails] = useState({
+    class: "",
+    section: "",
+    test: "quarterly",
+  });
+
+  const handleTimetablePopup = () => {
+    setShowPopup((prev) => ({
+      ...prev,
+      teacherTimetable: true,
+    }));
+  };
+
+  const handleAttendancePopup = () => {
+    setShowPopup((prev) => ({
+      ...prev,
+      teacherAttendance: true,
+    }));
+  };
   
-  console.log(Result,'---result2')
-const navigate = useNavigate()
-
-const EditSchedule = () => {
-  navigate('/teacherschedule/'+Result)
-}
-
-// const AssignSchedule = () => {
-//   navigate('/teacherschedule/'+Result)
-// }
-
-const renderBody = () => {
-  return(
-    data.map((item, index) => (
-      <tr className="time-row" key={index}>
-      <td>{item.day}</td>
-      <td>
-        <div className="subject">
-          <p>{item.periods.period1.class} {item.periods.period1.section}</p>
-          <p>{item.periods.period1.subject}</p>
-        </div>
-      </td>
-      <td>
-        <div className="subject2">
-          <p>{item.periods.period2.class} {item.periods.period2.section}</p>
-          <p>{item.periods.period2.subject}</p>
-        </div>
-      </td>
-      <td>
-        <div className="subject3">
-          <p>{item.periods.period3.class} {item.periods.period3.section}</p>
-          <p>{item.periods.period3.subject}</p>
-        </div>
-      </td>
-      <td>
-        <div className="subject">
-          <p>{item.periods.period4.class} {item.periods.period4.section}</p>
-          <p>{item.periods.period4.subject}</p>
-        </div>
-      </td>
-      <td>
-        <div className="subject2">
-          <p>{item.periods.period5.class} {item.periods.period5.section}</p>
-          <p>{item.periods.period5.subject}</p>
-        </div>
-      </td>
-      <td>
-        <div className="subject3">
-          <p>{item.periods.period6.class} {item.periods.period6.section}</p>
-          <p>{item.periods.period6.subject}</p>
-        </div>
-      </td>
-      <td>
-        <div className="subject">
-          <p>{item.periods.period7.class} {item.periods.period7.section}</p>
-          <p>{item.periods.period7.subject}</p>
-        </div>
-      </td>
-      <td>
-        <div className="subject2">
-          <p>{item.periods.period8.class} {item.periods.period8.section}</p>
-          <p>{item.periods.period8.subject}</p>
-        </div>
-      </td>
-    </tr>
-    ))
-   )
+  const getSchedule = async () => {
+    try {
+      const Scheduledata = {
+        teacherId: TeacherId
+      }
+      console.log(Scheduledata, '---sch')
+      let { status, result, result2 } = await getfixedschedule(Scheduledata)
+      console.log(result2, '---result2')
+      if (status == true) {
+        setSchedule(result)
+      }
+    } catch (err) {
+      console.log(err, '---err')
     }
+  }
+  useEffect(() => {
+    getSchedule()
+  }, [TeacherId])
+  console.log(schedule,'---scehdule')
+
+  useEffect(() => {
+    // Process the schedule data when it changes
+    if (schedule && schedule.schedule) {
+      const processedData = schedule.schedule.map((dayData) => {
+        const { day, periods } = dayData;
+        const processedPeriods = Object.values(periods).filter(
+          (period) => period.class && period.subject
+        );
+        return { day, periods: processedPeriods };
+      });
+      // Get the current day
+      const today = new Date().toLocaleDateString('en-US', { weekday: 'long' });
+      // Filter the processed schedule for the current day
+      const currentDayData = processedData.find(
+        (dayData) => dayData.day.toLowerCase() === today.toLowerCase()
+      );
+      setCurrentDaySchedule(currentDayData || []);
+    }
+  }, [schedule]);
  
-    return(
-      <>
+  const getAttendance = async () => {
+    try {
+      const attendata = {
+        date: Today,
+      }
+      let { status, result } = await findAttendance(attendata);
+      if (status === true) {
+        setAttendanceView(result);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
+    getAttendance();
+  }, []);
+  console.log(AttendanceView, '----View')
+  const IndividualAttendanceView = AttendanceView && AttendanceView.attendance && AttendanceView.attendance ? AttendanceView.attendance.find((each) => TeacherId === each.teacherId) : null
+  console.log(IndividualAttendanceView,'---attendance')
+  return (
+    <div className="dashboard-page">
       <TeacherHeader />
-        <div className="teacher">  
- <TeacherSidebar />
-  <div className="teacher-content" style={{ background: "#f7f7f8" }}>
-    <div className="header" style={{ width: "100%" }}>
-      <div className="l-header">
-        <p>Teacher Time Table</p>
-      </div>
-      <div className="r-header" style={{ width: 600 }}>
-        <input type="search" placeholder="search" />
-        <img src="images/filter.png" />
-        <a href="#" className="notify">
-          <img
-            src="images/bell.png"
-            alt=""
-            title="notification"
-            style={{ height: 25 }}
-          />
-        </a>
-        <a href="#" className="notify">
-          <img
-            src="images/setting.png"
-            alt=""
-            title="setting"
-            style={{ height: 25 }}
-          />
-        </a>
-        <div>
-          <span>Sam Smith</span>
-          <br />
-          <span style={{ color: "#ccc" }}>Admin</span>
+      <div className="dashboard-main">
+        {showPopup.teacherTimetable && (
+          <div className="teacher-schedule-pop">
+            <div
+              className="schedule-pop-overlay"
+              onClick={() =>
+                setShowPopup((prev) => ({ ...prev, teacherTimetable: false }))
+              }
+            ></div>
+            <div className="schedule-pop-container">
+              <TimeTablePopup data = {schedule.schedule}/>
+            </div>
+          </div>
+        )}
+        {showPopup.teacherAttendance && (
+          <div className="teacher-schedule-pop">
+            <div
+              className="schedule-pop-overlay"
+              onClick={() =>
+                setShowPopup((prev) => ({ ...prev, teacherAttendance: false }))
+              }
+            ></div>
+            <div className="schedule-pop-container">
+            <Attendance TeacherId={TeacherId} Month={Thismonth} />
+            </div>
+          </div>
+        )}
+        <TeacherSidebar />
+        <div className="dashboard-container">
+          <div className="dashboard-content">
+            <h2 className="dashboard-title">Teacher Dashboard</h2>
+            <div className="dashboard-tchr-info">
+              <div className="dashboard-segments">
+                <div className="dashboard-segment-content">
+                  <div className="tchr-att-header">
+                    <p>My Attendance Status</p>
+                    <button type="button" onClick={handleAttendancePopup} className="tchr-month-att-btn">
+                      <MdOutlineRemoveRedEye />
+                      Monthly Attendance
+                    </button>
+                  </div>
+                  {IndividualAttendanceView && IndividualAttendanceView ? (IndividualAttendanceView.status && IndividualAttendanceView.status === 'Present' ? (
+                     <div className="tchr-att-present">
+                     <FaCheckCircle />
+                     <p>{IndividualAttendanceView.status}</p>
+                     <span>{Today}</span>
+                   </div> 
+                  ):(
+                    <div className="tchr-att-absent">
+                    <IoIosCloseCircle size={25}/>
+                      <p>{IndividualAttendanceView.status}</p>
+                      <span>{Today}</span>
+                    </div>
+                  )):(
+                    <div className="tchr-att-absent">
+                    <IoIosCloseCircle size={25}/>
+                      <p>Waiting...</p>
+                      <span>{Today}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+              <div className="dashboard-segments">
+                <div className="dashboard-segment-content">
+                  <div className="tchr-att-header">
+                    <p>Schedule</p>
+                    <div className="header-input-fields">
+                      {currentDaySchedule && currentDaySchedule ? (  <span>
+                        Day:{currentDaySchedule.day}
+                      </span>): (
+                          <span>
+                          Day:Sunday
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  <div className="tchr-schedule-status">
+                  {currentDaySchedule && currentDaySchedule ? (
+                    currentDaySchedule.periods && currentDaySchedule.periods.length > 0 ? (
+                        <ul>
+                          {currentDaySchedule.periods.map((period, periodIndex) => (
+                            <li key={periodIndex}>
+                              {`${period.class} ${period.section} - ${period.subject}`}
+                            </li>
+                          ))}
+                        </ul>
+                  ):(
+                    <ul>
+                    <li>Free Period</li>
+                    <li>Free Period</li>
+                    <li>Free Period</li>
+                  </ul>
+                  )):(
+                    <ul>
+                    <li>It's Holiday Buddy..!</li>
+                    <li>It's Holiday Buddy..!</li>
+                    <li>It's Holiday Buddy..!</li>
+                  </ul>
+                  )}
+                    <button type="button" onClick={handleTimetablePopup}>
+                      <MdOutlineRemoveRedEye />
+                      View Time Table
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="dashboard-stud-info">
+              <div className="dashboard-stud-att">
+                <div className="dashboard-segments">
+                  <div className="dashboard-segment-content">
+                    <div className="tchr-att-header">
+                      <p>Student Attendance</p>
+                      <div className="header-input-fields">
+                        <div className="dashboard-multi-select">
+                          <MdOutlineClass />
+                          <select
+                            style={{ width: "90px" }}
+                            value={stdAttDetails.class}
+                            onChange={(e) =>
+                              setStdAttDetails((prev) => ({
+                                ...prev,
+                                class: e.target.value,
+                              }))
+                            }
+                          >
+                            <option></option>
+                            <option>Preschool</option>
+                            <option>LKG</option>
+                            <option>UKG</option>
+                            <option>Class 1</option>
+                            <option>Class 2</option>
+                            <option>Class 3</option>
+                            <option>Class 4</option>
+                            <option>Class 5</option>
+                            <option>Class 6</option>
+                            <option>Class 7</option>
+                            <option>Class 8</option>
+                            <option>Class 9</option>
+                            <option>Class 10</option>
+                            <option>Class 11</option>
+                            <option>Class 12</option>
+                          </select>
+                        </div>
+                        <div className="dashboard-multi-select">
+                          <SiGoogleclassroom />
+                          <select
+                            value={stdAttDetails.section}
+                            onChange={(e) =>
+                              setStdAttDetails((prev) => ({
+                                ...prev,
+                                section: e.target.value,
+                              }))
+                            }
+                          >
+                            <option></option>
+                            <option>A</option>
+                            <option>B</option>
+                            <option>C</option>
+                            <option>D</option>
+                            <option>E</option>
+                            <option>F</option>
+                          </select>
+                        </div>
+                        <div className="date-field-container">
+                          <MdOutlineToday />
+                          <input
+                            type="date"
+                            value={stdAttDetails.date}
+                            onChange={(e) =>
+                              setStdAttDetails((prev) => ({
+                                ...prev,
+                                date: e.target.value,
+                              }))
+                            }
+                          />
+                          <span>
+                            <button type="button">
+                              <RiArrowDropDownLine />
+                            </button>
+                          </span>
+                        </div>
+                        <button className="input-trigger-btn" type="button">
+                        <FaRegArrowAltCircleRight />
+                        </button>
+                      </div>
+                    </div>
+                    <div className="stud-att-status">
+                      <div className="att-status-container">
+                        <div className="att-status-container-head">
+                          <p>36</p>
+                          <span className="att-status-present">P</span>
+                        </div>
+                        <div className="att-status-container-foot">
+                          <span className="att-status-container-present">
+                            <FaArrowTrendUp />
+                          </span>
+                          <p>Present</p>
+                        </div>
+                      </div>
+                      <div className="att-status-container">
+                        <div className="att-status-container-head">
+                          <p>3</p>
+                          <span className="att-status-absent">A</span>
+                        </div>
+                        <div className="att-status-container-foot">
+                          <span className="att-status-container-absent">
+                            <FaArrowTrendDown />
+                          </span>
+                          <p>Absent</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="dashboard-segments">
+                  <div className="dashboard-segment-content">
+                    <div className="tchr-att-header">
+                      <p>Reminders</p>
+                    </div>
+                    <div className="dashboard-reminder">
+                      <ul>
+                        <li>
+                          <p>5 Jan, 2024</p>
+                          <div>
+                            Lorem ipsum dolor sit amet, consectetur adipiscing
+                            elit, sed do eiusmod
+                            <hr />
+                          </div>
+                        </li>
+                        <li>
+                          <p style={{ background: "#FBD540" }}>5 Jan, 2024</p>
+                          <div>
+                            Lorem ipsum dolor sit amet, consectetur adipiscing
+                            elit, sed do eiusmod
+                            <hr />
+                          </div>
+                        </li>
+                        <li>
+                          <p style={{ background: "#F939A1" }}>5 Jan, 2024</p>
+                          <div>
+                            Lorem ipsum dolor sit amet, consectetur adipiscing
+                            elit, sed do eiusmod
+                            <hr />
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="dashboard-segments stud-mark-analyze-sm">
+                <div className="dashboard-segment-content">
+                  <div className="tchr-att-header">
+                    <p>Student Marksheet Analysis</p>
+                    <div className="header-input-fields">
+                      <div className="dashboard-multi-select">
+                        <MdOutlineClass />
+                        <select
+                          style={{ width: "90px" }}
+                          value={stdMarkDetails.class}
+                          onChange={(e) =>
+                            setStdMarkDetails((prev) => ({
+                              ...prev,
+                              class: e.target.value,
+                            }))
+                          }
+                        >
+                          <option></option>
+                          <option>Preschool</option>
+                          <option>LKG</option>
+                          <option>UKG</option>
+                          <option>Class 1</option>
+                          <option>Class 2</option>
+                          <option>Class 3</option>
+                          <option>Class 4</option>
+                          <option>Class 5</option>
+                          <option>Class 6</option>
+                          <option>Class 7</option>
+                          <option>Class 8</option>
+                          <option>Class 9</option>
+                          <option>Class 10</option>
+                          <option>Class 11</option>
+                          <option>Class 12</option>
+                        </select>
+                      </div>
+                      <div className="dashboard-multi-select">
+                        <SiGoogleclassroom />
+                        <select
+                          value={stdMarkDetails.section}
+                          onChange={(e) =>
+                            setStdMarkDetails((prev) => ({
+                              ...prev,
+                              section: e.target.value,
+                            }))
+                          }
+                        >
+                          <option></option>
+                          <option>A</option>
+                          <option>B</option>
+                          <option>C</option>
+                          <option>D</option>
+                          <option>E</option>
+                          <option>F</option>
+                        </select>
+                      </div>
+                      <button className="input-trigger-btn" type="button">
+                        <FaRegArrowAltCircleRight />
+                        </button>
+                    </div>
+                  </div>
+                  <div className="stud-mark-analyze">
+                    <div className="stud-mark-analyze-nav">
+                      <span
+                        className={stdMarkDetails.test === 'quarterly' ? 'selected' : null}
+                        onClick={() =>
+                          setStdMarkDetails((prev) => ({
+                            ...prev,
+                            test: "quarterly",
+                          }))
+                        }
+                      >
+                        Quarterly
+                      </span>
+                      <span
+                        className={stdMarkDetails.test === 'halfYearly' ? 'selected' : null}
+                        onClick={() =>
+                          setStdMarkDetails((prev) => ({
+                            ...prev,
+                            test: "halfYearly",
+                          }))
+                        }
+                      >
+                        Half- Yearly
+                      </span>
+                      <span
+                        className={stdMarkDetails.test === 'annual' ? 'selected' : null}
+                        onClick={() =>
+                          setStdMarkDetails((prev) => ({
+                            ...prev,
+                            test: "annual",
+                          }))
+                        }
+                      >
+                        Annual
+                      </span>
+                    </div>
+                    <div className="stud-mark-analyze-chart">
+                      <div className="stud-mark-analyze-graph">
+                        <img
+                          src={`${process.env.PUBLIC_URL}/images/student-mark-analysis.png`}
+                          alt="graph"
+                        />
+                      </div>
+                      <div className="stud-mark-analyze-percent">
+                        <FaPercent />
+                        <span>Total Pass</span>
+                        <p>77%</p>
+                      </div>
+                    </div>
+                    <div className="stud-mark-analyze-score">
+                      <div className="mark-analyze-score-card">
+                        <p>40</p>
+                        <span>Students Scored above 35%</span>
+                      </div>
+                      <div className="mark-analyze-score-card">
+                        <p>5</p>
+                        <span>Students Scored below 35%</span>
+                      </div>
+                    </div>
+                    <div className="stud-mark-scale">
+                      <ul>
+                        <li>
+                          <span></span>
+                          <p>20%</p>
+                          <p>High Distinction (&lt; 90%)</p>
+                        </li>
+                        <li>
+                          <span style={{ backgroundColor: "#5BC7E6" }}></span>
+                          <p>60%</p>
+                          <p>Average (70-80%)</p>
+                        </li>
+                        <li>
+                          <span style={{ backgroundColor: "#7963CD" }}></span>
+                          <p>15%</p>
+                          <p>Below Average (&lt; 35-60%)</p>
+                        </li>
+                        <li>
+                          <span style={{ backgroundColor: "#EE0B0B" }}></span>
+                          <p>5%</p>
+                          <p> Fail (&lt; 35%)</p>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <img src="images/Profile photo.png" alt="" title="profile" />
       </div>
     </div>
-    <div className="time-table-content">
-      <div className="time-header">
-        <p style={{ fontSize: 15, fontWeight: 600 }}>Time Table</p>
-        {/* <div className="time-buttons">
-          <button style={{ color: "#605bff" }} onClick={EditSchedule}>
-            <i className="fa fa-pencil" style={{ marginRight: 10 }} onClick={EditSchedule}/>
-            Edit
-          </button>
-          <button style={{ color: "hotpink" }} onClick={AssignSchedule}>
-            <FontAwesomeIcon icon={faCalendarDays} style={{ marginRight: 10 }} onClick={AssignSchedule}/>
-            Assign Schedule
-          </button>
-        </div> */}
-      </div>
-      <table className="time-table" border={1}>
-        <thead>
-          <tr className="time-head-row">
-            <th>Day</th>
-            <th>
-              <span>1</span>
-              <br />
-              9.30-10.10AM
-            </th>
-            <th>
-              <span>2</span>
-              <br />
-              10.20-11.00AM
-            </th>
-            <th>
-              <span>3</span>
-              <br />
-              11.00-11.40AM
-            </th>
-            <th>
-              <span>4</span>
-              <br />
-              11.40-12.10PM
-            </th>
-            <th>
-              <span>5</span>
-              <br />
-              1.00-1.40PM
-            </th>
-            <th>
-              <span>6</span>
-              <br />
-              1.40-2.10PM
-            </th>
-            <th>
-              <span>7</span>
-              <br />
-              2.20-3.00PM
-            </th>
-            <th>
-              <span>8</span>
-              <br />
-              3.00-3.40PM
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-              {data ? (
-                renderBody()
-              ) : (
-                <tr className="time-row">
-                <td>Monday</td>
-                <td>
-                  <div className="subject">
-                    <p>Class=?</p>
-                    <p>Subject=?</p>
-                  </div>
-                </td>
-                <td>
-                  <div className="subject2">
-                  <p>Class=?</p>
-                    <p>Subject=?</p>
-                  </div>
-                </td>
-                <td>
-                  <div className="subject3">
-                  <p>Class=?</p>
-                    <p>Subject=?</p>
-                  </div>
-                </td>
-                <td>
-                  <div className="subject">
-                  <p>Class=?</p>
-                    <p>Subject=?</p>
-                  </div>
-                </td>
-                <td>
-                  <div className="subject2">
-                  <p>Class=?</p>
-                    <p>Subject=?</p>
-                  </div>
-                </td>
-                <td>
-                  <div className="subject3">
-                  <p>Class=?</p>
-                    <p>Subject=?</p>
-                  </div>
-                </td>
-                <td>
-                  <div className="subject">
-                  <p>Class=?</p>
-                    <p>Subject=?</p>
-                  </div>
-                </td>
-                <td>
-                  <div className="subject2">
-                  <p>Class=?</p>
-                    <p>Subject=?</p>
-                  </div>
-                </td>
-              </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-    </>
   );
 };
 

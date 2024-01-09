@@ -42,6 +42,66 @@ export const teacherlogin = async (data) => {
         }
     }
 }
+export const changepassword = async (data) => {
+
+    try {
+        let respData = await axios({
+            'url': '/changepassword',
+            'method': 'post',
+             data
+        })
+        return {
+            'status': respData.data.status,
+            'message': respData.data.message,
+        }
+    } catch (err) {
+        return {
+            'status': err.response.data.status,
+            'message': err.response.data.message,
+            'errors': err.response.data.errors
+        }
+    }
+}
+export const forgetpassword = async (data) => {
+
+    try {
+        let respData = await axios({
+            'url': '/forgetpassword',
+            'method': 'post',
+             data
+        })
+        return {
+            'status': respData.data.status,
+            'message': respData.data.message,
+        }
+    } catch (err) {
+        return {
+            'status': err.response.data.status,
+            'message': err.response.data.message,
+            'errors': err.response.data.errors
+        }
+    }
+}
+export const resetpassword = async (data) => {
+
+    try {
+        let respData = await axios({
+            'url': '/resetpassword',
+            'method': 'post',
+             data
+        })
+        return {
+            'status': respData.data.status,
+            'message': respData.data.message,
+        }
+    } catch (err) {
+        return {
+            'status': err.response.data.status,
+            'message': err.response.data.message,
+            'errors': err.response.data.errors
+        }
+    }
+}
 export const findsection = async (Data) => {
 
     try {

@@ -3,10 +3,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useNavigate, useParams } from 'react-router-dom';
 import moment from "moment-timezone";
 import { faArrowRight, faUpload, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
-
 //import actions
 import { getSingleteacher, updateTeacher } from '../actions/adminAction';
-
 // import lib
 import toastAlert from '../lib/toast';
 

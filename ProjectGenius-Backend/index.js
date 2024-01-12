@@ -31,7 +31,7 @@ const mongoConnect = async () => {
 mongoConnect()
 
 app.listen(PORT, () => {
-  console.log('SERVER IS RUNNING on ' + PORT)
+  console.log('SERVER IS RUNNING on' + PORT)
 })
 
 

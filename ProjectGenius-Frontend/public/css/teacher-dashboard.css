@@ -323,6 +323,7 @@
     margin-bottom: 8px;
     max-height: 80px;
     overflow-y: auto;
+    width: 50%;
 }
 .tchr-schedule-status ul::-webkit-scrollbar {
     width: 8px;
@@ -625,12 +626,6 @@
     font-weight: 400;
 }
 
-@media (max-width: 767px) {
-    .stud-mark-analyze-sm {
-        order: 1;
-    }
-}
-
 .stud-mark-analyze {
     display: flex;
     flex-direction: column;
@@ -697,8 +692,23 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    width: 70%;
 }
 
+.stud-mark-analyze-graph > span {
+    position: absolute;
+    text-align: center;
+    font-family: Poppins;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    width: 70%;
+}
+@media (max-width: 400px) {
+    .stud-mark-analyze-graph > span {
+        font-size: 12px;
+    }
+}
 
 .stud-mark-analyze-percent {
     display: flex;
@@ -708,6 +718,7 @@
     border-radius: 20px;
     background-color: #FDE2EA;
     padding: 16px;
+    width: 30%;
 }
 @media (max-width: 767px) {
     .stud-mark-analyze-percent {
@@ -784,7 +795,7 @@
     font-size: 22px;
     font-style: normal;
     font-weight: 700;
-    line-height: 30px; /* 136.364% */
+    line-height: 30px;
     letter-spacing: 0.44px;
 }
 @media (max-width: 767px) {

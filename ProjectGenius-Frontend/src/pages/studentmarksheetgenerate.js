@@ -210,9 +210,9 @@ const GenerateReport = () => {
               <label>Exam Name</label>
               <select value={state.exam} onChange={handleExam}>
                 <option></option>
-                <option>Quarterly Examination</option>
-                <option>Half Yearly Examination</option>
-                <option>Annual Examination</option>
+                <option value='Quarterly'>Quarterly Examination</option>
+                <option value='Halfyearly'>Half Yearly Examination</option>
+                <option value='Annual'>Annual Examination</option>
               </select>
               <span className='attendance-error'>{inputErrors.exam}</span>
             </div>

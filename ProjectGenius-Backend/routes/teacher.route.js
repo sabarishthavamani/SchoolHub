@@ -19,6 +19,7 @@ router.route('/daily-attendance').post(teacherCtrl.dailyattendance);
 router.route('/marksheet').post(teacherCtrl.createmarksheet);
 router.route('/marksheet-update').post(teacherCtrl.updatemarksheet);
 router.route('/find-marksheet').post(teacherValid.findmarksectionValid,teacherCtrl.findmarksheet);
+router.route('/marksheetforanalysis').get(teacherCtrl.findmarksheetforanalysis);
 router.route('/findsectionformarks').post(teacherValid.findmarksectionValid,teacherCtrl.findSectionforMarks);
 
 

@@ -1,30 +1,31 @@
 import React, { useEffect, useState } from "react";
+import "react-datepicker/dist/react-datepicker.css";
+import { RiArrowDropDownLine } from "react-icons/ri";
+import { FaCheckCircle, FaPercent, FaRegArrowAltCircleRight } from "react-icons/fa";
+import { SiGoogleclassroom } from "react-icons/si";
+import { FaArrowTrendDown, FaArrowTrendUp } from "react-icons/fa6";
+import { MdOutlineRemoveRedEye,MdOutlineClass,MdOutlineToday } from "react-icons/md";
+import { IoIosCloseCircle } from "react-icons/io";
+//import Actions
+import { findAttendance, getfixedschedule } from "../actions/adminAction";
+import { findmarksheetForAnalysis, findsection } from "../actions/teacherAction";
+//import Lib
+import toastAlert from "../lib/toast";
+//import Components
 import TeacherHeader from "./components/teachernavbar";
 import TeacherSidebar from "./components/teachersidebar";
-import "react-datepicker/dist/react-datepicker.css";
-
-import { RiArrowDropDownLine } from "react-icons/ri";
-import { FaCheckCircle, FaClosedCaptioning, FaCross, FaPercent, FaRegArrowAltCircleRight } from "react-icons/fa";
-import { SiGoogleclassroom } from "react-icons/si";
-import { FaArrowTrendDown, FaArrowTrendUp, FaX } from "react-icons/fa6";
-import {
-  MdOutlineRemoveRedEye,
-  MdOutlineClass,
-  MdOutlineToday,
-} from "react-icons/md";
+import ProgressChart from "./components/progresschart";
 import TimeTablePopup from "./components/timetablepopup";
 import Attendance from "./components/attendance";
-import { findAttendance, getfixedschedule } from "../actions/adminAction";
-import { setAuthRec } from "../lib/localstorage";
-import { FaxRounded } from "@mui/icons-material";
-import { IoIosCloseCircle } from "react-icons/io";
 
 const TeacherDashboard = () => {
-    
-  const [teacherId,setTeacherId] = useState(JSON.parse(localStorage.getItem("TEACHER_DATA")))
+
+  const [teacherId, setTeacherId] = useState(JSON.parse(localStorage.getItem("TEACHER_DATA")))
+  //states for Attendance view
   const [schedule, setSchedule] = useState('')
   const [currentDaySchedule, setCurrentDaySchedule] = useState([]);
   const [AttendanceView, setAttendanceView] = useState('');
+  const [attendancecheck, setattendancecheck] = useState({})
 
   const TeacherId = teacherId.teacherId
   const Thismonth = new Date().toLocaleString('en-US', { month: 'long' })
@@ -33,32 +34,29 @@ const TeacherDashboard = () => {
     teacherTimetable: false,
     teacherAttendance: false,
   });
-  const [tchrAttDate, settchrAttDate] = useState("");
+
   const [stdAttDetails, setStdAttDetails] = useState({
-    class: "",
+    admissiongrade: "",
     section: "",
     date: "",
   });
-  const [stdMarkDetails, setStdMarkDetails] = useState({
-    class: "",
-    section: "",
-    test: "quarterly",
-  });
 
+  const { admissiongrade, section, date } = stdAttDetails
+ //consolidate timetable popup
   const handleTimetablePopup = () => {
     setShowPopup((prev) => ({
       ...prev,
       teacherTimetable: true,
     }));
   };
-
+ //consolidate attendance popup
   const handleAttendancePopup = () => {
     setShowPopup((prev) => ({
       ...prev,
       teacherAttendance: true,
     }));
   };
-  
+//teacher Attendance data
   const getSchedule = async () => {
     try {
       const Scheduledata = {
@@ -77,7 +75,6 @@ const TeacherDashboard = () => {
   useEffect(() => {
     getSchedule()
   }, [TeacherId])
-  console.log(schedule,'---scehdule')
 
   useEffect(() => {
     // Process the schedule data when it changes
@@ -98,7 +95,7 @@ const TeacherDashboard = () => {
       setCurrentDaySchedule(currentDayData || []);
     }
   }, [schedule]);
- 
+ //student Attendance data
   const getAttendance = async () => {
     try {
       const attendata = {
@@ -116,9 +113,155 @@ const TeacherDashboard = () => {
   useEffect(() => {
     getAttendance();
   }, []);
-  console.log(AttendanceView, '----View')
+
   const IndividualAttendanceView = AttendanceView && AttendanceView.attendance && AttendanceView.attendance ? AttendanceView.attendance.find((each) => TeacherId === each.teacherId) : null
-  console.log(IndividualAttendanceView,'---attendance')
+
+  const handleChange = (e) => {
+    const { name, value } = e.target
+    setStdAttDetails({ ...stdAttDetails, [name]: value })
+  }
+  const getStuendentAttendance = async () => {
+    try {
+      let Data = {
+        admissiongrade: admissiongrade,
+        section: section,
+        date: date
+      }
+      let { status, message, result2 } = await findsection(Data);
+      if (status === true) {
+        setattendancecheck(result2)
+      }
+      if (status === false) {
+        toastAlert('error', message)
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const attendanceArray = attendancecheck && attendancecheck.attendance
+  let presentCount = 0
+  let absentCount = 0
+
+  attendanceArray && attendanceArray.forEach(student => {
+    if (student.status === 'present') {
+      presentCount++
+    } else if (student.status === 'absent') {
+      absentCount++
+    }
+  })
+
+//state for Marksheet Analysis
+  const [markData, setMarkData] = useState([])
+  const [graphData, setGraphData] = useState([
+    { name: "High Distinction", value: 1, colors: '#63CD81' },
+    { name: "Average", value: 1, colors: '#5BC7E6' },
+    { name: "Below Average", value: 1, colors: '#7963CD' },
+    { name: "Fail", value: 1, colors: '#EE0B0B' }
+  ])
+  const [graphErr, setGraphErr] = useState(false)
+  const [totalPercent, setTotalPercent] = useState({
+    totalPassPercent: '',
+    highDistinctionPercent: '',
+    averagePercent: '',
+    belowAveragePercent: '',
+    failPercent: ''
+  })
+  //state for marks data
+  const [stdMarkDetails, setStdMarkDetails] = useState({
+    admissiongrade: "",
+    section: "",
+    test: "quarterly",
+  });
+  // marksheet data
+  const handleMarksubmit = async () => {
+    try {
+      const Data = {
+        admissiongrade: stdMarkDetails.admissiongrade,
+        section: stdMarkDetails.section
+      }
+      let { status, result, message } = await findmarksheetForAnalysis(Data)
+      if (status === true) {
+        setMarkData(result)
+      } if (status === false) {
+        toastAlert('errors', message)
+      }
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  const handleNavChange = (examType) => {
+    const updatedMarkData = [
+      { name: "High Distinction", value: 0, colors: '#63CD81' },
+      { name: "Average", value: 0, colors: '#5BC7E6' },
+      { name: "Below Average", value: 0, colors: '#7963CD' },
+      { name: "Fail", value: 0, colors: '#EE0B0B' }
+    ]
+    const selectedExam = markData.filter(item => item.exam === examType);
+
+    if (selectedExam.length !== 0) {
+      const passedStudent = (total) => {
+        const totalPercent = (total / 500) * 100;
+        if (totalPercent >= 90) {
+
+          updatedMarkData[0].value += 1;
+        } else if (totalPercent >= 70 && totalPercent < 90) {
+          updatedMarkData[1].value += 1;
+        } else if (totalPercent >= 35 && totalPercent < 70) {
+          updatedMarkData[2].value += 1;
+        }
+      }
+
+      const failedStudent = (total) => {
+        updatedMarkData[3].value += 1;
+      }
+
+      selectedExam[0].marks.forEach((student) => {
+        const subjectObjKey = Object.keys(student.subjects)
+        const isStudentPass = subjectObjKey.every(each => parseInt(student.subjects[each]) >= 35)
+        if (isStudentPass) {
+          passedStudent(student.total)
+        } else {
+          failedStudent(student.total)
+        }
+      });
+
+      const totalPassPercent = Math.round((updatedMarkData.reduce((acc, each) => each.name !== 'Fail' ? each.value + acc : acc, 0) / selectedExam[0].marks.length) * 100)
+      const highDistinctionPercent = Math.round((updatedMarkData[0].value / selectedExam[0].marks.length) * 100)
+      const averagePercent = Math.round((updatedMarkData[1].value / selectedExam[0].marks.length) * 100)
+      const belowAveragePercent = Math.round((updatedMarkData[2].value / selectedExam[0].marks.length) * 100)
+      const failPercent = 100 - totalPassPercent
+
+      const updatedTotalMarkPercent = {
+        totalPassPercent,
+        highDistinctionPercent,
+        averagePercent,
+        belowAveragePercent,
+        failPercent
+      }
+      setStdMarkDetails(prev => ({ ...prev, test: examType }));
+      setGraphErr(false)
+      setGraphData(updatedMarkData);
+      setTotalPercent(updatedTotalMarkPercent)
+    } else {
+      setStdMarkDetails(prev => ({ ...prev, test: examType }));
+      setGraphErr(true)
+      setGraphData([
+        { name: "High Distinction", value: 1, colors: '#63CD81' },
+        { name: "Average", value: 1, colors: '#5BC7E6' },
+        { name: "Below Average", value: 1, colors: '#7963CD' },
+        { name: "Fail", value: 1, colors: '#EE0B0B' }
+      ]);
+      setTotalPercent({
+        totalPassPercent: '',
+        highDistinctionPercent: '',
+        averagePercent: '',
+        belowAveragePercent: '',
+        failPercent: ''
+      })
+    }
+  }
   return (
     <div className="dashboard-page">
       <TeacherHeader />
@@ -132,7 +275,7 @@ const TeacherDashboard = () => {
               }
             ></div>
             <div className="schedule-pop-container">
-              <TimeTablePopup data = {schedule.schedule}/>
+              <TimeTablePopup data={schedule.schedule} />
             </div>
           </div>
         )}
@@ -145,7 +288,7 @@ const TeacherDashboard = () => {
               }
             ></div>
             <div className="schedule-pop-container">
-            <Attendance TeacherId={TeacherId} Month={Thismonth} />
+              <Attendance TeacherId={TeacherId} Month={Thismonth} />
             </div>
           </div>
         )}
@@ -164,20 +307,20 @@ const TeacherDashboard = () => {
                     </button>
                   </div>
                   {IndividualAttendanceView && IndividualAttendanceView ? (IndividualAttendanceView.status && IndividualAttendanceView.status === 'Present' ? (
-                     <div className="tchr-att-present">
-                     <FaCheckCircle />
-                     <p>{IndividualAttendanceView.status}</p>
-                     <span>{Today}</span>
-                   </div> 
-                  ):(
-                    <div className="tchr-att-absent">
-                    <IoIosCloseCircle size={25}/>
+                    <div className="tchr-att-present">
+                      <FaCheckCircle />
                       <p>{IndividualAttendanceView.status}</p>
                       <span>{Today}</span>
                     </div>
-                  )):(
+                  ) : (
                     <div className="tchr-att-absent">
-                    <IoIosCloseCircle size={25}/>
+                      <IoIosCloseCircle size={25} />
+                      <p>{IndividualAttendanceView.status}</p>
+                      <span>{Today}</span>
+                    </div>
+                  )) : (
+                    <div className="tchr-att-absent">
+                      <IoIosCloseCircle size={25} />
                       <p>Waiting...</p>
                       <span>{Today}</span>
                     </div>
@@ -189,18 +332,18 @@ const TeacherDashboard = () => {
                   <div className="tchr-att-header">
                     <p>Schedule</p>
                     <div className="header-input-fields">
-                      {currentDaySchedule && currentDaySchedule ? (  <span>
+                      {currentDaySchedule && currentDaySchedule ? (<span>
                         Day:{currentDaySchedule.day}
-                      </span>): (
-                          <span>
+                      </span>) : (
+                        <span>
                           Day:Sunday
                         </span>
                       )}
                     </div>
                   </div>
                   <div className="tchr-schedule-status">
-                  {currentDaySchedule && currentDaySchedule ? (
-                    currentDaySchedule.periods && currentDaySchedule.periods.length > 0 ? (
+                    {currentDaySchedule && currentDaySchedule ? (
+                      currentDaySchedule.periods && currentDaySchedule.periods.length > 0 ? (
                         <ul>
                           {currentDaySchedule.periods.map((period, periodIndex) => (
                             <li key={periodIndex}>
@@ -208,19 +351,19 @@ const TeacherDashboard = () => {
                             </li>
                           ))}
                         </ul>
-                  ):(
-                    <ul>
-                    <li>Free Period</li>
-                    <li>Free Period</li>
-                    <li>Free Period</li>
-                  </ul>
-                  )):(
-                    <ul>
-                    <li>It's Holiday Buddy..!</li>
-                    <li>It's Holiday Buddy..!</li>
-                    <li>It's Holiday Buddy..!</li>
-                  </ul>
-                  )}
+                      ) : (
+                        <ul>
+                          <li>Free Period</li>
+                          <li>Free Period</li>
+                          <li>Free Period</li>
+                        </ul>
+                      )) : (
+                      <ul>
+                        <li>It's Holiday Buddy..!</li>
+                        <li>It's Holiday Buddy..!</li>
+                        <li>It's Holiday Buddy..!</li>
+                      </ul>
+                    )}
                     <button type="button" onClick={handleTimetablePopup}>
                       <MdOutlineRemoveRedEye />
                       View Time Table
@@ -240,13 +383,9 @@ const TeacherDashboard = () => {
                           <MdOutlineClass />
                           <select
                             style={{ width: "90px" }}
-                            value={stdAttDetails.class}
-                            onChange={(e) =>
-                              setStdAttDetails((prev) => ({
-                                ...prev,
-                                class: e.target.value,
-                              }))
-                            }
+                            value={admissiongrade}
+                            name="admissiongrade"
+                            onChange={handleChange}
                           >
                             <option></option>
                             <option>Preschool</option>
@@ -269,13 +408,9 @@ const TeacherDashboard = () => {
                         <div className="dashboard-multi-select">
                           <SiGoogleclassroom />
                           <select
-                            value={stdAttDetails.section}
-                            onChange={(e) =>
-                              setStdAttDetails((prev) => ({
-                                ...prev,
-                                section: e.target.value,
-                              }))
-                            }
+                            value={section}
+                            name="section"
+                            onChange={handleChange}
                           >
                             <option></option>
                             <option>A</option>
@@ -290,13 +425,9 @@ const TeacherDashboard = () => {
                           <MdOutlineToday />
                           <input
                             type="date"
-                            value={stdAttDetails.date}
-                            onChange={(e) =>
-                              setStdAttDetails((prev) => ({
-                                ...prev,
-                                date: e.target.value,
-                              }))
-                            }
+                            value={date}
+                            name="date"
+                            onChange={handleChange}
                           />
                           <span>
                             <button type="button">
@@ -304,15 +435,15 @@ const TeacherDashboard = () => {
                             </button>
                           </span>
                         </div>
-                        <button className="input-trigger-btn" type="button">
-                        <FaRegArrowAltCircleRight />
+                        <button className="input-trigger-btn" type="button" onClick={getStuendentAttendance}>
+                          <FaRegArrowAltCircleRight />
                         </button>
                       </div>
                     </div>
                     <div className="stud-att-status">
                       <div className="att-status-container">
                         <div className="att-status-container-head">
-                          <p>36</p>
+                          <p>{presentCount}</p>
                           <span className="att-status-present">P</span>
                         </div>
                         <div className="att-status-container-foot">
@@ -324,7 +455,7 @@ const TeacherDashboard = () => {
                       </div>
                       <div className="att-status-container">
                         <div className="att-status-container-head">
-                          <p>3</p>
+                          <p>{absentCount}</p>
                           <span className="att-status-absent">A</span>
                         </div>
                         <div className="att-status-container-foot">
@@ -381,12 +512,12 @@ const TeacherDashboard = () => {
                       <div className="dashboard-multi-select">
                         <MdOutlineClass />
                         <select
-                          style={{ width: "90px" }}
-                          value={stdMarkDetails.class}
+                          value={stdMarkDetails.admissiongrade}
+                          name="admissiongrade"
                           onChange={(e) =>
                             setStdMarkDetails((prev) => ({
                               ...prev,
-                              class: e.target.value,
+                              admissiongrade: e.target.value,
                             }))
                           }
                         >
@@ -412,6 +543,7 @@ const TeacherDashboard = () => {
                         <SiGoogleclassroom />
                         <select
                           value={stdMarkDetails.section}
+                          name="section"
                           onChange={(e) =>
                             setStdMarkDetails((prev) => ({
                               ...prev,
@@ -428,67 +560,60 @@ const TeacherDashboard = () => {
                           <option>F</option>
                         </select>
                       </div>
-                      <button className="input-trigger-btn" type="button">
+                      <button className="input-trigger-btn" type="button" onClick={handleMarksubmit}>
                         <FaRegArrowAltCircleRight />
-                        </button>
+                      </button>
                     </div>
                   </div>
                   <div className="stud-mark-analyze">
                     <div className="stud-mark-analyze-nav">
                       <span
-                        className={stdMarkDetails.test === 'quarterly' ? 'selected' : null}
-                        onClick={() =>
-                          setStdMarkDetails((prev) => ({
-                            ...prev,
-                            test: "quarterly",
-                          }))
+                        className={
+                          stdMarkDetails.test === "Quarterly"
+                            ? "selected"
+                            : null
                         }
+                        onClick={() => handleNavChange('Quarterly')}
                       >
                         Quarterly
                       </span>
                       <span
-                        className={stdMarkDetails.test === 'halfYearly' ? 'selected' : null}
-                        onClick={() =>
-                          setStdMarkDetails((prev) => ({
-                            ...prev,
-                            test: "halfYearly",
-                          }))
+                        className={
+                          stdMarkDetails.test === "Halfyearly"
+                            ? "selected"
+                            : null
                         }
+                        onClick={() => handleNavChange('Halfyearly')}
                       >
                         Half- Yearly
                       </span>
                       <span
-                        className={stdMarkDetails.test === 'annual' ? 'selected' : null}
-                        onClick={() =>
-                          setStdMarkDetails((prev) => ({
-                            ...prev,
-                            test: "annual",
-                          }))
+                        className={
+                          stdMarkDetails.test === "Annual" ? "selected" : null
                         }
+                        onClick={() => handleNavChange('Annual')}
                       >
                         Annual
                       </span>
                     </div>
                     <div className="stud-mark-analyze-chart">
                       <div className="stud-mark-analyze-graph">
-                        <img
-                          src={`${process.env.PUBLIC_URL}/images/student-mark-analysis.png`}
-                          alt="graph"
-                        />
+                        {graphErr ? <span>Exam not yet conducted</span> : <span>{`${stdMarkDetails.admissiongrade} - ${stdMarkDetails.section}`}</span>}
+                        <ProgressChart graphData={graphData} />
                       </div>
                       <div className="stud-mark-analyze-percent">
                         <FaPercent />
                         <span>Total Pass</span>
-                        <p>77%</p>
+                        {totalPercent.totalPassPercent && <p>{totalPercent.totalPassPercent}</p>}
                       </div>
                     </div>
                     <div className="stud-mark-analyze-score">
                       <div className="mark-analyze-score-card">
-                        <p>40</p>
+                        {totalPercent.totalPassPercent && <p>{totalPercent.totalPassPercent}</p>}
                         <span>Students Scored above 35%</span>
                       </div>
                       <div className="mark-analyze-score-card">
-                        <p>5</p>
+                        {totalPercent.failPercent && <p>{totalPercent.failPercent}</p>}
                         <span>Students Scored below 35%</span>
                       </div>
                     </div>
@@ -496,22 +621,22 @@ const TeacherDashboard = () => {
                       <ul>
                         <li>
                           <span></span>
-                          <p>20%</p>
-                          <p>High Distinction (&lt; 90%)</p>
+                          {totalPercent.highDistinctionPercent && <p>{`${totalPercent.highDistinctionPercent}%`}</p>}
+                          <p>High Distinction (&gt; 90%)</p>
                         </li>
                         <li>
                           <span style={{ backgroundColor: "#5BC7E6" }}></span>
-                          <p>60%</p>
+                          {totalPercent.averagePercent && <p>{`${totalPercent.averagePercent}%`}</p>}
                           <p>Average (70-80%)</p>
                         </li>
                         <li>
                           <span style={{ backgroundColor: "#7963CD" }}></span>
-                          <p>15%</p>
+                          {totalPercent.belowAveragePercent && <p>{`${totalPercent.belowAveragePercent}%`}</p>}
                           <p>Below Average (&lt; 35-60%)</p>
                         </li>
                         <li>
                           <span style={{ backgroundColor: "#EE0B0B" }}></span>
-                          <p>5%</p>
+                          {totalPercent.failPercent && <p>{`${totalPercent.failPercent}%`}</p>}
                           <p> Fail (&lt; 35%)</p>
                         </li>
                       </ul>

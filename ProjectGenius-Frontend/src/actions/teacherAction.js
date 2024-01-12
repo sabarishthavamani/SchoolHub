@@ -205,6 +205,23 @@ export const findmarksheet = async (Data) => {
     }
 }
 }
+export const findmarksheetForAnalysis = async (Data) => {
+
+    try {
+        let respData = await axios({
+            'url': '/marksheetforanalysis',
+            'method': 'get',
+            params:Data
+        })
+        return {
+            'status': respData.data.status,
+            'message': respData.data.message,
+            'result':respData.data.result,
+        }
+    } catch (err) {
+       console.log(err)
+}
+}
 export const updatemarksheet = async (Data) => {
 
     try {

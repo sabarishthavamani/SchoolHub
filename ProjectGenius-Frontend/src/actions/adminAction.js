@@ -709,3 +709,57 @@ export const findAttendanceForMonth = async (MonthData) => {
       console.log(err, 'errrr');
     }
 }
+
+export const registerDriver = async (formData) => {
+
+    try {
+        let respData = await axios({
+            'url': '/driveradmission',
+            'method': 'post',
+            'data': formData
+        })
+        return {
+            'status': respData.data.status,
+            'message': respData.data.message,
+            'result':respData.data.result,
+        }
+    } catch (err) {
+       console.log(err,'--err')
+    }
+}
+
+export const driverAadhar = async () => {
+
+    try {
+        let respData = await axios({
+            'url': '/getdriveraadhaar',
+            'method': 'get',
+        })
+        return {
+            'status': respData.data.status,
+            'result': respData.data.result,
+        }
+    } catch (err) {
+           console.log(err,'---err')
+    }
+}
+
+export const viewDriver = async () => {
+
+    try {
+        let respData = await axios({
+            'url': '/viewdriver',
+            'method': 'get',
+        })
+        return {
+            'status': respData.data.status,
+            'result': respData.data.result,
+            'imageUrl': respData.data.imageUrl
+        }
+    } catch (err) {
+        return {
+            'status': err.response.data.status,
+            'message': err.response.data.message,
+        }
+    }
+}

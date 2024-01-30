@@ -13,6 +13,7 @@ const Schedule = require('../models/schedule');
 const GroupSection = require('../models/groupsection');
 const ClassAllocate = require('../models/classallocation');
 const TeacherAttendance = require('../models/teacherattendance');
+const DriverAdmission = require('../models/driver');
 
 // config
 const config = require('../config');
@@ -842,6 +843,71 @@ const getAttendanceforMonth =async(req,res)=>{
         return res.status(500).json({ 'status': false, 'message': 'Error On Server' })
     }
 }
+
+const registerDriver = async (req, res) => {
+    try {
+        const maxDriver = await DriverAdmission.findOne({}, { driverId: 1 }).sort({ driverId: -1 });
+        // Calculate the next student ID
+        let nextdriverId = 'D0001'; // Default starting value
+        if (maxDriver && maxDriver.driverId) {
+            const currentMaxId = maxDriver.driverId;
+            const seriesNumber = parseInt(currentMaxId.substring(1), 10) + 1;
+            nextdriverId = `G${seriesNumber.toString().padStart(4, '0')}`;
+            console.log(nextdriverId, '---driverId222');
+        }
+        const firstName = req.body.firstName;
+        const lastName = req.body.lastName;
+        let FullName = `${firstName} ${lastName}`;
+       
+        let newDoc = new DriverAdmission({
+            'driverId': nextdriverId,
+            'name': FullName,
+            'dob': req.body.dob,
+            'age': req.body.age,
+            'maritalstatus': req.body.maritalstatus,
+            'currentsalary': req.body.currentsalary,
+            'placeofbirth': req.body.placeofbirth,
+            'driverphoto': req.files.driverphoto[0].filename,
+            'phoneNumber': req.body.phoneNumber,
+            'whatsappNumber': req.body.whatsappNumber,
+            'permanentaddress': req.body.permanentaddress,
+            'temporaryaddress': req.body.temporaryaddress,
+            'email': req.body.email,
+            'aadhaarNumber': req.body.aadhaarNumber,
+            'licencephoto': req.files.licencephoto[0].filename,
+            'licencenumber': req.body.licencenumber,
+            'licencetype': req.body.licencetype,
+            'licenceexpirydate': req.body.licenceexpirydate,
+            'bloodgroup': req.body.bloodgroup,
+            'higherqualification': req.body.higherqualification,
+            'role': req.body.role,
+            'drivingexperience': req.body.drivingexperience,
+            'fatherphonenumber': req.body.fatherphonenumber,
+            'motherphonenumber': req.body.motherphonenumber,
+        })
+        await newDoc.save();
+        return res.status(200).json({ 'status': true, 'message': " Register successfully" })
+    } catch (err) {
+        console.log(err, '--err')
+    }
+}
+const driveraadhaarValid = async (req, res) => {
+    try {
+        let checkaadhaarNo = await DriverAdmission.find({}, { 'aadhaarNumber': 1 }).lean();
+        console.log(checkaadhaarNo, '---aadhaar')
+        return res.status(200).json({ 'status': true, result: checkaadhaarNo })
+    } catch (err) {
+        console.log(err, '---err')
+    }
+}
+const ViewDriver = async (req, res) => {
+    try {
+        const driverView = await DriverAdmission.find({}).lean();
+        return res.status(200).json({ 'status': true, 'result': driverView, 'imageUrl': config.IMAGE.DRIVER_FILE_URL_PATH })
+    } catch (err) {
+        return res.status(500).json({ 'status': false, 'message': 'Error on server' })
+    }
+}
 module.exports = {
     adminLogin,
     verifyCode,
@@ -883,5 +949,8 @@ module.exports = {
     teacherAttendanceSetup,
     getAttendance,
     getAttendanceforMonth,
-    findTeacherWholeClass
+    findTeacherWholeClass,
+    registerDriver,
+    driveraadhaarValid,
+    ViewDriver
 };

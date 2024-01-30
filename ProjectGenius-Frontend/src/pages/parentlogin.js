@@ -5,7 +5,7 @@ import Form from 'react-bootstrap/Form';
 import { setAuthToken } from '../lib/localstorage';
 import toastAlert from '../lib/toast';
 //import Actions
-import { teacherlogin } from '../actions/teacherAction';
+import { parentlogin } from '../actions/parentAction';
 //import config
 import { setAuthorization } from '../config/axios'
 //import pacakages
@@ -41,14 +41,14 @@ const ParentLogin = () => {
                 email: email,
                 password: password
             }
-            let { status, message, errors, token } = await teacherlogin(data)
+            let { status, message, errors, token } = await parentlogin(data)
             if (status === true) {
                 setFormValue(initialFormValue)
                 setErrors({})
                 setAuthToken(`Bearer ${token}`);
                 setAuthorization(`Bearer ${token}`);
                 toastAlert('success',message)
-                navigate('/teacher-attendance')         
+                navigate('/parent-home')       
             } else if (status === false) {
                 if (errors) {
                     setErrors(errors)

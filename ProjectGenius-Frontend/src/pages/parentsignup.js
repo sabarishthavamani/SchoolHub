@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import Form from 'react-bootstrap/Form';
 import toastAlert from '../lib/toast';
 //import Actions
-import { teachersignup } from '../actions/teacherAction';
+import { parentsignup } from '../actions/parentAction';
 //import pacakages
 import isEmpty from 'is-empty';
 
@@ -39,12 +39,12 @@ const ParentSignup = () => {
                 password: password,
                 confirmpassword: confirmpassword,
             }
-            let { status, message, errors } = await teachersignup(data)
+            let { status, message, errors } = await parentsignup(data)
             if (status === true) {
                 setFormValue(initialFormValue)
                 setErrors({})
                 toastAlert('success',message)
-                navigate('/teacher-login')         
+                navigate('/parent-login')         
             } else if (status === false) {
                 if (errors) {
                     setErrors(errors)

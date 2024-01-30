@@ -87,6 +87,30 @@ const Sidebar = (props) => {
               </NavLink>
               </div>
             </li>
+            <li  style={ isLinkActive('/driver')  ? {
+              background: 'linear-gradient(to right,#fde4cb,#fcfad3)'
+            }: null} >
+      <div className="menu-bar">
+        {isLinkActive('/driver') ? (
+          <img src={`${process.env.PUBLIC_URL}/images/blue-contact.png`} alt="" />
+        ) : (
+          <img src={`${process.env.PUBLIC_URL}/images/person.png`} alt="" />
+        )}
+        <NavLink to='/driver' className={`mysidebar ${isLinkActive('/driver')  ? 'activemysidebar' : null}`}>Driver</NavLink>  
+      </div>
+    </li>
+    <li  style={ isLinkActive('/driverview')  ? {
+              background: 'linear-gradient(to right,#fde4cb,#fcfad3)'
+            }: null} >
+      <div className="menu-bar">
+        {isLinkActive('/driverview') ? (
+          <img src={`${process.env.PUBLIC_URL}/images/listblue.png`} alt="" />
+        ) : (
+          <img src={`${process.env.PUBLIC_URL}/images/listgrey.png`} alt="" />
+        )}
+        <NavLink to='/driverview' className={`mysidebar ${isLinkActive('/driverview')  ? 'activemysidebar' : null}`}>Driver List</NavLink>  
+      </div>
+    </li>
         </ul>
       </div>
       <div className="part-two">

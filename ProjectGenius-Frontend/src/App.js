@@ -42,6 +42,12 @@ import GenerateReport from './pages/studentmarksheetgenerate';
 import TeacherChangepassword from './pages/teacherchangepassword';
 import TeacherForgetpassword from './pages/teacherforgetpassword';
 import TeacherResetpassword from './pages/teacherresetpassword';
+import ParentHomepage from './pages/parenthomepage';
+import Driver from './pages/driveradmission';
+import DriverList from './pages/driverlist';
+import StudentProfile from './pages/studentprofile';
+import BusDetails from './pages/busdetails';
+import BusSchedule from './pages/busschedule';
 
 function App() {
   return (
@@ -73,6 +79,8 @@ function App() {
           <Route path="/sectionallocate/:Id" element={<ConditionRoute type="private"><SectionAllocation /></ConditionRoute>} />
           <Route path="/teacher-allocate/:Id" element={<ConditionRoute type="private"><TeacherAllocation /></ConditionRoute>} />
           <Route path="/multi-sectionallocate" element={<ConditionRoute type="private"><MultiSectionAllocation /></ConditionRoute>} />
+          <Route path="/driver" element={<ConditionRoute type="private"><Driver /></ConditionRoute>} />
+          <Route path="/driverview" element={<ConditionRoute type="private"><DriverList /></ConditionRoute>} />
           <Route path="/teacher-login" element={<ConditionRoute type="public"><TeacherLogin /></ConditionRoute>} />
           <Route path="/teacher-signup" element={<ConditionRoute type="public"><TeacherSignup /></ConditionRoute>} />
           <Route path="/teacher-changepassword" element={<ConditionRoute type="private2"><TeacherChangepassword /></ConditionRoute>} />
@@ -85,6 +93,10 @@ function App() {
           <Route path="/student-signup" element={<ConditionRoute type="private2"><StudentSignup /></ConditionRoute>} />
           <Route path="/parent-login" element={<ConditionRoute type="private2"><ParentLogin /></ConditionRoute>} />
           <Route path="/parent-signup" element={<ConditionRoute type="private2"><ParentSignup /></ConditionRoute>} />
+          <Route path="/parent-home" element={<ConditionRoute type="private2"><ParentHomepage /></ConditionRoute>} />
+          <Route path="/student-profile" element={<ConditionRoute type="private2"><StudentProfile /></ConditionRoute>} />
+          <Route path="/bus-details" element={<ConditionRoute type="private2"><BusDetails /></ConditionRoute>} />
+          <Route path="/bus-schedule" element={<ConditionRoute type="private2"><BusSchedule /></ConditionRoute>} />
           <Route path="/teacher-generatecard" element={<ConditionRoute type="private2"><GenerateReport /></ConditionRoute>} />
           {/* Redirecting to 404 page*/}
           <Route path="*" element={<ConditionRoute type="public"><Page404 /></ConditionRoute>} />

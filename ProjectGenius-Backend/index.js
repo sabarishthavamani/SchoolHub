@@ -6,6 +6,8 @@ const morgan = require('morgan');
 // Routes
 const adminRoutes =require('./routes/admin.route');
 const teacherRoutes = require('./routes/teacher.route');
+const parentRoutes = require('./routes/parent.route');
+
 // config
 const config = require('./config');
 const app = express();
@@ -18,6 +20,7 @@ app.use(cors())
 app.use(express.static('public'))
 app.use('/admin', adminRoutes);
 app.use('/admin', teacherRoutes);
+app.use('/admin', parentRoutes);
 
 const mongoConnect = async () => {
   try {

@@ -5,10 +5,12 @@ let key = {
     'PORT': PORT,
     'SECRET_KEY': 'PROJECT_GENIUS',
     'IMAGE': {
-        'USER_FILE_PATH': 'public/profile/',
-        'USER_FILE_URL_PATH': `${API_URL}/profile`,
+        'USER_FILE_PATH': 'public/studentprofile/',
+        'USER_FILE_URL_PATH': `${API_URL}/studentprofile`,
         'TEACHER_FILE_PATH': 'public/teacherprofile/',
         'TEACHER_FILE_URL_PATH': `${API_URL}/teacherprofile`,
+        'DRIVER_FILE_PATH': 'public/driverprofile/',
+        'DRIVER_FILE_URL_PATH': `${API_URL}/driverprofile`,
     }
 }
 module.exports = key

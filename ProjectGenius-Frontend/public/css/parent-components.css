@@ -1,0 +1,85 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
+.drivers-nav {
+    background-color: #fff;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    position: sticky;
+    left: 0;
+    bottom: 0;
+    margin-top: auto;
+    padding: 8px 0px;
+}
+
+.drivers-nav > a {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    color: #979797;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+}
+
+.selected-drivers-nav-menu {
+    color: #FF80A6 !important;
+    font-weight: 600 !important;
+}
+
+.drivers-header {
+    background-color: #FBF8BA;
+    width: 100%;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    box-shadow: 1.95px 1.95px 2.6px 0px rgba(0, 0, 0, 0.15);
+    position: sticky;
+    top: 0;
+    left: 0;
+}
+
+.drivers-header > button {
+    outline: none;
+    background-color: transparent;
+    border: none;
+    font-size: 18px;
+    color: #000;
+}
+
+.drivers-header > .header-bus-img {
+    height: 50px;
+    width: 50px;
+}
+
+.drivers-header > .header-bus-img > img {
+    height: 100%;
+    width: 100%;
+}
+
+.drivers-header > .header-bus-details {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.drivers-header > .header-bus-details > p {
+    color: #263238;
+    font-family: Poppins;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.48px;
+}
+
+.drivers-header > .header-bus-details > span {
+    color: #263238;
+    font-family: Poppins;
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 0.36px;
+}

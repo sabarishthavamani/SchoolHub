@@ -1,0 +1,675 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
+.driver-homepage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 20px;
+    width: 100%;
+    height: 100dvh;
+    overflow-y: auto;
+    background: #FFF8FA;
+}       
+
+.driver-homepage > .homepage-header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: #FBF8BA;
+    height: 203px;
+    width: 100%;
+}
+
+.driver-homepage > .homepage-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    gap: 12px;
+    width: 90%;
+}
+
+.homepage-nav {
+    width: 100%;
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.homepage-nav > span > svg {
+    color: #263238;
+    font-size: 26px;
+}
+
+.homepage-nav > h2 {
+    color: #3C3C3C;
+    text-align: center;
+    font-family: Poppins;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    margin: 0;
+}
+
+.homepage-nav > .homepage-nav-menus {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.homepage-nav > .homepage-nav-menus span > svg {
+    color: #263238;
+    font-size: 20px;
+    position: relative;
+}
+
+.homepage-nav-menus > .notification-alert {
+    position: relative;
+}
+
+.homepage-nav-menus > .notification-alert::before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 2px;
+    right: 3px;
+    z-index: 1;
+    height: 6px;
+    width: 6px;
+    border-radius: 50%;
+    background-color: #EA0A40;
+}
+
+.homepage-search {
+    width: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: #fff;
+    border-radius: 20px;
+    padding: 6px 16px;
+}
+
+.homepage-search > span > svg {
+    font-size: 20px;
+    color: #8B9390;
+}
+
+.homepage-search > input {
+    width: 100%;
+    background-color: transparent;
+    border: none;
+    outline: none;
+    color: #6d6d6d;
+    font-family: Poppins;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+}
+
+.homepage-menu-section {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(50%, 1fr));
+    gap: 12px;
+    margin-top: 16px;
+}
+
+.homepage-menu-section > .homepage-menu {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 16px;
+    background-color: #fff;
+    border-radius: 16px;
+    height: 150px;
+    box-shadow: 0px 3px 8px 0px rgba(0, 0, 0, 0.1);
+    margin-bottom: 12px;
+}
+
+.homepage-menu-section > .homepage-menu > img {
+    height: 55px;
+    width: 55px;
+    margin-bottom: 10px;
+}
+.homepage-menu-section > .homepage-menu > span {
+    color: #212423;
+    text-align: center;
+    font-family: Poppins;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+}
+
+/* Live Tracking Page Styles */
+
+.live-tracking-page {
+    height: 100vh;
+    width: 100%;
+    overflow-y: auto;
+    background-color: #FFFCFD;
+}
+
+.bus-tracking-info {
+    position: sticky;
+    bottom: 0;
+    height: 80vh;
+    width: 100%;
+    background-color: #fff;
+    transition: all 0.3s ease-in-out;
+}
+
+.open-tracking-info {
+    transform: translateY(0%);
+}
+
+.close-tracking-info {
+    transform: translateY(85%);
+}
+
+.bus-info {
+    background-color: #FFF;
+    padding: 16px 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 1.95px 1.95px 2.6px 0px rgba(0, 0, 0, 0.15);
+}
+
+.bus-info > .bus-info-img {
+    height: 50px;
+    width: 50px;
+}
+
+.bus-info > .bus-info-img > img {
+    height: 100%;
+    width: 100%;
+}
+
+.bus-info > .bus-details {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.bus-info > .bus-details > p {
+    color: #263238;
+    font-family: Poppins;
+    font-size: 16px;
+    font-weight: 800;
+}
+
+.bus-info > .bus-details > span {
+    color: #263238;
+    font-family: Poppins;
+    font-size: 13px;
+    font-weight: 400;
+}
+
+.bus-info > .bus-info-btn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.bus-info > .bus-info-btn > button {
+    border: none;
+    outline: none;
+    cursor: pointer;
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-size: 20px;
+}
+
+.bus-info > .bus-info-btn > .info-call-btn {
+    background-color: #012970;
+    color: #fff;
+}
+
+.bus-info > .bus-info-btn > .info-pop-btn {
+    background-color: transparent;
+    border: 1px solid #B7BFCC;
+    color: #012970;
+}
+
+/* Bus Schedule Page */
+
+.bus-schedule-page {
+    background-color: #FFF8FA;
+    height: 100dvh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: auto;
+}
+
+.bus-schedule-container {
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+}
+
+.bus-schedule-container > .bus-schedule-tabs {
+    width: 100%;
+    background: #FFF;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0px 1px 5px 0px #00000029;
+    padding: 12px;
+    margin: 16px 0px;
+}
+
+.bus-schedule-container > .bus-schedule-tabs > button {
+    background-color: #fff;
+    border-radius: 5px;
+    border: 1px solid #D9D9D9;
+    color: #263238;
+    font-family: Poppins;
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 0.36px;
+    padding: 5px 3px;
+    flex: 1 1 0;
+    cursor: pointer;
+}
+
+.bus-schedule-container > .bus-details-card {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    margin: 12px 0px;
+}
+
+.bus-schedule-container > .bus-details-card > h2 {
+    color: #27272A;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    text-align: left;
+}
+
+.bus-schedule-container > .bus-details-card > .details-card-container {
+    padding: 12px 14px;
+    border-radius: 8px;
+    background: #FFF;
+}
+
+.bus-schedule-container > .bus-details-card > .details-card-container > div {
+    display: flex;
+    align-items: center;
+    padding: 8px 0px;
+    margin: auto;
+}
+
+.bus-schedule-container > .bus-details-card > .details-card-container > div > * {
+    flex: 1 1 0;
+}
+
+.bus-schedule-container > .bus-details-card > .details-card-container > div > p {
+    color: #27272A;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+}
+
+.bus-schedule-container > .bus-details-card > .details-card-container > div > h3 {
+    color: #27272A;
+    text-align: right;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 700;
+}
+
+.bus-schedule-container > .bus-details-card > .details-card-container > hr {
+    margin: 0;
+    background: #EBEBF0;
+}
+
+.bus-schedule-container > .bus-route-card {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    margin: 12px 0px;
+}
+
+.bus-schedule-container > .bus-route-card > h2 {
+    color: #27272A;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    text-align: left;
+}
+
+.bus-schedule-container > .bus-route-card > .route-card-container {
+    padding: 12px 14px;
+    border-radius: 8px;
+    background: #FFF;
+}
+
+.bus-schedule-container > .bus-route-card > .route-card-container > .bus-route-info {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.bus-schedule-container > .bus-route-card > .route-card-container > .bus-route-info > span svg {
+    font-size: 20px;
+}
+
+.bus-schedule-container > .bus-route-card > .route-card-container > .bus-route-info > .bus-route-address {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    flex: 1 1 0;
+}
+
+.bus-schedule-container > .bus-route-card > .route-card-container > .bus-route-info > .bus-route-address > div {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.bus-schedule-container > .bus-route-card > .route-card-container > .bus-route-info > .bus-route-address > div p {
+    color: #28282B;
+    font-size: 14px;
+    font-weight: 400;
+    flex: 1 1 0;
+}
+
+.bus-schedule-container > .bus-route-card > .route-card-container > .bus-route-info > .bus-route-address > div span {
+    color: #808089;
+    font-size: 12px;
+    font-weight: 400;
+}
+
+.bus-schedule-container > .bus-route-card > .route-card-container > .bus-route-info > .bus-route-address > h3{
+    color: #28282B;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 700;
+    margin: 0;
+}
+
+.bus-schedule-container > .bus-route-card > .route-card-container > .bus-route-info > .bus-route-address > span {
+    color: #808089;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+}
+
+.bus-schedule-container > .bus-route-card > .route-card-container > hr {
+    background: #EBEBF0;
+}
+
+/* Bus Details Page */
+
+.bus-details-page {
+    background-color: #FFF8FA;
+    height: 100dvh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: auto;
+}
+
+.bus-details-container {
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+}
+
+.bus-details-container > .bus-details-card {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    margin: 12px 0px;
+}
+
+.bus-details-container > .bus-details-card > h2 {
+    color: #27272A;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    text-align: left;
+}
+
+.bus-details-container > .bus-details-card > .details-card-container {
+    padding: 12px 14px;
+    border-radius: 8px;
+    background: #FFF;
+}
+
+.bus-details-container > .bus-details-card > .details-card-container > div {
+    display: flex;
+    align-items: center;
+    padding: 8px 0px;
+    margin: auto;
+}
+
+.bus-details-container > .bus-details-card > .details-card-container > div > * {
+    flex: 1 1 0;
+}
+
+.bus-details-container > .bus-details-card > .details-card-container > div > p {
+    color: #27272A;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+}
+
+.bus-details-container > .bus-details-card > .details-card-container > div > h3 {
+    color: #27272A;
+    text-align: right;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 700;
+}
+
+.bus-details-container > .bus-details-card > .details-card-container > hr {
+    margin: 0;
+    background: #EBEBF0;
+}
+
+.bus-details-container > .bus-incharge-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    margin: 12px 0px;
+}
+
+.bus-details-container > .bus-incharge-container > h2{
+    color: #27272A;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    text-align: left;
+}
+
+.bus-details-container > .bus-incharge-container > .bus-incharge-info {
+    width: 90%;
+    display: flex;
+    align-items: flex-start;
+    align-self: center;
+    gap: 10px;
+    padding: 12px 16px;
+    border-radius: 5px;
+    background: #FFF;
+    margin: 12px 0px;
+    box-shadow: 0px 1px 3px -1px #0000004d, 0px 2px 5px -1px #32325d40;
+}
+
+.bus-details-container > .bus-incharge-container > .bus-incharge-info > .bus-incharge-img {
+    height: 69px;
+    width: 69px;
+    border-radius: 50%;
+    background-color: #FDEDEB;
+    display: grid;
+    place-items: center;
+}
+
+.bus-details-container > .bus-incharge-container > .bus-incharge-info > .bus-incharge-img > img {
+    height: 85%;
+    width: 85%;
+    border-radius: 50%;
+}
+
+.bus-details-container > .bus-incharge-container > .bus-incharge-info > .bus-incharge-details {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.bus-details-container > .bus-incharge-container > .bus-incharge-info > .bus-incharge-details > .bus-incharge-name {
+    margin-bottom: 10px;
+}
+
+.bus-details-container > .bus-incharge-container > .bus-incharge-info > .bus-incharge-details > .bus-incharge-name > h3 {
+    color: #000;
+    font-family: 'Poppins';
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 400;
+    margin: 0;
+}
+
+.bus-details-container > .bus-incharge-container > .bus-incharge-info > .bus-incharge-details > .bus-incharge-name > p {
+    color: #FF3672;
+    font-family: 'Poppins';
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+}
+
+.bus-details-container > .bus-incharge-container > .bus-incharge-info > .bus-incharge-details > .bus-incharge-contact > svg {
+    color: #929199;
+    background-color: transparent;
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+    border: 2px solid #EBEBEB;
+}
+
+.bus-details-container > .bus-incharge-container > .bus-incharge-info > .bus-incharge-details > .bus-incharge-contact > span {
+    color: #929199;
+    font-family: 'Poppins';
+    font-size: 12px;
+    font-style: normal;
+    margin-left: 8px;
+}
+
+.bus-details-container > .bus-incharge-container > .bus-incharge-info > .bus-incharge-details > .bus-incharge-contact > p {
+    color: #455A64;
+    font-family: Poppins;
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+/* Student Profile Page  */
+
+.student-profile-page {
+    background-color: #FFFFFF;
+    height: 100dvh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: auto;
+}
+
+.student-profile-container {
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+}
+
+.student-profile-container > .student-info-container {
+    background-color: #FFDFE9;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 10px;
+    box-shadow: 0px 3px 8px 0px #0000003d;
+    margin: 16px 0px;
+    width: 100%;
+}
+
+.student-profile-container > .student-info-container > .student-info-img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.student-profile-container > .student-info-container > .student-info-img > img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.student-profile-container > .student-info-container > .student-info-name-class > p{
+    color: #263238;
+    font-family: 'Poppins';
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    letter-spacing: 0.54px;
+}
+
+.student-profile-container > .student-detailed-info {
+    width: 100%;
+}
+
+.student-profile-container > .student-detailed-info > h2 {
+    color: #FF3672;
+    font-family: 'Poppins';
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 30px;
+}
+
+.student-profile-container > .student-detailed-info > table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0px;
+}
+ 
+.student-profile-container > .student-detailed-info > table th {
+    color: #000;
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 400;
+    padding: 8px;
+    width: 40%;
+}
+
+.student-profile-container > .student-detailed-info > table td {
+    color: #000;
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 400;
+    padding: 8px;
+    width: 40%;
+}
+
+.student-profile-container > .student-detailed-info > table th {
+    font-size: 14px;
+}
+
+.student-profile-container > .student-detailed-info > table td {
+    font-size: 18px;
+}

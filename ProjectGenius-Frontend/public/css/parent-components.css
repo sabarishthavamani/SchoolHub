@@ -11,6 +11,7 @@
     bottom: 0;
     margin-top: auto;
     padding: 8px 0px;
+    z-index: 999;
 }
 
 .drivers-nav > a {
@@ -40,8 +41,9 @@
     padding: 10px 12px;
     box-shadow: 1.95px 1.95px 2.6px 0px rgba(0, 0, 0, 0.15);
     position: sticky;
-    top: 0;
+    top: -1px;
     left: 0;
+    z-index: 999;
 }
 
 .drivers-header > button {
@@ -83,3 +85,163 @@
     font-weight: 400;
     letter-spacing: 0.36px;
 }
+
+/* Attendance Calender */
+
+.bus-att {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    margin: 16px 0;
+}
+
+.bus-att > .bus-att-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 12px 0;
+}
+
+.bus-att > .bus-att-info > .bus-att-absent {
+    color: #263238;
+    font-family: 'Poppins';
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.bus-att > .bus-att-info > .bus-att-absent::before {
+    content: '';
+    display: inline-block;
+    position: relative;
+    background-color: #FF80A6;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.bus-att > .bus-att-info > .bus-att-holidays {
+    color: #263238;
+    font-family: 'Poppins';
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+}
+
+.bus-att > .bus-att-info > .bus-att-holidays > span{
+    color: #DD0505;
+    font-size: 16px;
+    margin-right: 10px;
+}
+
+.bus-att > .react-calender-container {
+    position: relative;
+    align-self: center;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.bus-att > .react-calender-container > span {
+    display: grid;
+    place-content: center;
+    width: 35px;
+    height: 35px;
+    background-color: #F5F0A0;
+    border: 1px solid #01297080;
+    border-radius: 50%;
+    position: absolute;
+    top: -20px;
+    left: 47%;
+}
+
+.bus-att > .react-calender-container > span > svg {
+    color: #012970;
+    font-size: 20px;
+}
+
+/* React Calender Style */
+
+.react-calendar {
+    border: none !important;
+    border-radius: 6px;
+    box-shadow: 0px 8px 24px 0px #959da533;
+}
+
+.react-calendar__navigation {
+    display: flex;
+    height: 44px;
+    padding-top: 8px;
+    margin-bottom: 1em;
+}
+
+.react-calendar__navigation__prev2-button {
+    display: none !important;
+}
+
+.react-calendar__navigation__next2-button {
+    display: none !important;
+}
+
+.react-calendar__navigation__label {
+    color: #263238;
+    font-family: 'Poppins';
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+}
+
+.react-calendar__navigation button {
+    min-width: 20px !important;
+    height: 20px !important;
+    background: none;
+    margin: 12px 8px 0px 8px !important;
+}
+
+
+.react-calendar__navigation__arrow {
+    color: #929199;
+    border-radius: 5px;
+    border: 1px solid #D9D9D9 !important;
+    font-size: 23px;
+    display: grid;
+    place-items: stretch;
+}
+
+.react-calendar__month-view__weekdays {
+    color: var(--Label-Tertiary, rgba(60, 60, 67, 0.30));
+    text-align: center;
+    font-family: 'Poppins';
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 500 !important;
+    text-transform: uppercase;
+}
+
+.react-calendar__month-view__weekdays abbr {
+    text-decoration: none !important;
+}
+
+.react-calendar__tile {
+    border-radius: 50% !important;
+    padding: 14px !important;
+}
+
+.react-calendar__tile--now {
+    background-color: #0a7aff21 !important;
+    color: #0A7AFF !important;
+}
+
+/* .react-calendar__tile--active {
+    
+} */
+
+.react-calendar__tile.absent-date {
+    background-color: #FF80A6;
+    color: #fff !important;
+  }

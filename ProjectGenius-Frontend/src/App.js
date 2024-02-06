@@ -48,6 +48,9 @@ import DriverList from './pages/driverlist';
 import StudentProfile from './pages/studentprofile';
 import BusDetails from './pages/busdetails';
 import BusSchedule from './pages/busschedule';
+import BusAttendance from './pages/busattendance'
+import BusTracking from './pages/bustracking';
+import VehicleAdmission from './pages/vehicleadmission';
 
 function App() {
   return (
@@ -81,6 +84,7 @@ function App() {
           <Route path="/multi-sectionallocate" element={<ConditionRoute type="private"><MultiSectionAllocation /></ConditionRoute>} />
           <Route path="/driver" element={<ConditionRoute type="private"><Driver /></ConditionRoute>} />
           <Route path="/driverview" element={<ConditionRoute type="private"><DriverList /></ConditionRoute>} />
+          <Route path="/vehicle" element={<ConditionRoute type="private"><VehicleAdmission /></ConditionRoute>} />
           <Route path="/teacher-login" element={<ConditionRoute type="public"><TeacherLogin /></ConditionRoute>} />
           <Route path="/teacher-signup" element={<ConditionRoute type="public"><TeacherSignup /></ConditionRoute>} />
           <Route path="/teacher-changepassword" element={<ConditionRoute type="private2"><TeacherChangepassword /></ConditionRoute>} />
@@ -97,6 +101,8 @@ function App() {
           <Route path="/student-profile" element={<ConditionRoute type="private2"><StudentProfile /></ConditionRoute>} />
           <Route path="/bus-details" element={<ConditionRoute type="private2"><BusDetails /></ConditionRoute>} />
           <Route path="/bus-schedule" element={<ConditionRoute type="private2"><BusSchedule /></ConditionRoute>} />
+          <Route path="/bus-attendance" element={<ConditionRoute type="private2"><BusAttendance /></ConditionRoute>} />
+          <Route path="/bus-tracking" element={<ConditionRoute type="private2"><BusTracking /></ConditionRoute>} />
           <Route path="/teacher-generatecard" element={<ConditionRoute type="private2"><GenerateReport /></ConditionRoute>} />
           {/* Redirecting to 404 page*/}
           <Route path="*" element={<ConditionRoute type="public"><Page404 /></ConditionRoute>} />

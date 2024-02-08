@@ -11,6 +11,8 @@ let key = {
         'TEACHER_FILE_URL_PATH': `${API_URL}/teacherprofile`,
         'DRIVER_FILE_PATH': 'public/driverprofile/',
         'DRIVER_FILE_URL_PATH': `${API_URL}/driverprofile`,
+        'VehiclePhoto_FILE_PATH': 'public/VehiclePhoto/',
+        'VehiclePhoto_FILE_URL_PATH': `${API_URL}/VehiclePhoto`,
     }
 }
 module.exports = key

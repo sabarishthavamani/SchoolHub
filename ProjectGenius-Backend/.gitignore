@@ -4,9 +4,3 @@
 # Build files
 /build
 /dist
-
-# IDE files
-.vscode
-
-# Logs
-*.log

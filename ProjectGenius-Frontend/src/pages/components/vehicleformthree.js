@@ -4,6 +4,7 @@ import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 
 const VehicleFormThree = ({
   handlePreClick,
+  handleSubmit,
   setFormValue,
   formValue,
 }) => {
@@ -22,7 +23,7 @@ const VehicleFormThree = ({
   };
 
   const triggerSubmitAction = () => {
-    console.log(formValue, "final");
+    handleSubmit()
   };
 
   const triggerPreviousForm = () => {

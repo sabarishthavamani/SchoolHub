@@ -445,6 +445,27 @@ export const registerTeacher = async (formData) => {
         }
     }
 }
+
+// export const VehicleDetailsURL = `http://localhost:3002/admin/vehicleadmission`;
+
+export const VehicleURL = async (formData) => {
+
+    try {
+        let respData = await axios({
+            'url': '/vehicleadmission',
+            'method': 'post',
+            'data': formData
+        });
+        return {
+          'status': respData.data.status,
+          'message': respData.data.message,
+        };
+    
+      } catch (err) {
+        console.log(err, 'errrr');
+      }
+  }
+
 export const viewTeacher = async () => {
 
     try {

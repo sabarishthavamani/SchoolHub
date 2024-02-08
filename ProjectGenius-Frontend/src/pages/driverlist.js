@@ -14,8 +14,6 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import { ArrowRightAltOutlined } from "@mui/icons-material";
 //import Actions
 import { viewStudent, deleteStudent, viewDriver } from "../actions/adminAction";
-//impotr Components
-import StudentInfo from "./components/studentinfo";
 //import Lib
 import toastAlert from "../lib/toast";
 import DriverInfo from "./components/driverinfo";

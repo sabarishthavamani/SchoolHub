@@ -2,8 +2,8 @@ import React from "react";
 
 const VehicleFormOne = ({ handleNextClick, setFormValue, formValue }) => {
   const {
-    vehicleNumber,
     vehicleRegisterNumber,
+    vehicleType,
     manufacturer,
     seatingCapacity,
     ownerName,
@@ -13,8 +13,8 @@ const VehicleFormOne = ({ handleNextClick, setFormValue, formValue }) => {
   } = formValue;
 
   const isButtonDisable =
-    vehicleNumber !== "" &&
     vehicleRegisterNumber !== "" &&
+    vehicleType !== "" &&
     manufacturer !== "" &&
     seatingCapacity !== "" &&
     ownerName !== "" &&
@@ -40,18 +40,6 @@ const VehicleFormOne = ({ handleNextClick, setFormValue, formValue }) => {
         </div>
         <form action="" className="teacher-form">
           <div className="teach-box">
-            <label htmlFor="VehicleNumber">
-              Vehicle Number<sup>*</sup>
-            </label>
-            <input
-              type="number"
-              name="vehicleNumber"
-              id="VehicleNumber"
-              value={vehicleNumber}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="teach-box">
             <label htmlFor="VehicleRegisterNumber">
               Vehicle Register Number<sup>*</sup>
             </label>
@@ -64,6 +52,21 @@ const VehicleFormOne = ({ handleNextClick, setFormValue, formValue }) => {
               maxLength={20}
               style={{textTransform: 'uppercase'}}
             />
+          </div>
+          <div className="teach-box">
+            <label htmlFor="VehicleType">
+              Vehicle Type<sup>*</sup>
+            </label>
+            <select
+              type="number"
+              name="vehicleType"
+              id="VehicleType"
+              value={vehicleType}
+              onChange={handleChange}>
+                <option value=""></option>
+                <option value="bus">Bus</option>
+                <option value="van">Van</option>
+              </select>
           </div>
           <div className="teach-box">
             <label htmlFor="Manufacturer">

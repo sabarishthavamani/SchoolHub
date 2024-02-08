@@ -13,6 +13,8 @@ const adminCtrl = require('../controller/admin.controller')
 //validation
 const adminValid = require('../validation/admin.validation')
 
+//Vehicle
+const VehicleCtrl = require('../controller/vehicle.controller')
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -61,6 +63,23 @@ const storage3 = multer.diskStorage({
 const driverprofileUpload = multer({ storage: storage3 })
 
 
+//VehiclePhoto
+const storage4 = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, config.IMAGE.VehiclePhoto_FILE_PATH)
+    },
+    filename: function (req, file, cb) {
+        let mimeType =  file.mimetype;
+        let split = mimeType.split('/');
+        let fileType = split[1];
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+        cb(null, file.fieldname + '-' + uniqueSuffix + '.' + fileType)
+    }
+})
+
+const VehiclePhoto = multer({ storage: storage4 })
+
+
 //routes
 //admin-login
 router.route('/register').post( adminCtrl.createadmin);
@@ -106,9 +125,22 @@ router.route('/findteacherwholeclass').get(adminCtrl.findTeacherWholeClass);
 router.route('/teacherattendance').post(adminCtrl.teacherAttendanceSetup);
 router.route('/findteacherattendance').get(adminCtrl.getAttendance);
 router.route('/findmonthlyattendance').get(adminCtrl.getAttendanceforMonth);
+
+
 //driver
 router.route('/driveradmission').post(driverprofileUpload.fields([{ name: 'driverphoto', maxCount: 1 }, { name: 'licencephoto', maxCount: 1 }]),adminCtrl.registerDriver);
 router.route('/getdriveraadhaar').get(adminCtrl.driveraadhaarValid);
 router.route('/viewdriver').get(adminCtrl.ViewDriver);
+
+const VehicleRegistrationController=require('../controller/vehicle.controller')
+
+// Vehicle Registration Details
+router.route('/vehicleadmission').post(VehiclePhoto.fields([{ name: 'pollutionCertificate', maxCount: 1 }, { name: 'insurance', maxCount: 1 }]),VehicleCtrl.VehiclePost);
+router.get('/VehicleDetails',VehicleRegistrationController.VehicleDetails);
+router.get('/VehicleDetailById/:id',VehicleRegistrationController.VehicleDetailById);
+router.put('/VehicleDetailUpdate/:id',VehicleRegistrationController.VehicleDetailUpdate);
+router.delete('/VehicleDetailDelete/:id',VehicleRegistrationController.VehicleDetailDelete);
+
+
 
 module.exports = router;

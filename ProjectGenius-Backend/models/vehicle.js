@@ -5,11 +5,11 @@ const useschema = new schema({
     type: String,
     require: true,
   },
-  vehicleRegisterNumber: {
+  vehicleType: {
     type: String,
     require: true,
   },
-  vehicleType: {
+  vehicleRegisterNumber: {
     type: String,
     require: true,
   },
@@ -40,7 +40,7 @@ const useschema = new schema({
   pollutionCertificate: {
     
     type: String,
-    require: true,
+    // require: true,
   },
   pollutionTestedDate: {
     type: String,
@@ -56,7 +56,7 @@ const useschema = new schema({
   },
   insuranceStartDate: {
     type: String,
-    require: true,
+    // require: true,
   },
   insuranceEndDate: {
     type: String,
@@ -93,6 +93,10 @@ const useschema = new schema({
   vehicleRoute: {
     type: String,
     require: true,
+  },
+  active : {
+    type:Number,
+    default : 1
   },
 });
 

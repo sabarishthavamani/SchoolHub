@@ -107,14 +107,7 @@ const VehicleAdmission = () => {
     let {  message, errors,status:addstatus } = await VehicleURL(formData)
     toastAlert(addstatus, message)
     setFormValue(initialFormValue)
-    navigate('/teacherview')
-    
-    // if (status === true) {
-
-    //     toastAlert('success', message)
-    //     setFormValue(initialFormValue)
-    //     navigate('/teacherview')
-    // }
+    navigate('/vehicleview')
 
 } catch (err) {
    console.log(err)

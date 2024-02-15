@@ -387,3 +387,187 @@
     position: sticky;
     top: -1px;
 }
+
+/* Driver Allocation */
+
+.driver-allocate-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 100%;
+    padding: 0.5rem 0;
+}
+
+.driver-allocate-container > .driver-allocate-form {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    gap: 2rem;
+    width: 90%;
+    margin-bottom: 1rem;
+}
+
+.driver-allocate-part-one {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+}
+
+.driver-allocate-input {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    margin: 8px 6px;
+}
+
+.driver-allocate-input > label {
+    font-size: 14px;
+    color: #303972;
+    font-weight: 600;
+}
+
+.driver-allocate-input > input {
+    height: 33px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-top: 5px;
+    outline: none;
+    padding-left: 10px;
+}
+
+.driver-allocate-input > select {
+    height: 33px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-top: 5px;
+    outline: none;
+    padding-left: 10px;
+}
+
+.driver-allocate-part-two {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 50%;
+}
+
+.driver-allocate-part-two > .driver-allocate-part-two-sections {
+    width: 100%;
+    display: flex;
+}
+
+.driver-allocate-part-two > .driver-allocate-part-two-sections > .driver-allocate-input {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    margin: 8px 6px;
+}
+
+/* Route Allocation */
+.route-allocate-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 0.5rem 0;
+}
+
+.route-allocate-container > .route-allocate-form {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    gap: 2rem;
+    width: 90%;
+    margin-bottom: 1rem;
+}
+
+.route-allocate-part-one {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+}
+
+.route-allocate-input {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    margin: 8px 6px;
+}
+
+.route-allocate-input > label {
+    font-size: 14px;
+    color: #303972;
+    font-weight: 600;
+}
+
+.route-allocate-input > div > label {
+    font-size: 14px;
+    color: #303972;
+    font-weight: 600;
+}
+
+.route-allocate-input > input {
+    height: 33px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-top: 5px;
+    outline: none;
+    padding-left: 10px;
+}
+
+.route-allocate-input > select {
+    height: 33px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-top: 5px;
+    outline: none;
+    padding-left: 10px;
+}
+
+.route-allocate-part-two {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 50%;
+}
+
+.route-allocate-part-two-sections {
+    width: 100%;
+    display: flex;
+}
+
+.route-allocate-part-two-sections > .route-allocate-input {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    margin: 8px 6px;
+}
+
+.stop-allocate-sections {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 2rem;
+    width: 90%;
+    margin-bottom: 1rem;
+}
+
+.stop-allocate-sections > .stop-allocate-inputs {
+    width: 250px;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: start;
+}
+
+.add-route-allocate-control {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    gap: 1.5rem;
+}

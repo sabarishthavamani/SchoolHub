@@ -51,6 +51,10 @@ import BusSchedule from './pages/busschedule';
 import BusAttendance from './pages/busattendance'
 import BusTracking from './pages/bustracking';
 import VehicleAdmission from './pages/vehicleadmission';
+import VehicleList from './pages/vehiclelist';
+import VehicleEdit from './pages/vehicleedit';
+import DriverEdit from './pages/driveredit';
+import RouteAllocation from './pages/routeallocation';
 
 function App() {
   return (
@@ -85,6 +89,10 @@ function App() {
           <Route path="/driver" element={<ConditionRoute type="private"><Driver /></ConditionRoute>} />
           <Route path="/driverview" element={<ConditionRoute type="private"><DriverList /></ConditionRoute>} />
           <Route path="/vehicle" element={<ConditionRoute type="private"><VehicleAdmission /></ConditionRoute>} />
+          <Route path="/vehicleview" element={<ConditionRoute type="private"><VehicleList /></ConditionRoute>} />
+          <Route path="/vehicle-edit/:Id" element={<ConditionRoute type="private"><VehicleEdit /></ConditionRoute>} />
+          <Route path="/driver-edit/:Id" element={<ConditionRoute type="private"><DriverEdit /></ConditionRoute>} />
+          <Route path="/route-allocate/:Id" element={<ConditionRoute type="private"><RouteAllocation /></ConditionRoute>} />
           <Route path="/teacher-login" element={<ConditionRoute type="public"><TeacherLogin /></ConditionRoute>} />
           <Route path="/teacher-signup" element={<ConditionRoute type="public"><TeacherSignup /></ConditionRoute>} />
           <Route path="/teacher-changepassword" element={<ConditionRoute type="private2"><TeacherChangepassword /></ConditionRoute>} />

@@ -131,16 +131,20 @@ router.route('/findmonthlyattendance').get(adminCtrl.getAttendanceforMonth);
 router.route('/driveradmission').post(driverprofileUpload.fields([{ name: 'driverphoto', maxCount: 1 }, { name: 'licencephoto', maxCount: 1 }]),adminCtrl.registerDriver);
 router.route('/getdriveraadhaar').get(adminCtrl.driveraadhaarValid);
 router.route('/viewdriver').get(adminCtrl.ViewDriver);
-
-const VehicleRegistrationController=require('../controller/vehicle.controller')
+router.route('/getSingleDriver/:id').get(adminCtrl.getSingleDriver);
+router.route('/updateDriverDetail/:id').put(adminCtrl.DriverUpdate);
+router.route('/deleteDriverDetail/:id').put(adminCtrl.DriverDelete);
 
 // Vehicle Registration Details
 router.route('/vehicleadmission').post(VehiclePhoto.fields([{ name: 'pollutionCertificate', maxCount: 1 }, { name: 'insurance', maxCount: 1 }]),VehicleCtrl.VehiclePost);
-router.get('/VehicleDetails',VehicleRegistrationController.VehicleDetails);
-router.get('/VehicleDetailById/:id',VehicleRegistrationController.VehicleDetailById);
-router.put('/VehicleDetailUpdate/:id',VehicleRegistrationController.VehicleDetailUpdate);
-router.delete('/VehicleDetailDelete/:id',VehicleRegistrationController.VehicleDetailDelete);
+router.get('/VehicleDetails',VehicleCtrl.VehicleDetails);
+router.get('/VehicleDetailById/:id',VehicleCtrl.VehicleDetailById);
+router.put('/VehicleDetailUpdate/:id', VehicleCtrl.VehicleDetailUpdate);
+router.get('/VehicleDetailDelete/:id',VehicleCtrl.VehicleDetailDelete);
 
-
+// Vehicle Route
+router.route('/routeAllocation').post(VehicleCtrl.VehicleRouteAllocate);
+router.route('/vehicleRouteDetails').post(VehicleCtrl.getVehicleRoute);
+router.put('/updateVehicleRoute', VehicleCtrl.updateVehicleRoute);
 
 module.exports = router;

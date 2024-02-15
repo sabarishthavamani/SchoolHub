@@ -123,6 +123,18 @@ const Sidebar = (props) => {
         <NavLink to='/vehicle' className={`mysidebar ${isLinkActive('/vehicle')  ? 'activemysidebar' : null}`}>Vehicle</NavLink>  
       </div>
     </li>
+    <li  style={ isLinkActive('/vehicleview')  ? {
+              background: 'linear-gradient(to right,#fde4cb,#fcfad3)'
+            }: null} >
+      <div className="menu-bar">
+        {isLinkActive('/vehicleview') ? (
+          <img src={`${process.env.PUBLIC_URL}/images/listblue.png`} alt="" />
+        ) : (
+          <img src={`${process.env.PUBLIC_URL}/images/listgrey.png`} alt="" />
+        )}
+        <NavLink to='/vehicleview' className={`mysidebar ${isLinkActive('/vehicleview')  ? 'activemysidebar' : null}`}>Vehicle List</NavLink>  
+      </div>
+    </li>
         </ul>
       </div>
       <div className="part-two">
@@ -137,7 +149,7 @@ const Sidebar = (props) => {
           navigate('/login')
         }}><FontAwesomeIcon icon={faSignOut} /></button>
       </div>
-    </div>
+    </div> 
   )
 }
 

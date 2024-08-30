@@ -12,9 +12,15 @@ import {
   faArrowLeft,
 } from "@fortawesome/free-solid-svg-icons";
 
-import {getSingleDriver, updateDriver} from '../actions/adminAction'
+import {
+  getAllVehicle,
+  getSingleDriver,
+  updateDriver,
+} from "../actions/adminAction";
 
 import toastAlert from "../lib/toast";
+import AdminHeader from "./components/AdminHeader";
+import AdminSidebar from "./components/Adminsidebar";
 
 const initialFormValue = {
   firstName: "",
@@ -39,6 +45,15 @@ const initialFormValue = {
   licencephoto: "",
   driverphoto: "",
   higherqualification: "",
+  dearnessallowance: "",
+  dearnessallowanceAmount: "",
+  medicalallowance: "",
+  medicalallowance: "",
+  hraAllowance: "",
+  hraAllowanceAmount: "",
+  grossSalary: "",
+  vehicleRoute: "",
+  vehicleRegisterNumber: "",
 };
 
 const DriverEdit = () => {
@@ -51,6 +66,7 @@ const DriverEdit = () => {
   const [inputErrors, setInputErrors] = useState({});
   //Photo validating state
   const [fileErrorMsg, setFileErrorMsg] = useState("");
+  const [VehicleList, setVehicleList] = useState([]);
 
   const {
     firstName,
@@ -75,25 +91,92 @@ const DriverEdit = () => {
     driverphoto,
     licencetype,
     aadhaarNumber,
+    grossSalary,
+    hraAllowance,
+    hraAllowanceAmount,
+    dearnessallowance,
+    dearnessallowanceAmount,
+    medicalallowance,
+    medicalallowanceAmount,
+    vehicleRoute,
+    vehicleRegisterNumber,
   } = formValue;
 
-  const getData = async(Id) => {
+  const getData = async (Id) => {
     try {
-        let {status, result} = await getSingleDriver(Id)
-        if (status === true) {
-          setFormValue(result);
-          setData(result);
-        } else if (status === false) {
-          navigate("/driverview");
-        }
-      } catch (err) {
-        console.log(err, "--err");
+      let { status, result } = await getSingleDriver(Id);
+      if (status === true) {
+        setFormValue(result);
+        setData(result);
+      } else if (status === false) {
+        navigate("/driverview");
       }
-  }
+    } catch (err) {
+      console.log(err, "--err");
+    }
+  };
 
   useEffect(() => {
-    getData(Id)
-  },[])
+    getData(Id);
+  }, []);
+
+  const displayData = async () => {
+    try {
+      const vehicleDetails = await getAllVehicle();
+      const data = vehicleDetails.result;
+      setVehicleList(data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  useEffect(() => {
+    displayData();
+  }, []);
+
+  const [SelectedBusRoute, setSelectedBusRoute] = useState({
+    vehicleRoute: "",
+    vehicleRegisterNumber: "",
+  });
+
+  const handlerouteselection = (e) => {
+    const selectedNumber = e.target.value;
+    const selectedRoute = VehicleList.find(
+      (vehicleRoute) => vehicleRoute.vehicleRegisterNumber === selectedNumber
+    );
+
+    setSelectedBusRoute({
+      vehicleRoute: selectedRoute ? selectedRoute.vehicleRoute : "",
+      vehicleRegisterNumber: selectedNumber,
+    });
+
+    setFormValue({
+      ...formValue,
+      vehicleRoute: selectedRoute ? selectedRoute.vehicleRoute : "",
+      vehicleRegisterNumber: selectedNumber,
+    });
+  };
+
+  useEffect(() => {
+    setSelectedBusRoute({
+      vehicleRoute: formValue.vehicleRoute,
+      vehicleRegisterNumber: formValue.vehicleRegisterNumber,
+    });
+  }, [formValue]);
+
+  useEffect(() => {
+    const total = (
+      parseInt(formValue.currentsalary || 0) +
+      parseInt(formValue.dearnessallowanceAmount || 0) +
+      parseInt(formValue.medicalallowanceAmount || 0) +
+      parseInt(formValue.hraAllowanceAmount || 0)
+    ).toString();
+    setFormValue({ ...formValue, grossSalary: total });
+  }, [
+    formValue.currentsalary,
+    formValue.dearnessallowanceAmount,
+    formValue.medicalallowanceAmount,
+    formValue.hraAllowanceAmount,
+  ]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -111,6 +194,32 @@ const DriverEdit = () => {
       setFormValue({ ...formValue, [name]: value });
     }
   };
+
+  const handleChange2 = (e) => {
+    const { name, value } = e.target;
+
+    if (
+      name === "dearnessallowance" ||
+      name === "medicalallowance" ||
+      name === "hraAllowance"
+    ) {
+      const percentage = parseFloat(value);
+      const currentSalaryValue = parseFloat(formValue.currentsalary);
+      if (!isNaN(percentage) && !isNaN(currentSalaryValue)) {
+        const allowanceAmount = (currentSalaryValue * percentage) / 100;
+        setFormValue({
+          ...formValue,
+          [name]: value,
+          [`${name}Amount`]: allowanceAmount.toFixed(2),
+        });
+      } else {
+        setFormValue({ ...formValue, [name]: value, [`${name}Amount`]: "" });
+      }
+    } else {
+      setFormValue({ ...formValue, [name]: value });
+    }
+  };
+
   const handleFilePhotoChange = (event) => {
     const { name, files } = event.target;
     const supportedExtension = [".jpg", ".png", ".jpeg", ".gif", ".webp"];
@@ -129,7 +238,7 @@ const DriverEdit = () => {
         setFormValue({ ...formValue, ...{ [name]: "" } });
       } else {
         setFileErrorMsg("");
-        setFormValue({ ...formValue, ...{[name]: selectedFile } });
+        setFormValue({ ...formValue, ...{ [name]: selectedFile } });
       }
     }
   };
@@ -145,7 +254,7 @@ const DriverEdit = () => {
   };
 
   const handleNextClick = () => {
-    if (currentForm < 3) {
+    if (currentForm < 4) {
       setCurrentForm(currentForm + 1);
     }
   };
@@ -155,9 +264,9 @@ const DriverEdit = () => {
 
   const handleSubmit = async () => {
     try {
-      let formData = formValue
+      let formData = formValue;
 
-    let { status: apiStatus, message,} = await updateDriver(formData, Id);
+      let { status: apiStatus, message } = await updateDriver(formData, Id);
       if (apiStatus === true) {
         toastAlert("success", message);
         setFormValue(initialFormValue);
@@ -165,385 +274,794 @@ const DriverEdit = () => {
         navigate("/driverview");
       } else if (apiStatus === false) {
         toastAlert("error", message);
-        navigate("/driverview");
       }
     } catch (err) {
-      console.log(err)
+      console.log(err);
     }
-
-  }
+  };
 
   const renderForm = () => {
     switch (currentForm) {
       case 1:
         return (
           <>
-            <div className="teacher-details">
-              <div className="teacher-header">
-                <ion-icon name="person" />
-                <span>Personal Details</span>
-              </div>
-              <form action="" className="teacher-form">
-                <div className="teach-box">
-                  <label htmlFor="">
-                    First Name<sup>*</sup>
-                  </label>
-                  <input
-                    type="text"
-                    name="firstName"
-                    value={firstName}
-                    onChange={handleChange}
-                    maxLength={15}
-                  />
-                </div>
-                <div className="teach-box">
-                  <label htmlFor="">
-                    Last Name<sup>*</sup>
-                  </label>
-                  <input
-                    type="text"
-                    name="lastName"
-                    value={lastName}
-                    onChange={handleChange}
-                    maxLength={15}
-                  />
-                </div>
-                <div className="teach-box">
-                  <label htmlFor="">
-                    Date of Birth<sup>*</sup>
-                  </label>
-                  <div className="date-input-container ">
-                    <input
-                      type="text"
-                      style={{ borderRadius: "4px 0px 0px 4px " }}
-                      value={dob}
-                      placeholder="DD/MM/YYYY"
-                      readOnly
-                    />
-                    <input type="date" name="dob" onChange={handleChange} />
+            <div className="attendance">
+              <AdminHeader />
+              <div className="attendance-content">
+                <AdminSidebar />
+                <div className="att-sheet">
+                  <h2 className="dashboard-title">
+                    Person Details: {data.name}
+                  </h2>
+                  <div
+                    className="class-details"
+                    style={{ width: "85%", borderRadius: "15px" }}
+                  >
+                    <form
+                      className="myform"
+                      action=""
+                      style={{ marginTop: "35px" }}
+                    >
+                      <div className="teach-box">
+                        <label htmlFor="">
+                          First Name<sup>*</sup>
+                        </label>
+                        <input
+                          type="text"
+                          name="firstName"
+                          value={firstName}
+                          onChange={handleChange}
+                          maxLength={15}
+                        />
+                      </div>
+                      <div className="teach-box">
+                        <label htmlFor="">
+                          Last Name<sup>*</sup>
+                        </label>
+                        <input
+                          type="text"
+                          name="lastName"
+                          value={lastName}
+                          onChange={handleChange}
+                          maxLength={15}
+                        />
+                      </div>
+                      <div className="teach-box">
+                        <label htmlFor="">
+                          Date of Birth<sup>*</sup>
+                        </label>
+                        <div className="date-input-container ">
+                          <input
+                            type="text"
+                            style={{ borderRadius: "4px 0px 0px 4px " }}
+                            value={dob}
+                            placeholder="DD/MM/YYYY"
+                            readOnly
+                          />
+                          <input
+                            type="date"
+                            name="dob"
+                            onChange={handleChange}
+                          />
+                        </div>
+                      </div>
+                      <div className="teach-box">
+                        <label htmlFor="">
+                          Age<sup>*</sup>
+                        </label>
+                        <input
+                          type="text"
+                          name="age"
+                          value={age}
+                          onChange={handleChange}
+                          readOnly
+                        />
+                      </div>
+                      <div className="teach-box">
+                        <label htmlFor="">
+                          Marital Status<sup>*</sup>
+                        </label>
+                        <select
+                          name="maritalstatus"
+                          value={maritalstatus}
+                          onChange={handleChange}
+                        >
+                          <option />
+                          <option>Married</option>
+                          <option>Single</option>
+                          <option>Widowed</option>
+                          <option>Divorced</option>
+                        </select>
+                      </div>
+                      <div className="teach-box">
+                        <label htmlFor="">
+                          Place of Birth<sup>*</sup>
+                        </label>
+                        <input
+                          type="text"
+                          name="placeofbirth"
+                          value={placeofbirth}
+                          onChange={handleChange}
+                        />
+                      </div>
+                      <div className="teach-box">
+                        <label>Upload Teacher Photo</label>
+                        <input
+                          type="file"
+                          id="file"
+                          name="driverphoto"
+                          onChange={handleFilePhotoChange}
+                        />
+                        <label htmlFor="file" className="t-photo">
+                          <div style={{ marginRight: "10px" }}>
+                            <FontAwesomeIcon icon={faUpload} />
+                          </div>
+                          {typeof driverphoto === "object" ? (
+                            <span>{driverphoto.name}</span>
+                          ) : (
+                            <span>{getDriverPhotoName()}</span>
+                          )}
+                        </label>
+                        {typeof driverphoto === "object" && (
+                          <img
+                            src={URL.createObjectURL(driverphoto)}
+                            style={{ width: "60px", marginTop: "5px" }}
+                          />
+                        )}
+                        {typeof driverphoto === "string" && (
+                          <img
+                            src={driverphoto}
+                            style={{ width: "60px", marginTop: "5px" }}
+                          />
+                        )}
+                        <span className="text-error">{fileErrorMsg}</span>
+                      </div>
+                    </form>
+                  </div>
+
+                  <div className="pagination" style={{ marginBlock: "20px" }}>
+                    {currentForm < 4 && currentForm !== 1 && (
+                      <button
+                        className="pagination-button"
+                        onClick={() => {
+                          handlePreClick();
+                        }}
+                        style={{
+                          marginRight: "10px",
+                          backgroundColor: "#FF3672",
+                          width: "110px",
+                          border: "none",
+                          padding: "5px 5px",
+                          borderRadius: "20px",
+                          color: "white",
+                          fontSize: "15px",
+                        }}
+                      >
+                        <FontAwesomeIcon
+                          icon={faArrowLeft}
+                          className="myarrow"
+                        />
+                        Previous
+                      </button>
+                    )}
+                    {currentForm < 4 && (
+                      <button
+                        className="pagination-info"
+                        onClick={() => {
+                          handleNextClick();
+                        }}
+                        style={{
+                          marginLeft: "14px",
+                          backgroundColor: "#FF3672",
+                          width: "130px",
+                          border: "none",
+                          padding: "5px 5px",
+                          borderRadius: "20px",
+                          color: "white",
+                          fontSize: "15px",
+                        }}
+                      >
+                        Next
+                        <FontAwesomeIcon
+                          icon={faArrowRight}
+                          className="myarrow"
+                        />
+                      </button>
+                    )}
                   </div>
                 </div>
-                <div className="teach-box">
-                  <label htmlFor="">
-                    Age<sup>*</sup>
-                  </label>
-                  <input
-                    type="text"
-                    name="age"
-                    value={age}
-                    onChange={handleChange}
-                    readOnly
-                  />
-                </div>
-                <div className="teach-box">
-                  <label htmlFor="">
-                    Marital Status<sup>*</sup>
-                  </label>
-                  <select
-                    name="maritalstatus"
-                    value={maritalstatus}
-                    onChange={handleChange}
-                  >
-                    <option />
-                    <option>Married</option>
-                    <option>Single</option>
-                    <option>Widowed</option>
-                    <option>Divorced</option>
-                  </select>
-                </div>
-                <div className="teach-box">
-                  <label htmlFor="">
-                    Current Salary<sup>*</sup>
-                  </label>
-                  <input
-                    type="text"
-                    name="currentsalary"
-                    value={currentsalary}
-                  />
-                </div>
-                <div className="teach-box">
-                  <label htmlFor="">
-                    Place of Birth<sup>*</sup>
-                  </label>
-                  <input
-                    type="text"
-                    name="placeofbirth"
-                    value={placeofbirth}
-                    onChange={handleChange}
-                  />
-                </div>
-                <div className="teach-box">
-                  <label>Upload Driver Photo</label>
-                  <input
-                    type="file"
-                    id="file"
-                    name="driverphoto"
-                    onChange={handleFilePhotoChange}
-                  />
-                  <label htmlFor="file" className="t-photo">
-                    <div style={{ marginRight: "10px" }}>
-                      <FontAwesomeIcon icon={faUpload} />
-                    </div>
-                    {typeof driverphoto  === "object" ? (
-                      <span>{driverphoto.name}</span>
-                    ) : (
-                        <span>{getDriverPhotoName()}</span>
-                    )}
-                  </label>
-                  <span className="text-error">{fileErrorMsg}</span>
-                  {driverphoto === "" && fileErrorMsg === "" && (
-                    <span className="text-error">*No file uploaded</span>
-                  )}
-                </div>
-              </form>
+              </div>
             </div>
           </>
         );
       case 2:
         return (
           <>
-            <div className="teacher-details" style={{ minHeight: 420 }}>
-              <div className="teacher-header">
-                <ion-icon name="person" />
-                <span>Contact Details</span>
+            <div className="attendance">
+              <AdminHeader />
+              <div className="attendance-content">
+                <AdminSidebar />
+                <div className="att-sheet">
+                  <h2 className="dashboard-title">Personal Details</h2>
+                  <div
+                    className="class-details"
+                    style={{ width: "85%", borderRadius: "15px" }}
+                  >
+                    <form
+                      className="myform"
+                      action=""
+                      style={{ marginTop: "35px" }}
+                    >
+                      <div className="teach-box">
+                        <label htmlFor="">
+                          Mobile Number<sup>*</sup>
+                        </label>
+                        <input
+                          type="text"
+                          name="phoneNumber"
+                          value={phoneNumber}
+                          onChange={handleChange}
+                          maxLength={10}
+                        />
+                      </div>
+                      <div className="teach-box">
+                        <label htmlFor="">
+                          WhatsApp Number<sup>*</sup>
+                        </label>
+                        <input
+                          type="text"
+                          name="whatsappNumber"
+                          value={whatsappNumber}
+                          onChange={handleChange}
+                          maxLength={10}
+                        />
+                      </div>
+                      <div className="teach-box">
+                        <label htmlFor="">Email Address</label>
+                        <input
+                          type="email"
+                          name="email"
+                          value={email}
+                          onChange={handleChange}
+                          placeholder="abcd123@example.com"
+                        />
+                      </div>
+                      <div className="teach-box">
+                        <label htmlFor="">
+                          Aadhar Number<sup>*</sup>
+                        </label>
+                        <input
+                          type="text"
+                          name="aadhaarNumber"
+                          value={aadhaarNumber}
+                          onChange={handleChange}
+                          maxLength={14}
+                          placeholder="xxxx - xxxx - xxxx"
+                        />
+                      </div>
+                      <div className="teach-box">
+                        <label htmlFor="">
+                          Permanent Address
+                          <span className="proof">
+                            (As per Government Proof)
+                          </span>
+                          <sup>*</sup>
+                        </label>
+                        <textarea
+                          name="permanentaddress"
+                          value={permanentaddress}
+                          onChange={handleChange}
+                          maxLength={50}
+                        />
+                      </div>
+                      <div className="teach-box">
+                        <label>
+                          Temporary Address<sup>*</sup>
+                        </label>
+                        <textarea
+                          name="temporaryaddress"
+                          value={temporaryaddress}
+                          onChange={handleChange}
+                          maxLength={50}
+                        />
+                      </div>
+                      <div className="allocate-center">
+                        <div className="teach-box">
+                          {/* <div className="bus-allocation-heading">
+                            Bus Allocation
+                          </div> */}
+                          <label htmlFor="">
+                            Bus Stop<sup>*</sup>
+                          </label>
+                          <select
+                            name="vehicleRoute"
+                            value={SelectedBusRoute.vehicleRegisterNumber}
+                            onChange={handlerouteselection}
+                          >
+                            <option value=""></option>
+                            {VehicleList.map((route) => (
+                              <option
+                                key={route.vehicleRegisterNumber}
+                                value={route.vehicleRegisterNumber}
+                              >
+                                {route.vehicleRoute}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                        <div className="teach-box">
+                          <label htmlFor="">
+                            Bus Number<sup>*</sup>
+                          </label>
+                          <input
+                            name="vehicleRegisterNumber"
+                            value={SelectedBusRoute.vehicleRegisterNumber}
+                            onChange={handlerouteselection}
+                          />
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                  <div className="pagination" style={{ marginBlock: "20px" }}>
+                    <div>
+                      <button
+                        className="pagination-button"
+                        onClick={() => {
+                          handlePreClick();
+                        }}
+                        style={{
+                          marginRight: "10px",
+                          backgroundColor: "#FF3672",
+                          width: "110px",
+                          border: "none",
+                          padding: "5px 5px",
+                          borderRadius: "20px",
+                          color: "white",
+                          fontSize: "15px",
+                        }}
+                      >
+                        <FontAwesomeIcon
+                          icon={faArrowLeft}
+                          className="myarrow"
+                        />
+                        Previous
+                      </button>
+                    </div>
+                    <div>
+                      <button
+                        className="pagination-info"
+                        onClick={() => {
+                          handleNextClick();
+                        }}
+                        style={{
+                          marginLeft: "14px",
+                          backgroundColor: "#FF3672",
+                          width: "130px",
+                          border: "none",
+                          padding: "5px 5px",
+                          borderRadius: "20px",
+                          color: "white",
+                          fontSize: "15px",
+                        }}
+                      >
+                        Next
+                        <FontAwesomeIcon
+                          icon={faArrowRight}
+                          className="myarrow"
+                        />
+                      </button>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <form action="" className="teacher-form">
-                <div className="teach-box">
-                  <label htmlFor="">
-                    Mobile Number<sup>*</sup>
-                  </label>
-                  <input
-                    type="text"
-                    name="phoneNumber"
-                    value={phoneNumber}
-                    onChange={handleChange}
-                    maxLength={10}
-                  />
-                </div>
-                <div className="teach-box">
-                  <label htmlFor="">
-                    WhatsApp Number<sup>*</sup>
-                  </label>
-                  <input
-                    type="text"
-                    name="whatsappNumber"
-                    value={whatsappNumber}
-                    onChange={handleChange}
-                    maxLength={10}
-                  />
-                </div>
-                <div className="teach-box">
-                  <label htmlFor="">Email Address</label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={email}
-                    onChange={handleChange}
-                    placeholder="abcd123@example.com"
-                  />
-                </div>
-                <div className="teach-box">
-                  <label htmlFor="">
-                    Aadhar Number<sup>*</sup>
-                  </label>
-                  <input
-                    type="text"
-                    name="aadhaarNumber"
-                    value={aadhaarNumber}
-                    onChange={handleChange}
-                    maxLength={14}
-                    placeholder="xxxx - xxxx - xxxx"
-                  />
-                </div>
-                <div className="teach-box">
-                  <label htmlFor="">
-                    Permanent Address
-                    <span className="proof">(As per Government Proof)</span>
-                    <sup>*</sup>
-                  </label>
-                  <textarea
-                    name="permanentaddress"
-                    value={permanentaddress}
-                    onChange={handleChange}
-                    maxLength={50}
-                  />
-                </div>
-                <div className="teach-box">
-                  <label>
-                    Temporary Address<sup>*</sup>
-                  </label>
-                  <textarea
-                    name="temporaryaddress"
-                    value={temporaryaddress}
-                    onChange={handleChange}
-                    maxLength={50}
-                  />
-                </div>
-              </form>
             </div>
           </>
         );
       case 3:
         return (
-          <>
-            <div className="teacher-details" style={{ minHeight: 420 }}>
-              <div className="teacher-header">
-                <ion-icon name="person" />
-                <span>Teacher History</span>
-              </div>
-              <form action="" className="teacher-form">
-                <div className="teach-box">
-                  <label htmlFor="">
-                    Job Role<sup>*</sup>
-                  </label>
-                  <select name="role" value={role} onChange={handleChange}>
-                    <option />
-                    <option>Driver</option>
-                    <option>Attendar</option>
-                  </select>
-                </div>
-                <div className="teach-box">
-                  <label htmlFor="">
-                    Licence Number<sup>*</sup>
-                  </label>
-                  <input
-                    type="text"
-                    name="licencenumber"
-                    value={licencenumber}
-                    onChange={handleChange}
-                    disabled={role === "Attender"}
-                    style={{
-                      backgroundColor:
-                        role === "Attender" ? "transparent" : "white",
-                    }}
-                  />
-                </div>
-                <div className="teach-box">
-                  <label htmlFor="">
-                    Licence Type<sup>*</sup>
-                  </label>
-                  <select
-                    name="licencetype"
-                    value={licencetype}
-                    onChange={handleChange}
-                    disabled={role === "Attender"}
-                    style={{
-                      backgroundColor:
-                        role === "Attender" ? "transparent" : "white",
-                    }}
+          <div className="attendance">
+            <AdminHeader />
+            <div className="attendance-content">
+              <AdminSidebar />
+              <div className="att-sheet">
+                <h2 className="dashboard-title">Driver History</h2>
+                <div
+                  className="class-details"
+                  style={{ width: "85%", borderRadius: "15px" }}
+                >
+                  <form
+                    className="myform"
+                    action=""
+                    style={{ marginTop: "35px" }}
                   >
-                    <option />
-                    <option>LMV</option>
-                    <option>HMV</option>
-                  </select>
+                    <div className="teach-box">
+                      <label htmlFor="">
+                        Job Role<sup>*</sup>
+                      </label>
+                      <select name="role" value={role} onChange={handleChange}>
+                        <option />
+                        <option>Driver</option>
+                        <option>Attender</option>
+                      </select>
+                    </div>
+                    <div className="teach-box">
+                      <label htmlFor="">
+                        Licence Number<sup>*</sup>
+                      </label>
+                      <input
+                        type="text"
+                        name="licencenumber"
+                        value={licencenumber}
+                        onChange={handleChange}
+                        disabled={role === "Attender"}
+                        style={{
+                          backgroundColor:
+                            role === "Attender" ? "transparent" : "white",
+                        }}
+                      />
+                    </div>
+                    <div className="teach-box">
+                      <label htmlFor="">
+                        Licence Type<sup>*</sup>
+                      </label>
+                      <select
+                        name="licencetype"
+                        value={licencetype}
+                        onChange={handleChange}
+                        disabled={role === "Attender"}
+                        style={{
+                          backgroundColor:
+                            role === "Attender" ? "transparent" : "white",
+                        }}
+                      >
+                        <option />
+                        <option>LMV</option>
+                        <option>HMV</option>
+                      </select>
+                    </div>
+                    <div className="teach-box">
+                      <label htmlFor="">
+                        Licence Expiry Date<sup>*</sup>
+                      </label>
+                      <div className="date-input-container ">
+                        <input
+                          type="text"
+                          style={{ borderRadius: "4px 0px 0px 4px " }}
+                          value={licenceexpirydate}
+                          placeholder="DD/MM/YYYY"
+                          readOnly
+                          disabled={role === "Attender"}
+                        />
+                        <input
+                          type="date"
+                          name="licenceexpirydate"
+                          onChange={handleChange}
+                          disabled={role === "Attender"}
+                          style={{
+                            backgroundColor:
+                              role === "Attender" ? "transparent" : "white",
+                          }}
+                        />
+                      </div>
+                    </div>
+                    <div className="teach-box">
+                      <label htmlFor="">
+                        Educational Qualifications(Highest Degree)<sup>*</sup>
+                      </label>
+                      <select
+                        name="higherqualification"
+                        value={higherqualification}
+                        onChange={handleChange}
+                      >
+                        <option></option>
+                        <option>SSLC</option>
+                        <option>Higher Secondary</option>
+                        <option>ITI/Diploma</option>
+                        <option>Degree</option>
+                        <option>Below SSLC</option>
+                      </select>
+                    </div>
+                    <div className="teach-box">
+                      <label htmlFor="">
+                        Blood Group<sup>*</sup>
+                      </label>
+                      <select
+                        name="bloodgroup"
+                        value={bloodgroup}
+                        onChange={handleChange}
+                      >
+                        <option />
+                        <option>A+ve</option>
+                        <option>A-ve</option>
+                        <option>B+ve</option>
+                        <option>B-ve</option>
+                        <option>AB+ve</option>
+                        <option>AB-ve</option>
+                        <option>O+ve</option>
+                        <option>O-ve</option>
+                        <option>A1B+</option>
+                        <option>A1B-</option>
+                        <option>A2B+</option>
+                        <option>A2B-</option>
+                        <option>Bombay Blood Group</option>
+                      </select>
+                    </div>
+                    <div className="teach-box">
+                      <label htmlFor="">
+                        Previous Driving Experience (in Years)<sup>*</sup>
+                      </label>
+                      <input
+                        type="text"
+                        name="drivingexperience"
+                        value={drivingexperience}
+                        onChange={handleChange}
+                      />
+                    </div>
+                    <div className="teach-box">
+                      <label>
+                        Upload Licence Photo<sup>*</sup>
+                      </label>
+                      <input
+                        type="file"
+                        id="file"
+                        name="licencephoto"
+                        onChange={handleFilePhotoChange}
+                        accept="image/*,application/pdf"
+                      />
+                      <label htmlFor="file" className="t-photo">
+                        <div style={{ marginRight: "10px" }}>
+                          <FontAwesomeIcon icon={faUpload} />
+                        </div>
+                        {typeof licencephoto === "object" ? (
+                          <span>{licencephoto.name}</span>
+                        ) : (
+                          <span>{getDriverLicenceName()}</span>
+                        )}
+                      </label>
+                      <span className="text-error">{fileErrorMsg}</span>
+                      {licencephoto === "" && fileErrorMsg === "" && (
+                        <span className="text-error">*No file uploaded</span>
+                      )}
+                    </div>
+                  </form>
                 </div>
-                <div className="teach-box">
-                  <label htmlFor="">
-                    Licence Expiry Date<sup>*</sup>
-                  </label>
-                  <div className="date-input-container ">
-                    <input
-                      type="text"
-                      style={{ borderRadius: "4px 0px 0px 4px " }}
-                      value={licenceexpirydate}
-                      placeholder="DD/MM/YYYY"
-                      readOnly
-                      disabled={role === "Attender"}
-                    />
-                    <input
-                      type="date"
-                      name="licenceexpirydate"
-                      onChange={handleChange}
-                      disabled={role === "Attender"}
-                      style={{
-                        backgroundColor:
-                          role === "Attender" ? "transparent" : "white",
+                <div className="pagination" style={{ marginBlock: "20px" }}>
+                  <div>
+                    <button
+                      className="pagination-button"
+                      onClick={() => {
+                        handlePreClick();
                       }}
-                    />
+                      style={{
+                        marginRight: "10px",
+                        backgroundColor: "#FF3672",
+                        width: "110px",
+                        border: "none",
+                        padding: "5px 5px",
+                        borderRadius: "20px",
+                        color: "white",
+                        fontSize: "15px",
+                      }}
+                    >
+                      <FontAwesomeIcon icon={faArrowLeft} className="myarrow" />
+                      Previous
+                    </button>
+                  </div>
+                  <div>
+                    <button
+                      className="pagination-info"
+                      onClick={() => {
+                        handleNextClick();
+                      }}
+                      style={{
+                        marginLeft: "14px",
+                        backgroundColor: "#FF3672",
+                        width: "130px",
+                        border: "none",
+                        padding: "5px 5px",
+                        borderRadius: "20px",
+                        color: "white",
+                        fontSize: "15px",
+                      }}
+                    >
+                      Next
+                      <FontAwesomeIcon
+                        icon={faArrowRight}
+                        className="myarrow"
+                      />
+                    </button>
                   </div>
                 </div>
-                <div className="teach-box">
-                  <label htmlFor="">
-                    Educational Qualifications(Highest Degree)<sup>*</sup>
-                  </label>
-                  <select
-                    name="higherqualification"
-                    value={higherqualification}
-                    onChange={handleChange}
+              </div>
+            </div>
+          </div>
+        );
+      case 4:
+        return (
+          <div className="attendance">
+            <AdminHeader />
+            <div className="attendance-content">
+              <AdminSidebar />
+              <div className="att-sheet">
+                <h2 className="dashboard-title">Basic Salary</h2>
+                <div
+                  className="class-details"
+                  style={{ width: "85%", borderRadius: "15px" }}
+                >
+                  <form
+                    className="myform"
+                    action=""
+                    style={{ marginTop: "35px" }}
                   >
-                    <option></option>
-                    <option>SSLC</option>
-                    <option>Higher Secondary</option>
-                    <option>ITI/Diploma</option>
-                    <option>Degree</option>
-                    <option>Below SSLC</option>
-                  </select>
-                </div>
-                <div className="teach-box">
-                  <label htmlFor="">
-                    Blood Group<sup>*</sup>
-                  </label>
-                  <select
-                    name="bloodgroup"
-                    value={bloodgroup}
-                    onChange={handleChange}
-                  >
-                    <option />
-                    <option>A+ve</option>
-                    <option>A-ve</option>
-                    <option>B+ve</option>
-                    <option>B-ve</option>
-                    <option>AB+ve</option>
-                    <option>AB-ve</option>
-                    <option>O+ve</option>
-                    <option>O-ve</option>
-                    <option>A1B+</option>
-                    <option>A1B-</option>
-                    <option>A2B+</option>
-                    <option>A2B-</option>
-                    <option>Bombay Blood Group</option>
-                  </select>
-                </div>
-                <div className="teach-box">
-                  <label htmlFor="">
-                    Previous Driving Experience (in Years)<sup>*</sup>
-                  </label>
-                  <input
-                    type="text"
-                    name="drivingexperience"
-                    value={drivingexperience}
-                    onChange={handleChange}
-                  />
-                </div>
-                <div className="teach-box">
-                  <label>
-                    Upload Licence Photo<sup>*</sup>
-                  </label>
-                  <input
-                    type="file"
-                    id="file"
-                    name="licencephoto"
-                    onChange={handleFilePhotoChange}
-                    accept="image/*,application/pdf"
-                  />
-                  <label htmlFor="file" className="t-photo">
-                    <div style={{ marginRight: "10px" }}>
-                      <FontAwesomeIcon icon={faUpload} />
+                    <div className="teach-box">
+                      <label htmlFor="">
+                        Basic Salary<sup>*</sup>
+                      </label>
+                      <input
+                        type="text"
+                        name="currentsalary"
+                        value={currentsalary}
+                        onChange={handleChange2}
+                        maxLength={10}
+                      />
                     </div>
-                    {typeof licencephoto === 'object' ? (
-                      <span>{licencephoto.name}</span>
-                    ) : (
-                      <span>{getDriverLicenceName()}</span>
-                    )}
-                  </label>
-                  <span className="text-error">{fileErrorMsg}</span>
-                  {licencephoto === "" && fileErrorMsg === "" && (
-                    <span className="text-error">*No file uploaded</span>
+                    <div className="teach-box">
+                      <label htmlFor="">
+                        Dearness Allowance<sup>*</sup>
+                        (in Percentage %)
+                      </label>
+                      <input
+                        type="text"
+                        name="dearnessallowance"
+                        placeholder="%"
+                        value={dearnessallowance}
+                        onChange={handleChange2}
+                        maxLength={2}
+                      />
+                      <span value={dearnessallowanceAmount}>
+                        {dearnessallowanceAmount !== undefined
+                          ? `Amount: ${dearnessallowanceAmount}`
+                          : ""}
+                      </span>
+                    </div>
+
+                    <div className="teach-box">
+                      <label htmlFor="">
+                        Medical Allowance<sup>*</sup>
+                        (in Percentage %)
+                      </label>
+                      <input
+                        type="text"
+                        name="medicalallowance"
+                        placeholder="%"
+                        value={medicalallowance}
+                        onChange={handleChange2}
+                        maxLength={2}
+                      />
+                      <span value={medicalallowanceAmount}>
+                        {medicalallowanceAmount !== undefined
+                          ? `Amount: ${medicalallowanceAmount}`
+                          : ""}
+                      </span>
+                    </div>
+
+                    <div className="teach-box">
+                      <label htmlFor="">
+                        HRA<sup>*</sup>
+                        (in Percentage %)
+                      </label>
+                      <input
+                        type="text"
+                        name="hraAllowance"
+                        placeholder="%"
+                        value={hraAllowance}
+                        onChange={handleChange2}
+                        maxLength={2}
+                      />
+                      <span value={hraAllowanceAmount}>
+                        {hraAllowanceAmount !== undefined
+                          ? `Amount: ${hraAllowanceAmount}`
+                          : ""}
+                      </span>
+                    </div>
+
+                    <div className="teach-box">
+                      <label htmlFor="">
+                        Gross Salary<sup>*</sup>
+                      </label>
+                      <input
+                        type="text"
+                        name="grossSalary"
+                        value={grossSalary}
+                        onChange={handleChange2}
+                        disabled
+                      />
+                    </div>
+                  </form>
+                </div>
+                <div className="pagination" style={{ marginBlock: "20px" }}>
+                  {currentForm < 4 && currentForm !== 1 && (
+                    <button
+                      className="pagination-button"
+                      style={{
+                        marginRight: "10px",
+                        backgroundColor: "#FF3672",
+                        width: "110px",
+                        border: "none",
+                        padding: "5px 5px",
+                        borderRadius: "20px",
+                        color: "white",
+                        fontSize: "15px",
+                      }}
+                      onClick={() => {
+                        handlePreClick();
+                      }}
+                    >
+                      <FontAwesomeIcon icon={faArrowLeft} className="myarrow" />
+                      Previous
+                    </button>
+                  )}
+                  {currentForm < 4 && (
+                    <button
+                      onClick={() => {
+                        handleNextClick();
+                      }}
+                    >
+                      Next
+                      <FontAwesomeIcon
+                        icon={faArrowRight}
+                        className="myarrow"
+                      />
+                    </button>
                   )}
                 </div>
-              </form>
+                <div className="pagination-info">
+                  {currentForm === 4 && (
+                    <button
+                      onClick={() => {
+                        handlePreClick();
+                      }}
+                      style={{
+                        marginLeft: "14px",
+                        backgroundColor: "#FF3672",
+                        width: "130px",
+                        border: "none",
+                        padding: "5px 5px",
+                        borderRadius: "20px",
+                        color: "white",
+                        fontSize: "15px",
+                      }}
+                    >
+                      <FontAwesomeIcon icon={faArrowLeft} className="myarrow" />
+                      Previous
+                    </button>
+                  )}
+                  {currentForm === 4 && (
+                    <button
+                      className="pagination-button"
+                      type="button"
+                      onClick={() => {
+                        handleSubmit();
+                      }}
+                      style={{
+                        marginLeft: "14px",
+                        backgroundColor: "#FF3672",
+                        width: "130px",
+                        border: "none",
+                        padding: "5px 5px",
+                        borderRadius: "20px",
+                        color: "white",
+                        fontSize: "15px",
+                      }}
+                    >
+                      Submit
+                    </button>
+                  )}
+                </div>
+              </div>
             </div>
-          </>
+          </div>
+          // </div>
         );
       default:
         break;
@@ -551,56 +1069,8 @@ const DriverEdit = () => {
   };
   return (
     <>
-      <h3 className="editname">Edit Driver: {data.name}</h3>
-      <div className="container-one container-edit">
-        <div className="right-content">
-          {renderForm()}
-          <div className="btnn">
-            {currentForm == 2 && (
-              <button
-                className="previous"
-                onClick={() => {
-                  handlePreClick();
-                }}
-              >
-                <FontAwesomeIcon icon={faArrowLeft} className="myarrow" />
-                Previous
-              </button>
-            )}
-            {currentForm < 3 && (
-              <button
-                onClick={() => {
-                  handleNextClick();
-                }}
-              >
-                Next
-                <FontAwesomeIcon icon={faArrowRight} className="myarrow" />
-              </button>
-            )}
-          </div>
-          <div className="sub-btnn">
-            {currentForm == 3 && (
-              <button
-                onClick={() => {
-                  handlePreClick();
-                }}
-              >
-                <FontAwesomeIcon icon={faArrowLeft} className="myarrow" />
-                Previous
-              </button>
-            )}
-            {currentForm === 3 && (
-              <button
-                type="button"
-                onClick={() => {
-                    handleSubmit();
-                }}
-              >
-                Submit
-              </button>
-            )}
-          </div>
-        </div>
+      <div>
+        <div>{renderForm()}</div>
       </div>
     </>
   );

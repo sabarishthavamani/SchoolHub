@@ -6,6 +6,7 @@ const adminSchema = new Schema ({
 
     'email' : String,
     'password' : String,
+    'phone' : String,
     'verificationCode':String
 })
 

@@ -1,7 +1,8 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
-
+import AdminHeader from "../components/AdminHeader";
+import AdminSidebar from "../components/Adminsidebar";
 const VehicleFormThree = ({
   handlePreClick,
   handleSubmit,
@@ -37,15 +38,20 @@ const VehicleFormThree = ({
     serviceHistoryDetails !== "" &&
     usageType !== "" &&
     vehicleRoute !== "";
-
   return (
     <>
-      <div className="teacher-details">
-        <div className="teacher-header">
-          <ion-icon name="person" />
-          <span>Vehicle Details</span>
-        </div>
-        <form action="" className="teacher-form">
+      <div className="attendance">
+        <AdminHeader />
+        <div className="attendance-content">
+          <AdminSidebar />
+          <div className="att-sheet">
+            <span>Vehicle Details</span>
+
+            <div
+              className="class-details"
+              style={{ width: "85%", borderRadius: "15px" }}
+            >
+             <form action="" className="teacher-form">
           <div className="teach-box">
             <label htmlFor="FitnessCertificateNumber">
               F.C Number<sup>*</sup>
@@ -130,9 +136,11 @@ const VehicleFormThree = ({
             />
           </div>
         </form>
-      </div>
-      <div className="btnn">
-        <button className="previous" onClick={triggerPreviousForm}>
+            </div>
+
+            <div className="sub-btnn">
+              <div className="sub-btnn button">
+              <button className="previous" onClick={triggerPreviousForm}>
           <FontAwesomeIcon icon={faArrowLeft} className="myarrow" />
           Previous
         </button>
@@ -144,6 +152,10 @@ const VehicleFormThree = ({
         >
           Submit
         </button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </>
   );

@@ -1,24 +1,78 @@
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faHistory, faUpload } from '@fortawesome/free-solid-svg-icons';
+import { getAllVehicle} from '../../actions/adminAction';
+import AdminHeader from './AdminHeader';
+import AdminSidebar from './Adminsidebar';
 
 const TeacherHistory = (props) => {
-    const { formValue, setFormValue, handlePreClick, handleSubmit} = props
+    const { formValue, setFormValue, handlePreClick,handleNextClick} = props
 
     const [onFocusEmergrncyNum, setFocusOnEmergrncyNum] = useState(false)
     const [fileErrorMsg, setFileErrorMsg] = useState('');
+
+    const [VehicleList, setVehicleList] = useState([]);
+
+
+    const getData = async()=>{
+        try {
+            const vehicleDetails = await getAllVehicle();
+            const data = vehicleDetails.result;
+            setVehicleList(data)
+        } catch (err) {
+            console.log(err);
+        }
+    }
+    useEffect(()=>{
+        getData()
+    
+     },[])
+
+   const [SelectedBusRoute, setSelectedBusRoute] = useState({
+    vehicleRoute: "",
+    vehicleRegisterNumber : ""
+   })
+
+   const handlerouteselection = (e) => {
+    const selectedNumber = e.target.value;
+    const selectedRoute = VehicleList.find(
+        (vehicleRoute) => vehicleRoute.vehicleRegisterNumber === selectedNumber);
+
+    setSelectedBusRoute({
+        vehicleRoute: selectedRoute ? selectedRoute.vehicleRoute : "",
+        vehicleRegisterNumber: selectedNumber,
+    });
+
+    setFormValue({
+        ...formValue,
+        vehicleRoute: selectedRoute ? selectedRoute.vehicleRoute : "",
+        vehicleRegisterNumber: selectedNumber,
+    });
+};
+
+useEffect(()=>{
+
+    setSelectedBusRoute({
+        vehicleRoute: formValue.vehicleRoute ,
+        vehicleRegisterNumber: formValue.vehicleRegisterNumber,
+    })
+},[formValue])
+
+
+      const triggerNextForm = () => {
+      handleNextClick()
+    }
 
     const triggerPreviousForm = () => {
         handlePreClick()
     }
 
-    const triggerSubmitAction = () => {
-        handleSubmit()
-    }
+
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormValue({ ...formValue, [name]: value });
+        console.log(formValue);
     }
 
     const handleFileChange = (event) => {
@@ -53,19 +107,27 @@ const TeacherHistory = (props) => {
         }
         return null;
     };
+    
+    const { subjects, higherqualification, teachingexperience, bloodgroup, vaccination, emergencycontactNumber, teachersignature, teachingcertificates , vehicleRegisterNumber , vehicleRoute} = formValue;
 
-    const { subjects, higherqualification, teachingexperience, bloodgroup, vaccination, emergencycontactNumber, teachersignature, teachingcertificates } = formValue;
+    const isButtonDisable = (teachingcertificates !== "" && subjects !== "" && higherqualification !== "" && teachingexperience !== "" && bloodgroup !== "" && vaccination !== "" && emergencycontactNumber !== "" && teachersignature !== "" );
 
-    const isButtonDisable = (teachingcertificates !== "" && subjects !== "" && higherqualification !== "" && teachingexperience !== "" && bloodgroup !== "" && vaccination !== "" && emergencycontactNumber !== "" && teachersignature !== "");
 
-    return (
-        <>
-            <div className="teacher-details" style={{ minHeight: 420 }}>
-                <div className="teacher-header">
-                    <ion-icon name="person" />
-                    <span>Teacher History</span>
-                </div>
-                <form action="" className="teacher-form">                    
+
+  return (
+    <>
+      <div className="attendance">
+        <AdminHeader />
+        <div className="attendance-content">
+          <AdminSidebar />
+          <div className="att-sheet">
+            <h2 className="dashboard-title">New Teacher</h2>
+
+            <div
+              className="class-details"
+              style={{ width: "85%", borderRadius: "15px" }}
+            >
+             <form action="" className="teacher-form">                    
                     <div className="teach-box">
                         <label htmlFor="">
                             Educational Qualifications(Highest Degree)<sup>*</sup>
@@ -130,6 +192,38 @@ const TeacherHistory = (props) => {
                         <input type="text" name="emergencycontactNumber" value={emergencycontactNumber} onChange={handleChange} maxLength={10} onBlur={() => (emergencycontactNumber.length < 10  ? setFocusOnEmergrncyNum(true) : setFocusOnEmergrncyNum (false))} />
                         {emergencycontactNumber.length < 10 && onFocusEmergrncyNum && <span className='text-error'>Please enter valid Mobile Number</span> }
                     </div>
+
+                    <div className="teach-box">
+          <label htmlFor="">
+              Bus Stop<sup>*</sup>
+            </label>
+            <select
+              name="vehicleRoute"
+              value={SelectedBusRoute.vehicleRegisterNumber}
+              onChange={handlerouteselection}
+            >
+              <option value=""></option>
+              {VehicleList.map((route) => (
+                <option key={route.vehicleRegisterNumber} value={route.vehicleRegisterNumber}>
+                  {route.vehicleRoute}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="field-box">
+            <label htmlFor="">
+            Bus Number<sup>*</sup>
+            </label>
+            <input
+              name="vehicleRegisterNumber"
+              value={SelectedBusRoute.vehicleRegisterNumber}
+              onChange={handlerouteselection}
+            />
+          </div>
+
+
+
                     <div className="teach-box">
                         <label htmlFor="">
                             Teaching Certifications(if any)<sup>*</sup>
@@ -151,22 +245,31 @@ const TeacherHistory = (props) => {
                     </div>                    
                 </form>
             </div>
-            <div className="btnn">
-                <button
+
+            <div className="sub-btnn">
+            <div className="sub-btnn button">
+            <button
                     className='previous'
                     onClick={triggerPreviousForm}
                 >
                     <FontAwesomeIcon icon={faArrowLeft} className='myarrow' />
                     Previous
                 </button>
-                <button type="button" onClick={triggerSubmitAction}
-                    disabled={!isButtonDisable}
-                    style={{ backgroundColor: isButtonDisable ? '#ff80a6' : 'gray' }}
-                >
-                    Submit
-                </button>
-            </div>
-        </>
-    )
-}
+                <button
+        onClick={triggerNextForm}
+        disabled={!isButtonDisable}
+        style={{ backgroundColor: isButtonDisable ? '#ff80a6' : 'gray' }}
+      >
+        Next
+        <img src="images/arrow.png" alt="" />
+      </button>
+      </div>
+      </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
+
 export default TeacherHistory;

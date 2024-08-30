@@ -323,14 +323,15 @@ useEffect(() => {
   getData(Id)
 }, [])
 
-const getIndividualData = async (req,res) => {
+const getIndividualData = async () => {
   try {
     const data = {
       teacherId:teacherId
     }
     const { status, result } = await getfixedschedule(data);
     if (status === true) {
-      setTimeTable(result.schedule);
+      const scheduleData = result.schedule
+      setTimeTable(scheduleData);
     }
   } catch (error) {
     console.error("Error fetching data:", error);
@@ -631,7 +632,7 @@ useEffect(() => {
             <TimeTablePreview timeTable={timeTable} teacherId={teacherId} setTimeTable={setTimeTable}/>
           </div>
         </div>
-      </div>
+      </div> 
     </div>
   );
 }

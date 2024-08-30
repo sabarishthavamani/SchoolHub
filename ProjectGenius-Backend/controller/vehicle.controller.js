@@ -52,27 +52,24 @@ const VehiclePost = async (req, res) => {
 
   try {
     await NewRegister.save();
-    return res
-      .status(200)
-      .json({
-        status: true,
-        message: "Vehicle Details Added Successfully",
-        NewRegister,
-      });
+    return res.status(200).json({
+      status: true,
+      message: "Vehicle Details Added Successfully",
+      NewRegister,
+    });
   } catch (err) {
     console.log(err);
     return res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
-// http://localhost:3002/admin/VehicleDetails
+// http://localhost:3002/admin/VehicleDetailById
 
 const VehicleDetailById = async (req, res) => {
   let Display;
   const id = req.params.id;
   try {
     Display = await Vehicle.findById({ _id: id });
-
   } catch (err) {
     console.log(err);
   }
@@ -81,6 +78,8 @@ const VehicleDetailById = async (req, res) => {
   }
   return res.status(200).json({ status: true, result: Display });
 };
+
+// http://localhost:3002/admin/VehicleDetails
 
 const VehicleDetails = async (req, res) => {
   let Display;
@@ -181,24 +180,67 @@ const VehicleDetailDelete = async (req, res) => {
   }
 };
 
+// http://localhost:3002/admin/VehicleRouteAllocate
+
 const VehicleRouteAllocate = async (req, res) => {
   const routeModel = new vehicleRoute({
     ...req.body,
   });
   try {
     await routeModel.save();
-    return res
-      .status(200)
-      .json({
-        status: true,
-        message: "Bus route added successfully",
-        routeModel,
-      });
+    return res.status(200).json({
+      status: true,
+      message: "Bus route added successfully",
+      routeModel,
+    });
   } catch (err) {
     console.log(err);
     return res.status(404).json({ status: false, message: "Route not saved" });
   }
 };
+
+// http://localhost:3002/admin/showvehicleregistrationNumber/:id
+
+const showvehicleregistrationNumber = async (req, res) => {
+  let Display;
+  const regnum = req.params.id;
+  try {
+    Display = await Vehicle.findOne({ vehicleRegisterNumber: regnum });
+
+    if (!Display) {
+      return res
+        .status(404)
+        .json({ status: false, message: "Vehicle not found" });
+    }
+
+    return res.status(200).json({ status: true, result: Display });
+  } catch (err) {
+    console.log(err);
+    return res
+      .status(500)
+      .json({ status: false, message: "Internal Server Error" });
+  }
+};
+
+// http://localhost:3002/admin/VehicleDetailsbyselectedvalues
+
+const VehicleDetailsbyselectedvalues = async (req, res) => {
+  let Display;
+  try {
+    Display = await Vehicle.find(
+      {},
+      { _id: 1, vehicleRoute: 1, vehicleRegisterNumber: 1 }
+    );
+  } catch (err) {
+    console.log(err);
+  }
+  if (!Display) {
+    return res.status(404).json({ message: "Page Error" });
+  }
+  return res.status(200).json({ status: true, result: Display });
+};
+
+// http://localhost:3002/admin/getVehicleRoute
 
 const getVehicleRoute = async (req, res) => {
   let displaySingle;
@@ -213,8 +255,11 @@ const getVehicleRoute = async (req, res) => {
   return res.status(200).json({ status: true, result: displaySingle });
 };
 
+
+// http://localhost:3002/admin/updateVehicleRoute
+
 const updateVehicleRoute = async (req, res) => {
-  const id = { vehicleNumber : req.body.vehicleNumber }
+  const id = { vehicleNumber: req.body.vehicleNumber };
   const { ...rest } = req.body;
   let UpdateRoute;
   try {
@@ -227,16 +272,28 @@ const updateVehicleRoute = async (req, res) => {
     console.log(err);
   }
   if (!UpdateRoute) {
-    return res.status(404).json({ status: false, message: "Bus route not updated" });
+    return res
+      .status(404)
+      .json({ status: false, message: "Bus route not updated" });
   }
-  return res.status(200).json({ status: true, result:UpdateRoute, message: "Bus route successfully updated" });
+  return res
+    .status(200)
+    .json({
+      status: true,
+      result: UpdateRoute,
+      message: "Bus route successfully updated",
+    });
 };
 
-exports.VehiclePost = VehiclePost;
-exports.VehicleDetails = VehicleDetails;
-exports.VehicleDetailUpdate = VehicleDetailUpdate;
-exports.VehicleDetailDelete = VehicleDetailDelete;
-exports.VehicleDetailById = VehicleDetailById;
-exports.VehicleRouteAllocate = VehicleRouteAllocate;
-exports.getVehicleRoute = getVehicleRoute;
-exports.updateVehicleRoute = updateVehicleRoute;
+module.exports = {
+  VehiclePost,
+  VehicleDetails,
+  VehicleDetailUpdate,
+  VehicleDetailDelete,
+  VehicleDetailById,
+  VehicleRouteAllocate,
+  getVehicleRoute,
+  updateVehicleRoute,
+  showvehicleregistrationNumber,
+  VehicleDetailsbyselectedvalues,
+};

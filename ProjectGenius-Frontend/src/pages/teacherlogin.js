@@ -14,6 +14,7 @@ import isEmpty from 'is-empty';
 const initialFormValue = {
     teacherId: '',
     password: '',
+    email: '',
 }
 
 const TeacherLogin = () => {
@@ -25,6 +26,7 @@ const TeacherLogin = () => {
     const [inputErrors,setInputErrors] = useState({});
   
     const { teacherId, password } = formValue;
+    console.log(formValue,'id..,pass..');
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -35,8 +37,9 @@ const TeacherLogin = () => {
         setFormValue({ ...formValue, ...{ [name]: value } })
     }
     const handleSubmit = async () => {
-        try {
 
+      
+        try {
             let data = {
                 teacherId: teacherId,
                 password: password
@@ -46,10 +49,12 @@ const TeacherLogin = () => {
                 setFormValue(initialFormValue)
                 setErrors({})
                 setAuthToken(`Bearer ${token}`);
+                console.log('token..',token);
+                console.log('result...',result);
                 setAuthorization(`Bearer ${token}`);
                 toastAlert('success',message)
                 setAuthRec(result)     
-                navigate('/teacher-attendance')
+                navigate('/teacher-dashboard')
             } else if (status === false) {
                 if (errors) {
                     setErrors(errors)
@@ -84,7 +89,7 @@ const TeacherLogin = () => {
               <div className="logo">
                 <img src="images/Polygon 3.svg" />
                 <span>
-                  <h2>Genius</h2>
+                  <h2>SchoolPrj</h2>
                 </span>
               </div>
               <h3>Teacher Sign In</h3>

@@ -9,6 +9,9 @@ const Attendance = require('../models/attendance');
 const GroupSection = require('../models/groupsection');
 const TeacherAdmission = require('../models/teacheradmission');
 const MarkSheet = require('../models/marksheet');
+const HomeWorkModel = require('../models/assign.homework')
+const BusAttendance = require('../models/busattendance')
+const ParentsMeeting = require('../models/parentsmeeting')
 //config
 const config = require('../config/index');
 //control functions
@@ -31,10 +34,11 @@ const createteacher = async (req, res) => {
     return res.status(200).json({ 'status': true, 'message': 'Registered successfully' })
 
 }
+
 const teacherLogin = async (req, res) => {
     try {
         const admin = await Teacher.findOne({ 'teacherId': req.body.teacherId }).lean();
-        const teacher = await TeacherAdmission.findOne({ 'teacherId': req.body.teacherId }, { name: 1, teacherphoto: 1, teacherId: 1 }).lean();
+        const teacher = await TeacherAdmission.findOne({ 'teacherId': req.body.teacherId }).lean();
         teacher.teacherphoto = `${config.IMAGE.TEACHER_FILE_URL_PATH}/${teacher.teacherphoto}`;
         if (!admin) {
             return res.status(400).json({ 'status': false, 'errors': { 'teacherId': 'Invalid User Id' } });
@@ -51,10 +55,14 @@ const teacherLogin = async (req, res) => {
         return res.status(500).json({ 'status': false, 'message': 'Error on the server' });
     }
 };
+
+
 const jwtSign = (payload) => {
     let token = jwt.sign(payload, config.SECRET_KEY);
     return token;
 }
+
+
 const jwtVerify = (token) => {
     try {
         token = token.replace('Bearer ', '');
@@ -65,7 +73,6 @@ const jwtVerify = (token) => {
                 decoded
             }
         }
-
     } catch (err) {
         return {
             'status': false
@@ -88,6 +95,8 @@ const changePassword = async (req, res) => {
     const changepassword = await Teacher.findOneAndUpdate({ _id: req.user._id }, { $set: { 'password': hash } });
     return res.status(200).json({ 'status': true, 'message': "Password changed successfully" })
 }
+
+
 const forgetpassword = async (req, res) => {
     let find = await Teacher.findOne({ 'email': req.body.email }).lean();
     if (isEmpty(find)) {
@@ -99,6 +108,8 @@ const forgetpassword = async (req, res) => {
     })
     return res.status(200).json({ 'status': true, 'message': `Please Check the Message Received in : ${find.email}` })
 }
+
+
 const resetpassword = async (req, res) => {
     const salt = bcrypt.genSaltSync(10);
     const hash = bcrypt.hashSync(req.body.newpassword, salt);
@@ -113,8 +124,10 @@ const findSection = async (req, res) => {
             return res.status(400).json({ 'status': false, 'errors': { 'section': 'Selected Section Not Exist' } })
         }
         const result = await GroupSection.find({ section, admissiongrade }, { students: 1 }).lean();
-        const attendanceData = await Attendance.findOne({ admissiongrade, section, date }, { attendance: 1 }).lean()
-        return res.status(200).json({ 'status': true, 'result': result, 'result2': attendanceData });
+        const attendanceData = await Attendance.findOne({ admissiongrade, section, date }, { attendance: 1 }).lean() 
+        console.log(result,'result2222....');
+        console.log(attendanceData,'attendanceData2222....');
+        return res.status(200).json({ 'status': true, 'result': result, 'result2': attendanceData }); 
     } catch (err) {
         console.log(err, '--err')
         return res.status(500).json({ 'status': false, 'message': 'Error on the Server' });
@@ -135,6 +148,49 @@ const dailyattendance = async (req, res) => {
         return res.status(500).json({ 'status': false, 'message': 'Error on the Server' });
     }
 }
+
+const dailyAttendanceUpdate = async (req, res) => {
+    const id = req.params.id;
+    const studentIdToUpdate = req.body.studentId; // Assuming you're sending the studentId in the request body
+    const newStatus = req.body.status; // Assuming you're sending the new status in the request body
+    const attendanceDate = req.body.date
+    console.log(attendanceDate,'date....');
+
+    try {
+        if (!id || !studentIdToUpdate || !newStatus) {
+            return res.status(400).json({ status: false, message: 'Missing required parameters' });
+        }
+
+        let updateAttendance = await Attendance.findOneAndUpdate(   
+            { _id:id, admissiongrade: req.body.admissiongrade, section: req.body.section, date: attendanceDate, 'attendance.studentId': studentIdToUpdate },
+            { $set: { 'attendance.$.status': newStatus } },
+            { new: true }
+        );
+            console.log(updateAttendance,'updated Status...');
+        if (updateAttendance) {
+            return res.status(200).json({ status: true, message: 'Attendance updated successfully', result: updateAttendance });
+        }
+        return res.status(404).json({ status: false, message: "Attendance not updated" });
+    } catch (err) {
+        console.log(err);
+        return res.status(500).json({ status: false, message: "Internal Server Error" });
+    }
+};
+
+const displayAttendance = async(req,res)=>{
+    let dis
+    try {
+        dis = await Attendance.find()
+
+    } catch (err) {
+        console.log(err);
+    }
+    if(dis){
+        return res.status(200).json({status:true, message:"Attendance viewed successfully",result:dis})
+    }
+     return res.status(404).json({status:false,message:'Attendance not found'})
+}
+
 const createmarksheet = async (req, res) => {
     try {
         const marksheetData = new MarkSheet({
@@ -144,6 +200,7 @@ const createmarksheet = async (req, res) => {
             'marks': req.body.marks
         })
         await marksheetData.save()
+        console.log(marksheetData,'create sheet...');
         return res.status(200).json({ 'status': true, 'message': `Marks for ${req.body.exam} submitted successfully` })
     } catch (err) {
         console.log(err, '---err')
@@ -164,6 +221,7 @@ const findmarksheet = async (req, res) => {
     try {
         const { admissiongrade, section, exam } = req.body;
         const MarksheetData = await MarkSheet.findOne({ admissiongrade, section, exam }).lean();
+        console.log(MarksheetData,'find sheet...');
         if (isEmpty(MarksheetData)) {
             return res.status(400).json({ 'status': false, 'errors': { 'exam': 'Selected Exam Result Not Generated Yet' } })
         }
@@ -173,6 +231,22 @@ const findmarksheet = async (req, res) => {
         return res.status(500).json({ 'status': false, 'message': 'Error on the Server' });
     }
 }
+
+const findMarksheetForSingleStudent = async (req, res) => {
+    try {
+        const singleIdMark = await MarkSheet.find({}).lean();
+        console.log(singleIdMark, 'singleId....');
+
+        if (!singleIdMark) {
+            return res.status(404).json({ status: false, message: 'Results not found' });
+        }
+        return res.status(200).json({ status: true, result: singleIdMark });
+    } catch (err) {
+        console.log(err);
+        return res.status(500).json({ status: false, message: 'Internal server error' });
+    }
+};
+
 const findmarksheetforanalysis = async (req, res) => {
     try {
         const { admissiongrade, section } = req.query;
@@ -198,7 +272,260 @@ const findSectionforMarks = async (req, res) => {
         console.log(err, '--err')
         return res.status(500).json({ 'status': false, 'message': 'Error on the Server' });
     }
+}  
+
+const postHomeWork = async (req, res) => {
+    try {
+        const { teacherId, name, assignDate, dueDate, section, className, homeWork } = req.body;
+        
+        
+        const posting = new HomeWorkModel({
+            teacherId,
+            name,
+            assignDate,
+            dueDate,
+            section,
+            className,
+            homeWork,
+            fileUploads: req.files && req.files.fileUploads ? req.files.fileUploads[0].filename : ''
+        });
+        
+    
+        await posting.save();
+        console.log(posting,'View Home Work');
+    
+        if (posting) {
+            return res.status(200).json({ status: true, message: 'Homework added successfully' });
+        }
+        
+        return res.status(404).json({ status: false, message: 'Homework not added' });
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ status: false, message: 'Internal Server Error' });
+    }
+};
+
+const getHomeWorkList = async(req,res)=>{
+    let got;
+    try {
+        got = await HomeWorkModel.find({}).lean()
+        got.fileUploads = `${config.IMAGE.HomeWork_FILE_URL_PATH}/${got.fileUploads}`;
+        console.log(got,'file data...');
+        if (got) {
+            return res.status(200).json({ status: true, message: 'Homework list viewed successfully',result:got,imageUrl:config.IMAGE.HomeWork_FILE_URL_PATH });
+        }
+        return res.status(404).json({ status: false, message: 'Homework list not found' });
+
+    } catch (err) {
+        err
+    }
+  }
+  
+  const updateHomeWork = async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { assignDate, dueDate, subject, description } = req.body;
+  
+      const updatedHomeWork = await HomeWorkModel.findByIdAndUpdate(
+        id,
+        {
+          assignDate,
+          dueDate,
+          $push: { homeWork: { subject, description } },
+        },
+        { new: true }
+      );
+  
+      if (updatedHomeWork) {
+        return res.status(200).json({
+          status: true,
+          message: 'Homework updated successfully',
+          result: updatedHomeWork,
+        });
+      }
+      return res.status(404).json({ status: false, message: 'Homework not found' });
+    } catch (err) {
+      console.error(err);
+      return res.status(500).json({ status: false, message: 'Internal Server Error' });
+    }
+  };
+  
+  const deleteHomeWork = async (req, res) => {
+    try {
+      const { id } = req.params;
+      console.log(id,'id.........');
+  
+      const deletedHomeWork = await HomeWorkModel.findByIdAndDelete({_id:id});
+        console.log(deletedHomeWork,'deleteHomeWork....');
+      if (deletedHomeWork) {
+        return res.status(200).json({
+          status: true,
+          message: 'Homework deleted successfully',
+        });
+      }
+      return res.status(404).json({ status: false, message: 'Homework not found' });
+    } catch (err) {
+      console.error(err);
+      return res.status(500).json({ status: false, message: 'Internal Server Error' });
+    }
+  };
+
+
+  const getSingleHomeWork = async (req, res) => {
+    try {
+      let homeWorkData = await HomeWorkModel.findOne({
+        _id: req.params.id,
+      }).lean();
+      homeWorkData.fileUploads = `${config.IMAGE.HomeWork_FILE_URL_PATH}/${homeWorkData.fileUploads}`;
+      console.log(homeWorkData,'homeWorkData.......');
+      return res.status(200).json({ status: true, result: homeWorkData });
+    } catch (err) {
+      console.log(err, "--err");
+      return res.status(500).json({ status: false, message: "error on server" });
+    }
+  };
+
+
+
+  const assignMeeting = async (req, res) => {
+    try {
+        const { teacherId, name, assignDate, section, className, description ,studentName,title} = req.body;
+        
+        
+        const posting = new ParentsMeeting({
+            teacherId,
+            name,
+            assignDate,
+            section,
+            className,
+            description,
+            studentName,
+            title,
+            fileUploads: req.files && req.files.fileUploads ? req.files.fileUploads[0].filename : ''
+        });
+        
+    
+        await posting.save();
+        console.log(posting,'View Meeting');
+    
+        if (posting) {
+            return res.status(200).json({ status: true, message: 'Meeting allocated successfully' });
+        }
+        
+        return res.status(404).json({ status: false, message: 'Meeting not allocated' });
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ status: false, message: 'Internal Server Error' });
+    }
+};
+
+const getMeetingList = async(req,res)=>{
+    let got;
+    try {
+        got = await ParentsMeeting.find({}).lean()
+        got.fileUploads = `${config.IMAGE.Meeting_FILE_URL_PATH}/${got.fileUploads}`;
+        console.log(got,'Meeting data...');
+        if (got) {
+            return res.status(200).json({ status: true, message: 'Meeting list viewed successfully',result:got,imageUrl:config.IMAGE.Meeting_FILE_URL_PATH });
+        }
+        return res.status(404).json({ status: false, message: 'Meeting list not found' });
+
+    } catch (err) {
+        err
+    }
+  }
+
+  const deleteMeeting = async (req, res) => {
+    try {
+      const { id } = req.params;
+      console.log(id,'id.........');
+  
+      const delelteMeetingList= await ParentsMeeting.findByIdAndDelete({_id:id});
+        console.log(delelteMeetingList,'delelteMeetingList....');
+      if (delelteMeetingList) {
+        return res.status(200).json({
+          status: true,
+          message: 'Meeting deleted successfully',
+        });
+      }
+      return res.status(404).json({ status: false, message: 'Meeting not found' });
+    } catch (err) {
+      console.error(err);
+      return res.status(500).json({ status: false, message: 'Internal Server Error' });
+    }
+  };
+
+  const dailyBusAttendance = async (req, res) => {
+    try {
+        const attendanceData = new BusAttendance({
+            'date': req.body.date,
+            'attendance': req.body.attendance
+        })
+        await attendanceData.save()
+        console.log(attendanceData,'attendanceData....');
+        return res.status(200).json({ 'status': true, 'message': `Attendence for ${req.body.date} submitted successfully` })
+    } catch (err) {
+        console.log(err, '---err')
+        return res.status(500).json({ 'status': false, 'message': 'Error on the Server' });
+    }
 }
+  
+const displayBusAttendance = async(req,res)=>{
+    let dis
+    try {
+        dis = await BusAttendance.find()
+
+    } catch (err) {
+        console.log(err);
+    }
+    if(dis){
+        return res.status(200).json({status:true, message:"Attendance viewed successfully",result:dis})
+    }
+     return res.status(404).json({status:false,message:'Attendance not found'})
+}
+
+const findAttendance = async (req, res) => {
+    try {
+        const { date } = req.body;
+      
+        const attendanceData = await BusAttendance.findOne({ date:date }).lean()
+        console.log(attendanceData,'busAttendance....');
+        return res.status(200).json({ 'status': true,  'result': attendanceData });
+    } catch (err) {
+        console.log(err, '--err')
+        return res.status(500).json({ 'status': false, 'message': 'Error on the Server' });
+    }
+}
+
+
+const BusAttendanceUpdate = async (req, res) => {
+    const id = req.params.id;
+    const studentIdToUpdate = req.body.passengerId; // Assuming you're sending the studentId in the request body
+    const newStatus = req.body.status; // Assuming you're sending the new status in the request body
+    const attendanceDate = req.body.date
+    console.log(attendanceDate,'date....');
+
+    try {
+        if (!id || !studentIdToUpdate || !newStatus) {
+            return res.status(400).json({ status: false, message: 'Missing required parameters' });
+        }
+
+        let updateAttendance = await BusAttendance.findOneAndUpdate(   
+            { _id:id, date: attendanceDate, 'attendance.passengerId': studentIdToUpdate },
+            { $set: { 'attendance.$.status': newStatus } },
+            { new: true }
+        );
+            console.log(updateAttendance,'updated Status...');
+        if (updateAttendance) {
+            return res.status(200).json({ status: true, message: 'Attendance updated successfully', result: updateAttendance });
+        }
+        return res.status(404).json({ status: false, message: "Attendance not updated" });
+    } catch (err) {
+        console.log(err);
+        return res.status(500).json({ status: false, message: "Internal Server Error" });
+    }
+};
+
 module.exports = {
     createteacher,
     teacherLogin,
@@ -210,8 +537,25 @@ module.exports = {
     createmarksheet,
     findmarksheet,
     findSectionforMarks,
+    findMarksheetForSingleStudent,
     findmarksheetforanalysis,
     updatemarksheet,
     forgetpassword,
-    resetpassword
+    resetpassword,
+    dailyAttendanceUpdate,
+    displayAttendance,
+    postHomeWork,
+    getHomeWorkList,
+    updateHomeWork,
+    deleteHomeWork,
+    assignMeeting,
+    getMeetingList,
+    deleteMeeting,
+
+    dailyBusAttendance,
+    displayBusAttendance,
+    findAttendance,
+    BusAttendanceUpdate,
+    getSingleHomeWork
+    
 }

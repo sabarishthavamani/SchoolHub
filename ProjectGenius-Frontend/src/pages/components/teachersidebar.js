@@ -1,23 +1,29 @@
-import React, { useContext } from "react";
+import React, { useState, useContext } from "react";
 import { useLocation, Link, useNavigate } from "react-router-dom";
 import { faSignOut } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IoMdArrowDropdown, IoMdArrowDropright } from "react-icons/io";
 import { FaRegEdit } from "react-icons/fa";
+import { FaListCheck } from "react-icons/fa6";
+import { TbReportSearch } from "react-icons/tb";
+import { GrTableAdd } from "react-icons/gr";
+import { IoPersonSharp } from "react-icons/io5";
+import { FcLeave } from "react-icons/fc";
+import { MdAssignment } from "react-icons/md";
 //import Lib
 import { removeAuthRec, removeAuthToken } from "../../lib/localstorage";
 //import Context
 import { TeacherMenuContext } from "../../context/teachermenucontext";
-
 
 const TeacherSidebar = () => {
   const { openMenu, toggleMenu } = useContext(TeacherMenuContext);
   //hooks
   const { pathname } = useLocation();
   const navigate = useNavigate();
+  const [dropdownExpanded, setDropdownExpanded] = useState(false);
+
   return (
     <>
-     
       <div className={`side-menu-content ${openMenu ? "open" : "close"}`}>
         <div className="att-part-one">
           <div className="att-menu">
@@ -45,38 +51,23 @@ const TeacherSidebar = () => {
             <p
               className="am"
               style={
-                pathname === "/teacher-attendance"
+                pathname === "/teacher-marksheet"
                   ? { backgroundColor: "#f9f6b8" }
                   : {}
               }
-              onClick={() => toggleMenu()}
+              onClick={() => {
+                toggleMenu();
+                setDropdownExpanded(!dropdownExpanded);
+              }}
             >
-              <Link to="/teacher-attendance">
-                <img
-                  src={`${process.env.PUBLIC_URL}/images/sheet.png`}
-                  alt="attendance"
-                  style={{ marginRight: "18px" }}
-                />
-                Attendance Sheet
-              </Link>
-            </p>
-            <p
-              className="am"
-              style={
-                pathname === ("/teacher-marksheet")
-                  ? { backgroundColor: "#f9f6b8" }
-                  : {}
-              }
-              onClick={() => toggleMenu()}
-            >
-              <Link to="/teacher-marksheet" className="report">
+              <Link className="report">
                 <img
                   src={`${process.env.PUBLIC_URL}/images/report.png`}
                   alt="report"
                 />
-                Report Card
+                Student Info
                 <span>
-                  {pathname === ("/teacher-marksheet") || pathname === ("/teacher-generatecard") ? (
+                  {dropdownExpanded ? (
                     <IoMdArrowDropdown size={20} />
                   ) : (
                     <IoMdArrowDropright size={20} />
@@ -84,40 +75,154 @@ const TeacherSidebar = () => {
                 </span>
               </Link>
             </p>
-            {pathname === ("/teacher-marksheet") || pathname === ("/teacher-generatecard") ? (
-              <p className="am"
-              style={
-                pathname === "/teacher-generatecard"
-                  ? { backgroundColor: "#f9f6b8" }
-                  : {}
-              }
-              onClick={() => toggleMenu()}>
-                <Link to="/teacher-generatecard" className="report ms-3">
-                  <span><FaRegEdit size={25} /></span>
-                  Generate Report
-                </Link>
-              </p>
-            ) : null}
+            {dropdownExpanded && (
+              <>
+                <p
+                  className="am"
+                  style={
+                    pathname === "/teacher-attendance"
+                      ? { backgroundColor: "#f9f6b8" }
+                      : {}
+                  }
+                >
+                  <Link to="/teacher-attendance" className="report ms-3">
+                    <span>
+                      <FaListCheck size={25} />
+                    </span>
+                    Attendance
+                  </Link>
+                </p>
+
+                <p
+                  className="am"
+                  style={
+                    pathname === "/student-timetable/:id"
+                      ? { backgroundColor: "#f9f6b8" }
+                      : {}
+                  }
+                >
+                  <Link to="/student-timetable/:id" className="report ms-3">
+                    <span>
+                      <GrTableAdd size={25} />
+                    </span>
+                    Time Table
+                  </Link>
+                </p>
+
+
+                <p
+                  className="am"
+                  style={
+                    pathname === "/parents-meeting"
+                      ? { backgroundColor: "#f9f6b8" }
+                      : {}
+                  }
+                >
+                  <Link to="/parents-meeting" className="report ms-3">
+                    <span>
+                      <GrTableAdd size={25} />
+                    </span>
+                    Parents Meeting
+                  </Link>
+                </p>
+
+
+                <p
+                  className="am"
+                  style={
+                    pathname === "/student-homework"
+                      ? { backgroundColor: "#f9f6b8" }
+                      : {}
+                  }
+                >
+                  <Link to="/student-homework" className="report ms-3">
+                    <span>
+                      <MdAssignment size={25} />
+                    </span>
+                    Home Work
+                  </Link>
+                </p>
+                <p
+                  className="am"
+                  style={
+                    pathname === "/teacher-generatecard"
+                      ? { backgroundColor: "#f9f6b8" }
+                      : {}
+                  }
+                  onClick={(e) => {
+                    e.stopPropagation(); // Prevent the event from propagating to the parent element
+                  }}
+                >
+                  <Link to="/teacher-generatecard" className="report ms-3">
+                    <span>
+                      <TbReportSearch size={25} />
+                    </span>
+                    Generate Report
+                  </Link>
+                </p>
+
+
+                <p
+                  className="am"
+                  style={
+                    pathname === "/teacher-marksheet"
+                      ? { backgroundColor: "#f9f6b8" }
+                      : {}
+                  }
+                  onClick={(e) => {
+                    e.stopPropagation(); // Prevent the event from propagating to the parent element
+                  }}
+                >
+                  <Link to="/teacher-marksheet" className="report ms-3">
+                    <span>
+                      <TbReportSearch size={25} />
+                    </span>
+                    Marksheet Edit
+                  </Link>
+                </p>
+
+              </>
+            )}
           </div>
-          {/* <div className="att-menu">
+          <div className="att-menu">
             <span>Manage</span>
+
             <p
               className="am"
               style={
-                pathname === "/teacher-student"
+                pathname === "/teacherleaveappliedlist"
                   ? { backgroundColor: "#f9f6b8" }
                   : {}
               }
             >
-              <Link to="/teacher-student" className="child">
-                <img
-                  src={`${process.env.PUBLIC_URL}/images/child.png`}
-                  alt="Student"
-                />
-                Student
+              <Link to="/teacherleaveappliedlist" className="child">
+                <span>
+                  <FcLeave size={25} />
+                </span>
+                Leave List
               </Link>
             </p>
-          </div> */}
+
+
+            <p
+              className="am"
+              style={
+                pathname === "/profile-details"
+                  ? { backgroundColor: "#f9f6b8" }
+                  : {}
+              }
+            >
+              <Link to="/profile-details" className="child">
+                <span>
+                  <IoPersonSharp size={25} />
+                </span>
+                Profile
+              </Link>
+            </p>
+
+           
+
+          </div>
         </div>
         <button
           data-bs-toggle="tooltip"
@@ -136,7 +241,10 @@ const TeacherSidebar = () => {
           </span>
         </button>
       </div>
-      <div className={`side-menu-overlay ${openMenu ? "open" : "close"}`} onClick={() => toggleMenu()}></div>
+      <div
+        className={`side-menu-overlay ${openMenu ? "open" : "close"}`}
+        onClick={() => toggleMenu()}
+      ></div>
     </>
   );
 };

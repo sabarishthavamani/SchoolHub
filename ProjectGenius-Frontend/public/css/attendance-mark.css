@@ -162,7 +162,7 @@
     margin-right: 8px;
 }
 .att-sheet {
-    width: 78%;
+    width: 140%;
     height: 100%;
     background-color: #f6f9ff;
     display: flex;
@@ -191,6 +191,7 @@
         max-width: 400px;
     }
 }
+
 .std-class {
     width: 22%;
     display: flex;
@@ -847,3 +848,20 @@
 /* Nav Setting Pop Up */
 
 
+
+
+@media (max-width: 420px) {
+  .pagination {
+    margin-block: 100px;
+    /* background-color: #0fa961; */
+    /* align-items: center; */
+
+  }
+  .pagination-button {
+    width: 100px;
+    font-size: 5px; 
+  }
+  .pagination-info {
+    font-size: 12px;
+  }
+}

@@ -14,6 +14,8 @@ const TeacherHeader = () => {
   //state
   const [teacherInfo, setTeacherInfo] = useState("");
   const [navPop, setNavPop] = useState(false);
+
+  console.log(openMenu,'open...', toggleMenu,'toggle...');
   
   const navigate = useNavigate()
 
@@ -43,10 +45,10 @@ const TeacherHeader = () => {
           src={`${process.env.PUBLIC_URL}/images/Polygon 3.png`}
           alt="logo"
         />
-        <span>Genius</span>
+        <span>SchoolPrj</span>
       </div>
       <div className="scl-std" onClick={detailHandler}>
-        <img src={teacherInfo.teacherphoto} width={'40px'} height={'40px'} style ={{borderRadius:"50%"}}alt="student" />
+        <img src={teacherInfo.teacherphoto} width={'40px'} height={'40px'} style ={{borderRadius:"50%"}}alt="Teacher" />
         <span>{teacherInfo.name}</span>
       </div>
       {navPop && (

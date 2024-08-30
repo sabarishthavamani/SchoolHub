@@ -14,7 +14,7 @@
 }
 
 .dashboard-container {
-    width: 78%;
+    width: 140%;
     height: 100%;
     background-color: #f6f9ff;
     display: flex;
@@ -63,7 +63,6 @@
         margin-bottom: 10px;
     }
 }
-
 
 .dashboard-segments {
     display: flex;
@@ -149,7 +148,6 @@
         font-size: 16px;
     }
 }
-
 
 .date-field-container span {
     position: absolute;

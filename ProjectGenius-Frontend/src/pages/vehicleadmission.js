@@ -148,11 +148,11 @@ const VehicleAdmission = () => {
 
   return (
     <div className="teacher">
-      <Sidebar />
+      {/* <Sidebar />
       <div className="teacher-content">
-        <Navbar pageTitle="New Bus" />
+        <Navbar pageTitle="New Bus" /> */}
         {renderForm()}
-      </div>
+      {/* </div> */}
     </div>
   );
 };

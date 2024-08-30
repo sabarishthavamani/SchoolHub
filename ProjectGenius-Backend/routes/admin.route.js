@@ -16,6 +16,13 @@ const adminValid = require('../validation/admin.validation')
 //Vehicle
 const VehicleCtrl = require('../controller/vehicle.controller')
 
+//Leave Allocation Form
+const leaveAllocate = require('../controller/leaveallocation.controller')
+
+//Payroll Salary
+const payrollsalary = require('../controller/payroll.controller')
+
+
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, config.IMAGE.USER_FILE_PATH)
@@ -99,6 +106,10 @@ router.route('/groupsectionverify').post(adminCtrl.verifyGroupSection);
 router.route('/singlesectionallocate').post(adminValid.sectionValid,adminCtrl.singlesectionAllocation);
 router.route('/singlesectionverify').post(adminCtrl.verifysingleSection);
 router.route('/updatesinglesection').post(adminCtrl.updatesingleSection);
+router.route('/studentschedule').post(adminCtrl.createstudentSchedule);
+router.route('/getstudentschedule').get(adminCtrl.findStudentSchedule);
+router.route('/getallstudentschedule').get(adminCtrl.findAllStudentSchedule);
+
 //feesetup & feepayment
 router.route('/feessetup').post(adminValid.feesetupValid,adminCtrl.createFeeSetup);
 router.route('/feesupdate').post(adminValid.feesetupEditValid,adminCtrl.updateFeeSetup);
@@ -125,15 +136,24 @@ router.route('/findteacherwholeclass').get(adminCtrl.findTeacherWholeClass);
 router.route('/teacherattendance').post(adminCtrl.teacherAttendanceSetup);
 router.route('/findteacherattendance').get(adminCtrl.getAttendance);
 router.route('/findmonthlyattendance').get(adminCtrl.getAttendanceforMonth);
-
+router.route('/post-punching').post(adminCtrl.postPunching);
+router.route('/view-punching').get(adminCtrl.viewPunching);
 
 //driver
 router.route('/driveradmission').post(driverprofileUpload.fields([{ name: 'driverphoto', maxCount: 1 }, { name: 'licencephoto', maxCount: 1 }]),adminCtrl.registerDriver);
 router.route('/getdriveraadhaar').get(adminCtrl.driveraadhaarValid);
 router.route('/viewdriver').get(adminCtrl.ViewDriver);
+router.route('/DisplayBusAllocation').get(adminCtrl.DisplayBusAllocation);
+router.route('/displayBusAllocation/:driverId').get(adminCtrl.displayBusAllocation);
 router.route('/getSingleDriver/:id').get(adminCtrl.getSingleDriver);
-router.route('/updateDriverDetail/:id').put(adminCtrl.DriverUpdate);
+// router.route('/singleAllocationDisplay/:id').get(adminCtrl.SingleAllocationDisplay);
+router.route('/updateDriverDetail/:id').put(driverprofileUpload.fields([{ name: 'driverphoto', maxCount: 1 }, { name: 'licencephoto', maxCount: 1 }]),adminCtrl.DriverUpdate);
+router.route('/allocateBusRoute/:id').post(adminCtrl.PostBusRoute);
+router.route('/deleteBusAllocate/:id').put(adminCtrl.DeleteBusAllocate);
 router.route('/deleteDriverDetail/:id').put(adminCtrl.DriverDelete);
+router.route('/getallsection').get(adminCtrl.findAllSection);
+
+
 
 // Vehicle Registration Details
 router.route('/vehicleadmission').post(VehiclePhoto.fields([{ name: 'pollutionCertificate', maxCount: 1 }, { name: 'insurance', maxCount: 1 }]),VehicleCtrl.VehiclePost);
@@ -141,10 +161,39 @@ router.get('/VehicleDetails',VehicleCtrl.VehicleDetails);
 router.get('/VehicleDetailById/:id',VehicleCtrl.VehicleDetailById);
 router.put('/VehicleDetailUpdate/:id', VehicleCtrl.VehicleDetailUpdate);
 router.get('/VehicleDetailDelete/:id',VehicleCtrl.VehicleDetailDelete);
+router.get('/showvehicleregistrationNumber/:id',VehicleCtrl.showvehicleregistrationNumber);
+router.get('/VehicleDetailsbyselectedvalues',VehicleCtrl.VehicleDetailsbyselectedvalues);
+
+
 
 // Vehicle Route
 router.route('/routeAllocation').post(VehicleCtrl.VehicleRouteAllocate);
 router.route('/vehicleRouteDetails').post(VehicleCtrl.getVehicleRoute);
 router.put('/updateVehicleRoute', VehicleCtrl.updateVehicleRoute);
+
+
+//Leave Allocation Form 
+
+router.post("/alloctaionFieldPost",leaveAllocate.alloctaionFieldPost)
+router.get("/allocationFieldDisplay",leaveAllocate.allocationFieldDisplay)
+router.put("/allocationFieldEdit/:id",leaveAllocate.allocationFieldEdit)
+router.delete("/allocationFieldDelete/:id",leaveAllocate.allocationFieldDelete)
+
+//Salary
+router.post("/payrollsalary",payrollsalary.salaryform)
+router.put("/salaryformUpdate/:employeePaySlipId/:employeeId", payrollsalary.salaryformUpdate);
+router.get("/salarypayrollDislay/:month",payrollsalary.salarypayrollDislay)
+router.get("/payrollListmonth",payrollsalary.payrollListmonth)
+
+
+//Leave Allocation Form 
+
+router.post("/alloctaionFieldPost",leaveAllocate.alloctaionFieldPost)
+router.get("/allocationFieldDisplay",leaveAllocate.allocationFieldDisplay)
+router.put("/allocationFieldEdit/:id",leaveAllocate.allocationFieldEdit)
+router.get("/singleAllocationDisplay/:id",leaveAllocate.singleAllocationDisplay)
+router.put("/allocationCasualFieldEdit/:id",leaveAllocate.allocationCasualFieldEdit)
+router.delete("/allocationFieldDelete/:id",leaveAllocate.allocationFieldDelete)
+
 
 module.exports = router;

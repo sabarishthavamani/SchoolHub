@@ -1,13 +1,21 @@
+const events = require('events');
+events.EventEmitter.defaultMaxListeners = 15;
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const morgan = require('morgan');
+
 // Routes
 const adminRoutes =require('./routes/admin.route');
 const teacherRoutes = require('./routes/teacher.route');
 const parentRoutes = require('./routes/parent.route');
-
+const EmployeRouter= require('./routes/Empsalary.route')
+const leaveapplication = require('./routes/leaveform.router')
+const studentrouter = require('./routes/student.route');
+const adminnotification = require('./routes/adminnotif.router')
+const driversignup = require('./routes/driver.router')
 // config
 const config = require('./config');
 const app = express();
@@ -21,6 +29,12 @@ app.use(express.static('public'))
 app.use('/admin', adminRoutes);
 app.use('/admin', teacherRoutes);
 app.use('/admin', parentRoutes);
+app.use('/admin', EmployeRouter);
+app.use('/admin',leaveapplication);
+app.use('/admin',studentrouter);
+app.use('/admin',adminnotification);
+app.use('/admin',driversignup);
+
 
 const mongoConnect = async () => {
   try {

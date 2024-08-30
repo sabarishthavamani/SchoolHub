@@ -3,7 +3,8 @@ const { Schema } = mongoose;
 
 const parentsignupSchema  = new Schema ({
     
-    'email':String,
+    'fatherphonenumber':String,
+    'dob':String,
     'password' : String
 
 })

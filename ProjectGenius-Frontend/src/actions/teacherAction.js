@@ -124,6 +124,7 @@ export const findsection = async (Data) => {
         }
     }
 }
+
 export const Dailyattendance = async (Data) => {
 
     try {
@@ -143,6 +144,27 @@ export const Dailyattendance = async (Data) => {
     }
 }
 }
+
+
+
+export const updateDailyattendance = async (Data) => {
+
+    try {
+        const respData = await axios.put(`/update-attendance/${Data.id}/${Data.studentId}`, Data);
+        return {
+            'status': respData.data.status,
+            'message': respData.data.message,
+            'result': respData.data.result,
+        }
+    } catch (err) {
+        return {
+            'status': err.response.data.status,
+            'message': err.response.data.message,
+    }
+}
+}
+
+
 export const findsectionformarks = async (Data) => {
 
     try {
@@ -205,6 +227,28 @@ export const findmarksheet = async (Data) => {
     }
 }
 }
+
+export const findsinglemarksheet = async () => {
+
+    try {
+        let respData = await axios({
+            'url': '/find-singlemarksheet',
+            'method': 'get',
+            
+        })
+        return {
+            'status': respData.data.status,
+            'message': respData.data.message,
+            'result':respData.data.result,
+        }
+    } catch (err) {
+        return {
+            'status': err.response.data.status,
+            'message': err.response.data.message,
+            'errors': err.response.data.errors
+    }
+}
+}
 export const findmarksheetForAnalysis = async (Data) => {
 
     try {
@@ -241,3 +285,224 @@ export const updatemarksheet = async (Data) => {
     }
 }
 }
+
+export const displayAttendanceData = async () => {
+
+    try {
+        let respData = await axios({
+            'url': '/displayAttendance',
+            'method': 'get',
+            // params:Data
+        })
+        return {
+            'status': respData.data.status,
+            'message': respData.data.message,
+            'result':respData.data.result,
+        }
+    } catch (err) {
+       console.log(err)
+}
+}
+
+export const assignHomeWork = async(Data)=>{
+    try {
+        let respData;
+        respData = await axios({
+            url:'/posthomework',
+            method:'post',
+            data:Data
+        })
+        return{
+            status:respData.data.status,
+            message:respData.data.message,
+            result:respData.data.result
+        }
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+export const viewHomeWork = async()=>{
+    try {
+        let respData;
+        respData = await axios({
+            url:'/gethomeworklist',
+            method:'get',
+        })
+        return{
+            status:respData.data.status,
+            message:respData.data.message,
+            result:respData.data.result,
+            imageUrl:respData.data.imageUrl
+        }
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+export const getSingleHomeWork = async (id) => {
+    try {
+      let respData = await axios({
+        url: "/getsingle-homework/" + id,
+        method: "get",
+      });
+  
+      return {
+        status: respData.data.status,
+        result: respData.data.result,
+      };
+    } catch (err) {
+      console.log(err, "errrr");
+    }
+  };
+
+export const deleteHomeWork = async(id)=>{
+    try {
+        
+       const respData = await axios({
+            url:`/deletehomeworklist/${id}`,
+            method:'delete',
+        })
+        return{
+            status:respData.data.status,
+            message:respData.data.message,
+            result:respData.data.result
+        }
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+export const assignMeeting = async(Data)=>{
+    try {
+        let respData;
+        respData = await axios({
+            url:'/postparentsmeeting',
+            method:'post',
+            data:Data
+        })
+        return{
+            status:respData.data.status,
+            message:respData.data.message,
+            result:respData.data.result
+        }
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+export const viewMeeting = async()=>{
+    try {
+        let respData;
+        respData = await axios({
+            url:'/getmeetinglist',
+            method:'get',
+        })
+        return{
+            status:respData.data.status,
+            message:respData.data.message,
+            result:respData.data.result,
+            imageUrl:respData.data.imageUrl
+        }
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+export const deleteMeeting = async(id)=>{
+    try {
+        
+       const respData = await axios({
+            url:`/deletemeetinglist/${id}`,
+            method:'delete',
+        })
+        return{
+            status:respData.data.status,
+            message:respData.data.message,
+            result:respData.data.result
+        }
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+export const DailyBusAttendancePost = async (Data) => {
+
+    try {
+        let respData = await axios({
+            'url': '/daily-bus-attendance',
+            'method': 'post',
+            'data':Data
+        })
+        return {
+            'status': respData.data.status,
+            'message': respData.data.message,
+        }
+    } catch (err) {
+        return {
+            'status': err.response.data.status,
+            'message': err.response.data.message,
+    }
+}
+}
+
+export const displayBusAttendanceData = async () => {
+
+    try {
+        let respData = await axios({
+            'url': '/display-bus-attendance',
+            'method': 'get',
+        })
+        return {
+            'status': respData.data.status,
+            'message': respData.data.message,
+            'result':respData.data.result,
+        }
+    } catch (err) {
+       console.log(err)
+}
+}
+
+
+export const findBusAttendance = async (Data) => {
+
+    try {
+        let respData = await axios({
+            'url': '/find-bus-attendance',
+            'method': 'post',
+            'data':Data
+        })
+        return {
+            'status': respData.data.status,
+            'message': respData.data.message,
+            'result':respData.data.result,
+        }
+    } catch (err) {
+        return {
+            'status': err.response.data.status,
+            'message': err.response.data.message,
+            'errors': err.response.data.errors
+        }
+    }
+}
+
+
+export const updateBusAttendance = async (Data) => {
+
+    try {
+        const respData = await axios.put(`/update-bus-attendance/${Data.id}/${Data.passengerId}`, Data);
+        return {
+            'status': respData.data.status,
+            'message': respData.data.message,
+            'result': respData.data.result,
+        }
+    } catch (err) {
+        return {
+            'status': err.response.data.status,
+            'message': err.response.data.message,
+    }
+}
+}
+
+
+

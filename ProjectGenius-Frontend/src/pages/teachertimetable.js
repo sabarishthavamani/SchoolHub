@@ -13,7 +13,6 @@ const TimeTable = () =>{
   // const { Data } = location.state || "";
 // console.log(Data,'---Data')
 const [Result,setResult] = useState()
-// console.log(Result, 'mohann ')
  
 const getData = async (teacherId) => {
   try {

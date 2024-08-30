@@ -457,3 +457,9 @@ ul {
     border: none;
     outline: none;
 }
+.teacher-content{
+    height: calc(100vh-100px);
+    overflow-y: auto;
+    
+
+}

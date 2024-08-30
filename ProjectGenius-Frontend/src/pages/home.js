@@ -5,7 +5,7 @@ const Home = () => {
   return (
     <div className="home">
     <div className="home-head">
-      <img src="images/home-logo.png" />
+      <img src="images/Polygon 3.png" />
     </div>
     <div className="home-content">
       <div className="left-home">
@@ -27,6 +27,9 @@ const Home = () => {
             </li>
             <li>
               <Link to={'/parent-login'}>Parent</Link>
+            </li>
+            <li>
+              <Link to={'/driver-login'}>Driver</Link>
             </li>
           </ul>
         </div>

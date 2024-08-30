@@ -8,7 +8,8 @@ import { parentsignup } from '../actions/parentAction';
 import isEmpty from 'is-empty';
 
 const initialFormValue = {
-    email: '',
+  fatherphonenumber: '',
+  dob: '',
     password: '',
     confirmpassword:'',
 }
@@ -21,7 +22,7 @@ const ParentSignup = () => {
     const [errors, setErrors] = useState({});
     const [inputErrors,setInputErrors] = useState({});
     //destructuring
-    const { email, password, confirmpassword } = formValue;
+    const { fatherphonenumber,dob, password, confirmpassword } = formValue;
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -35,8 +36,9 @@ const ParentSignup = () => {
         try {
 
             let data = {
-                email: email,
-                password: password,
+              fatherphonenumber: fatherphonenumber,
+              dob: dob,
+              password: password,
                 confirmpassword: confirmpassword,
             }
             let { status, message, errors } = await parentsignup(data)
@@ -82,15 +84,28 @@ const ParentSignup = () => {
                 </span>
               </div>
               <h3>Parent Sign Up</h3>
-               <Form.Group controlId="formEmail" className="field">
-                            <Form.Label>Email</Form.Label>
+              <Form.Group controlId="formEmail" className="field">
+                            <Form.Label>Father Phone Number</Form.Label>
                             <Form.Control
                                 type="email"
-                                placeholder="abcxyz@gmail.com"
-                                name="email"
-                                value={email}
+                                placeholder="Father Phone Number"
+                                name="fatherphonenumber"
+                                value={fatherphonenumber}
                                 onChange={handleChange}
-                                isInvalid={(inputErrors && inputErrors.email) && isValid(inputErrors.email)} 
+                                isInvalid={(inputErrors && inputErrors.fatherphonenumber) && isValid(inputErrors.fatherphonenumber)} 
+                            />
+                            <Form.Control.Feedback type="invalid">{inputErrors && inputErrors.email}
+                            </Form.Control.Feedback>
+                        </Form.Group>
+                        <Form.Group controlId="formEmail" className="field">
+                            <Form.Label>Children Date of Birth</Form.Label>
+                            <Form.Control
+                                type="dob"
+                                placeholder="DD/MM/YYY"
+                                name="dob"
+                                value={dob}
+                                onChange={handleChange}
+                                isInvalid={(inputErrors && inputErrors.dob) && isValid(inputErrors.dob)} 
                             />
                             <Form.Control.Feedback type="invalid">{inputErrors && inputErrors.email}
                             </Form.Control.Feedback>

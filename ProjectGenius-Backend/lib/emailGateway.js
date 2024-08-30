@@ -1,30 +1,27 @@
-const nodemailer = require('nodemailer');
+const twilio = require('twilio');
 
-const sendMail = async ({ to, content } ) => {
+const sendSMS = async ({ to, message }) => {
+    const accountSid = 'ACce769617397c9ecca63dd175ba87658f'; // Your Twilio account SID
+    const authToken = '50176780b5f2215c57e54832ecb55a2a'; // Your Twilio auth token
+    const client = twilio(accountSid, authToken);
+
     try {
-        const transporter = nodemailer.createTransport({
-            host: 'smtp.gmail.com',
-            port: 465, // SMTP port for secure connection
-            secure: true, // Use SSL/TLS
-            auth: {
-                user: 'vetriredot3029@gmail.com', // Your Gmail email address
-                pass: 'simq ixth lqyc wcut' // Your Gmail password or app-specific password
-            }
+        const smsResponse = await client.messages.create({
+            body: message,
+            to: to,
+            from: '+18142472647', // Replace with your valid Twilio phone number
         });
 
-
-        let sendMail = await transporter.sendMail({
-            from: 'vetriredot3029@gmail.com',
-            to: to, // Email address of the recipient
-            subject: 'Hello from Nodemailer',
-            html: content
-        })
-
-        console.log(sendMail && sendMail.messageId)
+        console.log(smsResponse.sid);
     } catch (err) {
-        console.log('EMAIL ERR : ', err)
+        if (err.code === 21608) {
+            console.log('The number is unverified. Trial accounts cannot send messages to unverified numbers.');
+            return { error: 'The number is unverified. Please verify it or upgrade your Twilio account.' };
+        } else {
+            console.log('SMS ERROR:', err);
+            throw err;
+        }
     }
-}
+};
 
-module.exports = sendMail;
-
+module.exports = sendSMS;

@@ -510,10 +510,44 @@ export const createteacherschedule = async (data) => {
     console.log(err, "--err");
   }
 };
+
+export const createStudentSchedule = async (data) => {
+  try {
+    let respData = await axios({
+      url: "/studentschedule",
+      method: "post",
+      data: data,
+    });
+    return {
+      status: respData.data.status,
+      message: respData.data.message,
+      result: respData.data.result,
+    };
+  } catch (err) {
+    console.log(err, "--err");
+  }
+};
+
 export const getTeacherSchedule = async (teacherId) => {
   try {
     let respData = await axios({
       url: "/getteacherschedule/" + teacherId,
+      method: "get",
+    });
+    return {
+      status: respData.data.status,
+      result: respData.data.result,
+      result2: respData.data.result2,
+    };
+  } catch (err) {
+    console.log(err, "errrr");
+  }
+};
+
+export const allStudentSchedule = async () => {
+  try {
+    let respData = await axios({
+      url: "/getallstudentschedule" ,
       method: "get",
     });
     return {
@@ -541,6 +575,23 @@ export const getfixedschedule = async (data) => {
     console.log(err, "errrr");
   }
 };
+
+export const getStudentcShedule = async (data) => {
+  try {
+    let respData = await axios({
+      url: "/getstudentschedule",
+      method: "get",
+      params: data,
+    });
+
+    return {
+      status: respData.data.status,
+      result: respData.data.result,
+    };
+  } catch (err) {
+    console.log(err, "errrr");
+  }
+}
 export const findschedulefordetails = async (Scheduledata) => {
   try {
     let respData = await axios({
@@ -665,6 +716,10 @@ export const registerDriver = async (formData) => {
     };
   } catch (err) {
     console.log(err, "--err");
+    return {
+      status: err.response.data.status,
+      message: err.response.data.message,
+    };
   }
 };
 
@@ -740,10 +795,104 @@ export const updateDriver = async (formData, id) => {
   }
 };
 
+export const busRouteAllocate = async (formData, id) => {
+  try {
+    let respData = await axios({
+      url: `/allocateBusRoute/${id}`,
+      method: "post",
+      data: formData,
+    });
+    return {
+      status: respData.data.status,
+      result: respData.data.result,
+      message: respData.data.message,
+    };
+  } catch (err) {
+    return {
+      status: err.response.data.status,
+      message: err.response.data.message,
+    };
+  }
+};
+
+export const displayBusAllocation = async () => {
+  try {
+    let respData = await axios({
+      url: "/DisplayBusAllocation",
+      method: "get",
+    });
+    return {
+      status: respData.data.status,
+      result: respData.data.result,
+      imageUrl: respData.data.imageUrl,
+    };
+  } catch (err) {
+    return {
+      status: err.response.data.status,
+      message: err.response.data.message,
+    };
+  }
+};
+
+export const displayBusAllocationId = async (driverId) => {
+  try {
+    let respData = await axios({
+      url: `/displayBusAllocation/${driverId}`, // Include driverId in the URL
+      method: 'get',
+    });
+    return {
+      status: respData.data.status,
+      result: respData.data.result,
+      imageUrl: respData.data.imageUrl,
+    };
+  } catch (err) {
+    return {
+      status: err.response.data.status,
+      message: err.response.data.message,
+    };
+  }
+};
+
+export const getSingleBusAllocate = async (id) => {
+  try {
+    let respData = await axios({
+      url: `/singleAllocationDisplay/${id}`,
+      method: "get",
+    });
+    return {
+      status: respData.data.status,
+      result: respData.data.result,
+    };
+  } catch (err) {
+    return {
+      status: err.response.data.status,
+      message: err.response.data.message,
+    };
+  }
+};
+
 export const deleteDriver = async (id) => {
   try {
     let respData = await axios({
       url: `/deleteDriverDetail/${id}`,
+      method: "put",
+    });
+    return {
+      status: respData.data.status,
+      message: respData.data.message,
+    };
+  } catch (err) {
+    return {
+      status: err.response.data.status,
+      message: err.response.data.message,
+    };
+  }
+};
+
+export const deleteBusAllocation = async (id) => {
+  try {
+    let respData = await axios({
+      url: `/deleteBusAllocate/${id}`,
       method: "put",
     });
     return {
@@ -893,7 +1042,7 @@ export const updateVehicleRouteData = async (routeData) => {
     });
     return {
       status: respData.data.status,
-      message: respData.data.message
+      message: respData.data.message,
     };
   } catch (err) {
     return {
@@ -903,3 +1052,621 @@ export const updateVehicleRouteData = async (routeData) => {
   }
 };
 
+export const LeaveFormUrl = async (routeData) => {
+  try {
+    let respData = await axios({
+      url: `/leaveapplication`,
+      method: "post",
+      data: routeData,
+    });
+    return {
+      status: respData.data.status,
+      message: respData.data.message,
+    };
+  } catch (err) {
+    return {
+      status: err.response.data.status,
+      message: err.response.data.message,
+    };
+  }
+};
+//leaveform
+export const leaveformapply = async (formData) => {
+  try {
+    let respData = await axios({
+      url: "/leaveapplication",
+      method: "post",
+      data: formData,
+    });
+    return {
+      status: respData.data.status,
+      message: respData.data.message,
+    };
+  } catch (err) {
+    return {
+      status: err.response.data.status,
+      message: err.response.data.message,
+      errors: err.response.data.errors,
+    };
+  }
+};
+
+//leaveapply
+export const applyLeave = async (formData) => {
+  try {
+    let respData = await axios({
+      url: "/leaveapplication",
+      method: "post",
+      data: formData,
+    });
+    return {
+      status: respData.data.status,
+      message: respData.data.message,
+    };
+  } catch (err) {
+    console.log(err, "errrr");
+  }
+};
+
+//Leave List
+
+export const leaveDisplay = async () => {
+  try {
+    let respData = await axios({
+      url: "/leaveDisplay",
+      method: "get",
+    });
+    return {
+      status: respData.data.status,
+      result: respData.data.result,
+    };
+  } catch (err) {
+    console.log(err, "errrr");
+  }
+};
+
+export const leaveDisplaymonth = async (month) => {
+  try {
+    let respData = await axios({
+      url: `/leaveformDislay/${month}`,
+      method: "get",
+    });
+    return {
+      status: respData.data.status,
+      result: respData.data.result,
+    };
+  } catch (err) {
+    console.log(err, "errrr");
+  }
+};
+
+
+//Leave-Approval
+
+
+export const leavesanction = async (formData, leaveDataListId) => {
+  try {
+    const respData = await axios({
+      url: `/leaveapplicationupdate/${leaveDataListId}`,
+      method: "put",
+      data: formData,
+    });
+
+    if (respData && respData.data) {
+      return {
+        status: respData.data.status,
+        message: respData.data.message,
+        result: respData.data.result,
+      };
+    } else {
+      throw new Error("Invalid response from server");
+    }
+  } catch (err) {
+    console.error("Error updating leave application:", err);
+    return {
+      status: "error",
+      message: "Failed to update leave application",
+    };
+  }
+};
+
+
+
+
+
+//employesalaryform
+
+export const employesalaryform = async (formData) => {
+  try {
+    let respData = await axios({
+      url: "/Employee-Salary",
+      method: "post",
+      data: formData,
+    });
+    return {
+      status: respData.data.status,
+      message: respData.data.message,
+    };
+  } catch (err) {
+    console.log(err, "errrr");
+  }
+};
+
+
+//fetchExistingLeaveDates
+export const fetchExistingLeaveDates = async (formData) => {
+  try {
+    let respData = await axios({
+      url: "/fetchExistingLeaveDates",
+      method: "get",
+      data: formData,
+    });
+    return {
+      status: respData.data.status,
+      message: respData.data.message,
+    };
+  } catch (err) {
+    console.log(err, "errrr");
+  }
+};
+
+
+export const leaveAllocate = async(formData)=>{
+  try{
+    let respData = await axios({
+      url:"/alloctaionFieldPost",
+      method:"post",
+      data:formData
+    
+    })
+    return{
+      status: respData.data.status,
+      message:respData.data.message,
+      result:respData.data.result
+    }
+  }
+  catch(err){
+    console.log(err);
+  }
+}
+
+export const leaveAllocateDisplay = async()=>{
+  try{
+    let respData = await axios({
+      url:"/leaveDisplay",
+      method:"get",
+    
+    
+    })
+    return{
+      status: respData.data.status,
+      message:respData.data.message,
+      result:respData.data.result
+    }
+  }
+  catch(err){
+    console.log(err);
+  }
+}
+
+export const singleAllocateDisplay = async(id)=>{
+  try{
+    let respData = await axios({
+      url:`/singleAllocationDisplay/${id}`,
+      method:"get",
+    
+    
+    })
+    return{
+      status: respData.data.status,
+      message:respData.data.message,
+      result:respData.data.result
+    }
+  }
+  catch(err){
+    console.log(err);
+  }
+}
+
+// actions/adminAction.js
+
+export const leaveAllocateEdit = async(formData)=>{
+  try{
+    const respData = await axios.put(`/allocationFieldEdit/${formData.employeeId}`, formData);
+    return{
+      status: respData.data.status,
+      message:respData.data.message,
+      result:respData.data.result
+    };
+  }
+  catch(err){
+    console.log(err);
+  }
+}
+
+
+
+export const casualLeaveAllocateEdit = async (formData) => {
+  try {
+    const respData = await axios.put(`/allocationCasualFieldEdit/${formData.employeeId}`, formData);
+    return {
+      status: respData.data.status,
+      message: respData.data.message,
+      result: respData.data.result  // Return the updated data
+    };
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+
+
+export const leaveAllocateDelete = async(formData)=>{
+  try{
+    const respData = await axios.delete(`/allocationFieldDelete/${formData.employeeId}`, formData);
+    return{
+      status: respData.data.status,
+      message:respData.data.message,
+      result:respData.data.result
+    };
+  }
+  catch(err){
+    console.log(err);
+  }
+}
+
+export const payrollsalary = async (EmployeePaySlip) => {
+  try {
+    let respData = await axios({
+      url: "/payrollsalary",
+      method: "post",
+      data: EmployeePaySlip,
+    });
+    return {
+      status: respData.data.status,
+      message: respData.data.message,
+    };
+  } catch (err) {
+    console.log(err, "errrr");
+  }
+};
+
+//salaryformUpdate
+export const salaryformUpdate = async (formData, employeePaySlipId, employeeId) => {
+  try {
+    const respData = await axios.put(`/salaryformUpdate/${employeePaySlipId}/${employeeId}`, formData);
+    return {
+      status: respData.data.status,
+      message: respData.data.message,
+    };
+  } catch (err) {
+    return {
+      status: err.response.data.status,
+      message: err.response.data.message,
+    };
+  }
+};
+
+
+
+//salarypayrollDislay
+
+export const salarypayrollDislay = async (month) => {
+  try {
+    let respData = await axios({
+      url: `/salarypayrollDislay/${month}`,
+      method: "get",
+    });
+    return {
+      status: respData.data.status,
+      message: respData.data.message,
+      result : respData.data.result,
+    };
+  } catch (err) {
+    return {
+      status: err.response.data.status,
+      message: err.response.data.message,
+    };
+  }
+};
+
+export const payrollListmonth = async()=>{
+  try{
+    let respData = await axios({
+      url:"/payrollListmonth",
+      method:"get",
+    
+    
+    })
+    return{
+      status: respData.data.status,
+      message:respData.data.message,
+      result:respData.data.result
+    }
+  }
+  catch(err){
+    console.log(err);
+  }
+}
+
+export const punchPost = async (formData) => {
+  try {
+    let respData = await axios({
+      url: "/post-punching",
+      method: "post",
+      data: formData,
+    });
+    return {
+      status: respData.data.status,
+      message: respData.data.message, 
+    };
+  } catch (err) {
+    console.log(err, "errrr");
+  }
+};
+
+//leaveapply
+export const newadminNotification = async (formData) => {
+  try {
+    let respData = await axios({
+      url: "/newadminNotification",
+      method: "post",
+      data: formData,
+    });
+    return {
+      status: respData.data.status,
+      message: respData.data.message,
+      result : respData.data.result,
+    };
+  } catch (err) {
+    console.log(err, "errrr");
+  }
+};
+
+//adminnotificationDisplay
+
+export const adminnotificationDisplay = async () => {
+  try {
+    let respData = await axios({
+      url: "/adminnotificationDisplay",
+      method: "get",
+      // params: formData,
+    });
+    return {
+      status: respData.data.status,
+      message: respData.data.message,
+      imageUrl: respData.data.imageUrl,
+      result: respData.data.result,
+    };
+  } catch (err) {
+    console.log(err, "errrr");
+  }
+};
+
+//adminnotificationDelete
+
+export const adminnotificationDelete = async (id) => {
+  try {
+    let respData = await axios({
+      url: `/adminnotificationDelete/${id}`,
+      method: "delete",
+    });
+    return {
+      status: respData.data.status,
+      message: respData.data.message,
+    };
+  } catch (err) {
+    return {
+      status: err.response.data.status,
+      message: err.response.data.message,
+    };
+  }
+};
+
+//adminnotificationUpdate
+export const adminnotificationUpdate = async (id) => {
+  try {
+    let respData = await axios({
+      url: `/adminnotificationUpdate/${id}`,
+      method: "put",
+      // data: Updatedata,
+    });
+    return {
+      status: respData.data.status,
+      message: respData.data.message,
+    };
+  } catch (err) {
+    return {
+      status: err.response.data.status,
+      message: err.response.data.message,
+    };
+  }
+};
+
+export const adminnotificationDisplaybyId = async (id) => {
+  try {
+    let respData = await axios({
+      url: `/adminnotificationDisplaybyId/${id}`,
+      method: "get",
+    });
+    return {
+      status: respData.data.status,
+      result: respData.data.result,
+    };
+  } catch (err) {
+    return {
+      status: err.response.data.status,
+      message: err.response.data.message,
+    };
+  }
+};
+
+
+//LeaveMonthList
+
+export const Leavelistmonth = async()=>{
+  try{
+    let respData = await axios({
+      url:"/Leavelistmonth",
+      method:"get",
+    
+    
+    })
+    return{
+      status: respData.data.status,
+      message:respData.data.message,
+      result:respData.data.result
+    }
+  }
+  catch(err){
+    console.log(err);
+  }
+}
+
+
+//leaveformDislay
+
+export const leaveformDislay = async (month) => {
+  try {
+    let respData = await axios({
+      url: `/leaveformDislay/${month}`,
+      method: "get",
+    });
+    return {
+      status: respData.data.status,
+      message: respData.data.message,
+      result : respData.data.result,
+    };
+  } catch (err) {
+    return {
+      status: err.response.data.status,
+      message: err.response.data.message,
+    };
+  }
+};
+
+
+//employeemonthly Generate
+
+export const employeemonthly = async (formData) => {
+  try {
+    let respData = await axios({
+      url: "/creatmonthatt",
+      method: "post",
+      data: formData,
+    });
+    return {
+      status: respData.data.status,
+      message: respData.data.message,
+      result: respData.data.result,
+    };
+  } catch (err) {
+    return {
+      status: err.response.data.status,
+      message: err.response.data.message,
+      errors: err.response.data.errors,
+    };
+  }
+};
+
+
+//employeeDay attendance
+
+export const employeeperday = async (formData, month, date) => {
+  try {
+    const respData = await axios({
+      url: `/employeeDisplay/${month}/${date}`,
+      method: "put",
+      data: formData,
+    });
+    return {
+      status: respData.data.status,
+      message: respData.data.message,
+      result: respData.data.result,
+    };
+  } catch (err) {
+    return {
+      status: err.response.data.status,
+      message: err.response.data.message,
+      errors: err.response.data.errors,
+    };
+  }
+};
+
+
+
+//selectedmonthDisplay
+
+export const selectedmonthDisplay = async (month) => {
+  try {
+    let respData = await axios({
+      url: `/selectedmonthDisplay/${month}`,
+      method: "get",
+    });
+    return {
+      status: respData.data.status,
+      message: respData.data.message,
+      result : respData.data.result,
+    };
+  } catch (err) {
+    return {
+      status: err.response.data.status,
+      message: err.response.data.message,
+    };
+  }
+};
+
+
+//employeedayattendance
+
+export const employeedayattendance = async (formData, month, date,employeeId) => {
+  try {
+    const respData = await axios.put(`/EmployeeAttendanceUpdate/${month}/${date}/${employeeId}`, formData);
+    return {
+      status: respData.data.status,
+      message: respData.data.message,
+      result: respData.data.result,
+    };
+  } catch (err) {
+    return {
+      status: err.response.data.status,
+      message: err.response.data.message,
+    };
+  }
+};
+
+
+
+export const displayoverall = async()=>{
+  try{
+    let respData = await axios({
+      url:"/displayoverall",
+      method:"get",
+    
+    
+    })
+    return{
+      status: respData.data.status,
+      message:respData.data.message,
+      result:respData.data.result
+    }
+  }
+  catch(err){
+    console.log(err);
+  }
+}
+
+export const findAllSection = async () => {
+  try {
+    let respData = await axios({
+      url: "/getallsection",
+      method: "get",
+    });
+    return {
+      status: respData.data.status,
+      result: respData.data.result, 
+    };
+  } catch (err) {
+    console.log(err, "errrr");
+  }
+};

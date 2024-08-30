@@ -11,5 +11,8 @@ const parentCtrl = require('../controller/parent.controller')
 //parent-login
 router.route('/parent-register').post(parentValid.parentregisterValid,parentCtrl.createparent);
 router.route('/parent-login').post(parentValid.parentloginValid,parentCtrl.parentLogin);
+router.route('/parent-forgetpassword').post(parentValid.forgetpasswordValid,parentCtrl.forgetpassword);
+router.route('/parent-resetpassword').post(parentValid.resetpasswordValid,parentCtrl.resetpassword);
+router.route('/parent-changepassword').post(parentValid.changepasswordValid, parentCtrl.changePassword);
 
 module.exports = router;

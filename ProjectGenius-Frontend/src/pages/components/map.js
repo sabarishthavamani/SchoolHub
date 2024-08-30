@@ -61,7 +61,7 @@ const Map = () => {
 
   return (
     <>
-      <div className="route-tracking-form">
+      {/* <div className="route-tracking-form">
         <div>
         <input
           type="text"
@@ -90,7 +90,7 @@ const Map = () => {
         </div>
         <p>{`Distance - ${distance}`}</p>
         <p>{`Duration - ${duration}`}</p>
-      </div>
+      </div> */}
       <GoogleMap
         center={center}
         zoom={15}
